@@ -19,13 +19,13 @@ X264_ENCODING_COMMAND_IPHONE = "x264 --crf 21 --deblock 2:2 --psy-rd 0.4 --level
 X264_ENCODING_COMMAND_PS3 = "x264 --crf 21 --deblock 2:2 --psy-rd 0.4 --level 4.2 --profile high --aud --sar 1:1 --vbv-maxrate 31250 --vbv-bufsize 31250 --b-pyramid none --bframes 16 --sar 1:1 --ssim --psnr --non-deterministic"
 
 FILE_ARG = "--files"
-FILE_ARG_HELP_STRING =	"\t#{FILE_ARG} [<file 1>;<file 2>;...]\n\t\tThe name(s) of the media files you want to encode\n\t\tAllowed to put \"all\" to specify all media files in current dir\n\n"
-						
+FILE_ARG_HELP_STRING =	"\t#{FILE_ARG} <file 1>[ <file 2> <file 3>...]\n\t\tThe name(s) of the media files you want to encode\n\t\tAllowed to put \"all\" to specify all media files in current dir\n\n"
+
 DEVICE_ARG = "--device"
 DEVICE_ARG_HELP_STRING =	"\t#{DEVICE_ARG} <string>\n\t\tSpecifies the device to encode for\n\t\tValid inputs: ps3, iphone4\n\n"
 
 AVS_ADD_ARG = "--avs-add"
-AVS_ADD_ARG_HELP_STRING =	"\t#{AVS_ADD_ARG} {<string 1>;<string 2>;<string 3>}\n\t\tAdds extra lines into the avisynth file\n\n"
+AVS_ADD_ARG_HELP_STRING =	"\t#{AVS_ADD_ARG} <string 1>[ <string 2> <string 3>...]\n\t\tAdds extra lines into the avisynth file\n\n"
 
 NO_MUX_ARG = "--no-mux"
 NO_MUX_ARG_HELP_STRING =	"\t#{NO_MUX_ARG}\n\t\tDon't multiplex the raw video\n\n"
@@ -40,11 +40,17 @@ FORCE_SUBTITLE_TRACK = "--subtitle-track"
 FORCE_SUBTITLE_TRACK_HELP_STRING =	"\t#{FORCE_SUBTITLE_TRACK}\n\t\tUse specified track for subtitle\n\n"
 
 BLACKLIST_ARG = "--blacklist"
-BLACKLIST_ARG_HELP_STRING =		"\t#{BLACKLIST_ARG} [<file 1>;<file 2>;...]\n\t\tThe name(s) of the files you want to explicitly blacklist\n\t\tCan be used in conjunction with a list of files that have been whitelisted\n\t\tThe blacklist takes precedence over the whitelist\n\n"
+BLACKLIST_ARG_HELP_STRING =		"\t#{BLACKLIST_ARG} <file 1>[ <file 2> <file 3>...]\n\t\tThe name(s) of the files you want to explicitly blacklist\n\t\tCan be used in conjunction with a list of files that have been whitelisted\n\t\tThe blacklist takes precedence over the whitelist\n\n"
 
 PROG_HELP_HEADER = 	"Auto Device Encoder\nAuthor: Andrew Johnson\n\nUsage: ruby autoDeviceEncoder.rb [options]\n\nOptions:\n\n"
 
 PROG_ARG_VECTOR = [FILE_ARG, DEVICE_ARG, AVS_ADD_ARG, NO_MUX_ARG, HELP_ARG, FORCE_AUDIO_TRACK, FORCE_SUBTITLE_TRACK, BLACKLIST_ARG]
+
+IPHONE4_CONSTANT = "iphone4"
+
+PLAYSTATION_3_CONSTANT = "ps3"
+
+DEVICE_VECTOR = [IPHONE4_CONSTANT, PLAYSTATION_3_CONSTANT]
 
 PROG_ARG_HELP_HASH = {
 	FILE_ARG => FILE_ARG_HELP_STRING,
@@ -63,7 +69,7 @@ for i in 1..MAX_MUTEXES
 	GLOBAL_MUTEX_ARRAY.push(Mutex.new)
 end
 
-class ProgramArgs
+class ProgramArgsOld
 	attr_accessor :device, :files, :avsCommands, :noMultiplex, :audioTrack, :subtitleTrack, :blacklist
 	
 	def initialize()
@@ -77,73 +83,55 @@ class ProgramArgs
 	end
 end
 
+class ProgramArgs
+	attr_accessor :hash
+	def initialize(hash)
+		@hash = hash
+	end
+		
+	def getElementOrNil(key, index)
+		e = hash[key]
+		if e != nil then
+			return e[index]
+		else
+			return nil
+		end
+	end
+		
+	def device
+		getElementOrNil(DEVICE_ARG, 0)
+	end
+	
+	def files
+		hash[FILE_ARG]
+	end
+	
+	def avsCommands
+		hash[AVS_ADD_ARG]
+	end
+	
+	def noMultiplex
+		hash.include?(NO_MUX_ARG)
+	end
+	
+	def audioTrack
+		getElementOrNil(FORCE_AUDIO_TRACK, 0)
+	end
+	
+	def subtitleTrack
+		getElementOrNil(FORCE_SUBTITLE_TRACK, 0)
+	end
+	
+	def blacklist
+		hash[BLACKLIST_ARG]
+	end
+end
+
 def printHelp
 	puts PROG_HELP_HEADER
 	PROG_ARG_HELP_HASH.each{ |key, value|
 		puts value
 	}
-end
-
-def printHelpOld
-	helpString = []
-	
-	helpString.push("Auto Device Encoder")
-	helpString.push("Author: Andrew Johnson")
-	helpString.push("")
-	
-	helpString.push("Usage: ruby autoDeviceEncoder.rb [options]")
-	helpString.push("")
-	
-	helpString.push("Options:")
-	helpString.push("")
-	
-	#Options
-	
-	#Help
-	helpString.push("\t#{HELP_ARG}")
-	helpString.push("\t\tPrint this help screen")
-	helpString.push("")
-	
-	#Files
-	helpString.push("\t#{FILE_ARG} [<file 1>;<file 2>;...]")
-	helpString.push("\t\tThe name(s) of the media files you want to encode")
-	helpString.push("\t\tAllowed to put \"all\" to specify all media files in current dir")
-	helpString.push("")
-	
-	#Blacklist
-	helpString.push("\t#{BLACKLIST_ARG} [<file 1>;<file 2>;...]")
-	helpString.push("\t\tThe name(s) of the files you want to explicitly blacklist")
-	helpString.push("\t\tCan be used in conjunction with a list of files that have been whitelisted")
-	helpString.push("\t\tThe blacklist takes precedence over the whitelist")
-	helpString.push("")
-	
-	#Device type
-	helpString.push("\t#{DEVICE_ARG} <string>")
-	helpString.push("\t\tSpecifies the device to encode for")
-	helpString.push("\t\tValid inputs: ps3, iphone4")
-	helpString.push("")
-	
-	#Filters
-	helpString.push("\t#{AVS_ADD_ARG} {<string 1>;<string 2>;<string 3>}")
-	helpString.push("\t\tAdds extra lines into the avisynth file")
-	helpString.push("")
-	
-	#No-Mux
-	helpString.push("\t#{NO_MUX_ARG}")
-	helpString.push("\t\tDon't multiplex the raw video")
-	helpString.push("")
-	
-	#Force audio track
-	helpString.push("\t#{FORCE_AUDIO_TRACK}")
-	helpString.push("\t\tUse specified track for audio")
-	helpString.push("")
-	
-	#Force subtitle track
-	helpString.push("\t#{FORCE_SUBTITLE_TRACK}")
-	helpString.push("\t\tUse specified track for subtitle")
-	helpString.push("")
-	
-	helpString.each{|e| puts e}
 end
 
 #Goes through the list of tracks of a media file and returns the track number
@@ -186,7 +174,7 @@ end
 def extractSubtitleAndAudioTracks(mediaFile, programArgs)
 	extractedTracks = []
 	
-	aacOnly = programArgs.device.casecmp("iphone4") == 0
+	aacOnly = programArgs.device.casecmp(IPHONE4_CONSTANT) == 0
 	
 	LOGGER.info("Searching for tracks")
 	
@@ -335,7 +323,21 @@ def filterFiles(dir, blacklist)
 	return files
 end
 
-def processAllFiles(programArgs)
+def validateProgramArgs(programArgs)
+	if !(programArgs.files != nil && programArgs.files.size > 1) then
+		LOGGER.error("Need to specify files to encode")
+		return false
+	end
+	
+	if !(programArgs.device != nil && DEVICE_VECTOR.include?(programArgs.device)) then
+		LOGGER.error("No device selected or no applicable device selected")
+		return false
+	end
+	
+	return true
+end
+
+def processAllFilesOld(programArgs)
 	filteredFiles = []
 	threads = []
 	
@@ -367,16 +369,6 @@ def processAllFiles(programArgs)
 	}
 end
 
-def doesUserWantHelp(argVector)
-	for a in argVector
-		if a.casecmp(HELP_ARG) == 0 then
-			return true
-		end
-	end
-	
-	return false
-end
-
 def generateAvsStringFromFilterList(listOfFilters)
 	avsFilterString = ""
 	
@@ -387,28 +379,62 @@ end
 
 def getArguments(argVector)
 	LOGGER.info("Processing Arguments")
-	begin
-		index = 0
-		while index < argVector.size
-			currentArg = argVector[index]
-			if PROG_ARG_VECTOR.include?(currentArg) then
-					yeild currentArg
-			else
-				LOGGER.warn("Argument #{currentArg} not recognized. Ignoring")
+	index = 0
+	
+	argCollector = Hash.new
+	currentSwitch = nil
+	
+	while index < argVector.size
+		currentArg = argVector[index]
+		if PROG_ARG_VECTOR.include?(currentArg) then
+			currentSwitch = currentArg
+			if argCollector[currentArg] == nil then
+				argCollector[currentArg] = Array.new
 			end
-			index = index + 1
+		else
+			currentCollection = argCollector[currentSwitch]
+			currentCollection.push(currentArg)
 		end
-	rescue
-		LOGGER.error("Error occured while parsing the arguments")
-		LOGGER.error($!)
+		index = index + 1
 	end
+	
+	return argCollector
 end
 
 def processArgs(argVector)
-	getArguments(argVector){ |currentArg|
-		#Process Arguments
-		puts currentArg
-	}
+	collectedArgs = getArguments(argVector)
+	if collectedArgs.size < 2 || collectedArgs[HELP_ARG] != nil then
+		printHelp
+		exit
+	end
+	
+	programArgs = ProgramArgs.new(collectedArgs)
+	
+	preEncodingFeedback(programArgs)
+	
+	
+end
+
+def preEncodingFeedback(programArgs)
+	#AVS Filters
+	if programArgs.avsCommands != nil then
+		LOGGER.info("Extra AVS Filters to be applied:\n\n#{programArgs.avsCommands}")
+	end
+		
+	#Info
+	if programArgs.noMultiplex then
+		LOGGER.info("Not multiplexing the file")
+	end
+	
+	#Audio track
+	if programArgs.audioTrack != nil then
+		LOGGER.info("Using Audio at Track ##{programArgs.audioTrack}")
+	end
+	
+	#Subtitle track
+	if programArgs.subtitleTrack != nil then
+		LOGGER.info("Using Subtitles at Track ##{programArgs.subtitleTrack}")
+	end
 end
 
 def processArgsOld(argVector)
