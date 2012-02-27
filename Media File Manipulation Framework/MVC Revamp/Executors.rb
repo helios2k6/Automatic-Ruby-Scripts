@@ -15,7 +15,6 @@ module Executors
 			@executors << executor
 			
 			#Send Notification with stdout reference to execution
-			Facade.instance.send_notification()
 		end
 		
 	end

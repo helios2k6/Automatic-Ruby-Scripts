@@ -30,8 +30,10 @@ module MediaContainerTools
 			end
 		end
 		
-		def multiplexToMP4(file, outputfile)
+		def self.multiplexToMP4(file, outputfile)
+			command = "#{ExtractionToolsConstant::MP4BOX} -add \"#{file}\" \"#{outputfile}\""
 			
+			return [command, outputfile]
 		end
 	end
 end
