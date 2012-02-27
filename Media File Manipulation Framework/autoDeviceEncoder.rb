@@ -16,7 +16,7 @@ LOGGER.level = Logger::INFO
 LOGGER.formatter = proc {|severity, datetime, progname, msg| "#{severity}: #{msg}\n"}
 
 X264_ENCODING_COMMAND_IPHONE = "x264 --crf 21 --deblock 2:2 --psy-rd 0.4 --level 3.1 --profile main --b-pyramid none --bframes 16 --sar 1:1 --ssim --psnr --non-deterministic"
-X264_ENCODING_COMMAND_PS3 = "x264 --crf 21 --deblock 2:2 --psy-rd 0.4 --level 4.2 --profile high --aud --sar 1:1 --vbv-maxrate 31250 --vbv-bufsize 31250 --b-pyramid none --bframes 16 --sar 1:1 --ssim --psnr --non-deterministic"
+X264_ENCODING_COMMAND_PS3 = "x264 --crf 21 --deblock 2:2 --psy-rd 0.4 --level 4.2 --profile high --aud --sar 1:1 --vbv-maxrate 31250 --vbv-bufsize 31250 --b-pyramid none --bframes 16 --ssim --psnr --non-deterministic"
 
 FILE_ARG = "--files"
 FILE_ARG_HELP_STRING =	"\t#{FILE_ARG} <file 1>[ <file 2> <file 3>...]\n\t\tThe name(s) of the media files you want to encode\n\t\tAllowed to put \"all\" to specify all media files in current dir\n\n"

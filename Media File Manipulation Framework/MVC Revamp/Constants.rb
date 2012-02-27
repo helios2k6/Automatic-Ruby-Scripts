@@ -1,0 +1,14 @@
+module Constants
+	class ProxyConstants
+		ENCODING_JOBS_PROXY = "ENCODING_JOBS_PROXY"
+		LOGGER_PROXY = "LOGGER_PROXY"
+		PROGRAM_ARGS_PROXY = "PROGRAM_ARGS_PROXY"
+		EXECUTOR_PROXY = "EXECUTOR_PROXY"
+	end
+	
+	class MediatorConstants
+		SCREEN_MEDIATOR = "SCREEN_MEDIATOR"
+	end
+	
+
+end
