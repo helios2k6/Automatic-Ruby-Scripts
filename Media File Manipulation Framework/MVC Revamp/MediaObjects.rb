@@ -1,3 +1,6 @@
+require 'PureMVC_Ruby'
+require './Constants'
+
 module MediaObjects
 	class TrackType
 		GENERAL = "General" #This is special. Do not put this in the Track Type Vector
@@ -27,12 +30,35 @@ module MediaObjects
 	class MediaContainers
 		MKV = "Matroska"
 		MP4 = "MPEG-4"
-		
+    AVI = "Audio Video Interleave"  #TODO - Fix this up and put proper strings in here
+    WMV = "Windows Media"
+    
 		CONTAINER_VECTOR = [MKV, MP4]
 		
-		EXTENSION_HASH = [MKV => ".mkv", MP4 => ".mp4"]
+		EXTENSION_HASH = [MKV => ".mkv", MP4 => ".mp4", AVI => ".avi", WMV => ".wmv"]
 	end
-		
+  
+  class MediaFileProxy < Proxy
+    attr_accessor :mediaFiles
+    
+    def initialize
+      super(ProxyConstants::MEDIA_FILE_PROXY)
+      @mediaFiles = Array.new
+    end
+    
+    def addMediaFile(mediaFile)
+      if mediaFile.is_a? MediaFile then
+        @mediafiles << mediaFile
+      end
+    end
+    
+    def getFilteredFiles(blacklist)
+      @mediaFiles.select{|e|
+        blacklist.include?(e)
+      }
+    end
+  end
+  
 	class MediaFile
 		attr_accessor :file, :tracks, :mediaContainerType
 		

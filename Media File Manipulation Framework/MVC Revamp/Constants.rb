@@ -5,6 +5,8 @@ module Constants
 		PROGRAM_ARGS_PROXY = "PROGRAM_ARGS_PROXY"
 		EXECUTOR_PROXY = "EXECUTOR_PROXY"
     SCREEN_PROXY = "SCREEN_PROXY"
+    MEDIA_FILE_PROXY = "MEDIA_FILE_PROXY"
+    TICKET_MASTER_PROXY = "TICKET_MASTER_PROXY"
 	end
 	
 	class MediatorConstants
@@ -26,4 +28,11 @@ module Constants
     
     EXECUTED_UNKNOWN = "EXECUTED_UNKNOWN"
 	end
+  
+  class DeviceConstants
+    PS3_CONSTANT = "ps3"
+    IPHONE4_CONSTANT = "iphone4"
+
+    DEVICE_VECTOR = [PS3_CONSTANT, IPHONE4_CONSTANT]
+  end
 end
