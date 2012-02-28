@@ -6,6 +6,5 @@ module Notifications
 		
 		COMMAND_EXECUTED = "COMMAND_EXECUTED" #Used to signal that a command has been executed
     COMMAND_FINISHED_EXECUTING = "COMMAND_FINISHED_EXECUTING" #Used to signal that a command has finished executing
-    
 	end
 end

@@ -30,6 +30,14 @@ module MediaTaskObjects
 		
 		DEVICE_VECTOR = [PS3_CONSTANT, IPHONE4_CONSTANT]
 		
+    QUALITY_LOW = "--crf 24"
+    
+    QUALITY_MEDIUM = "--crf 22 --subme 8"
+    
+    QUALITY_HIGH = "--crf 20 --subme 9"
+    
+    QUALITY_VERY_HIGH = "--crf 18 --subme 10 --trellis 2"
+    
 		PS3_COMPAT_ARGS = "--level 4.2 --profile high --aud --sar 1:1 --vbv-maxrate 31250 --vbv-bufsize 31250 "
 		IPHONE4_COMPAT_ARGS = "--level 3.1 --profile main --sar 1:1"
 		
@@ -38,7 +46,7 @@ module MediaTaskObjects
 		DIAGNOSTIC_ARGS = "--psnr --ssim"
 		OPTIONAL_ENHANCEMENTS = "--non-deterministic"
 		
-		ANIME_QUALITY_ARGS = "--deblock 2:2 --psy-rd 0.3 --bframes 16 --b-pyramid none"
+		ANIME_TUNE_ARGS = "--deblock 2:2 --psy-rd 0.3 --bframes 16 --b-pyramid none"
 	end
 
 	class EncodingJob

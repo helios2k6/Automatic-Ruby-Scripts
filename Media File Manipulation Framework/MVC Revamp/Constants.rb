@@ -4,6 +4,7 @@ module Constants
 		LOGGER_PROXY = "LOGGER_PROXY"
 		PROGRAM_ARGS_PROXY = "PROGRAM_ARGS_PROXY"
 		EXECUTOR_PROXY = "EXECUTOR_PROXY"
+    SCREEN_PROXY = "SCREEN_PROXY"
 	end
 	
 	class MediatorConstants

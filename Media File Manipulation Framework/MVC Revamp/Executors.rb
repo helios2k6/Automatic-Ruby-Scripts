@@ -1,5 +1,6 @@
 require 'PureMVC_Ruby'
 require './Constants'
+require './Notifications'
 require 'pty'
 
 module Executors	
@@ -15,6 +16,7 @@ module Executors
 			@executors << executor
 			
 			#Send Notification with stdout reference to execution
+      Facade.instance.sendNotification(Notifications::COMMAND_EXECUTED, executor.stdout)
 		end
 		
 	end
