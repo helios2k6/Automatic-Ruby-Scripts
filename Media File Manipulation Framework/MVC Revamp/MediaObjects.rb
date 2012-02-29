@@ -13,27 +13,32 @@ module MediaObjects
 	
 	class TrackFormat
 		AVC = "AVC"
+		VC_ONE = "VC-1"
 		
-		AAC = "AAC"
+    AAC = "AAC"
 		FLAC = "FLAC"
 		AC3 = "AC-3"
 		VORBIS = "Vorbis"
+    WAV = "Wave"
 		
 		ASS = "ASS"
 		UTF_EIGHT = "UTF-8"
 		
-		TRACK_FORMAT_VECTOR = [AVC, AAC, FLAC, AC3, VORBIS, ASS, UTF_EIGHT]
+		TRACK_FORMAT_VECTOR = [AVC, VC_ONE, AAC, FLAC, AC3, VORBIS, ASS, UTF_EIGHT, WAV]
 		
-		EXTENSION_HASH = [AVC => ".264", AAC => ".aac", FLAC => ".flac", AC3 => ".ac3", VORBIS => ".ogg", ASS => ".ass", UTF_EIGHT => ".srt"]
+    AUDIO_FORMAT_VECTOR = [AAC, FLAC, AC3, VORBIS, WAV]
+    VIDEO_FORMAT_VECTOR = [AVC, VC_ONE]
+    
+		EXTENSION_HASH = [AVC => ".264", AAC => ".aac", FLAC => ".flac", AC3 => ".ac3", VORBIS => ".ogg", ASS => ".ass", UTF_EIGHT => ".srt", WAV => ".wav"]
 	end
 	
 	class MediaContainers
 		MKV = "Matroska"
 		MP4 = "MPEG-4"
-    AVI = "Audio Video Interleave"  #TODO - Fix this up and put proper strings in here
+    AVI = "AVI"  
     WMV = "Windows Media"
     
-		CONTAINER_VECTOR = [MKV, MP4]
+		CONTAINER_VECTOR = [MKV, MP4, AVI, WMV]
 		
 		EXTENSION_HASH = [MKV => ".mkv", MP4 => ".mp4", AVI => ".avi", WMV => ".wmv"]
 	end
@@ -50,12 +55,6 @@ module MediaObjects
       if mediaFile.is_a? MediaFile then
         @mediafiles << mediaFile
       end
-    end
-    
-    def getFilteredFiles(blacklist)
-      @mediaFiles.select{|e|
-        blacklist.include?(e)
-      }
     end
   end
   
