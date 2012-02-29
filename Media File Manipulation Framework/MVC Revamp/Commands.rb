@@ -225,7 +225,7 @@ module Commands
         postCommand << :DECODE_VORBIS
         postCommand << :ENCODE_AAC
       end
-      
+
       return postCommand
     end
 
@@ -235,49 +235,42 @@ module Commands
       mediaFile = encodingJob.mediaFile
       encodingJobProxy = facade.retrieve_proxy(ProxyConstants::ENCODING_JOBS_PROXY)
 
-      audioTrack = audioTrack = encodingJob.audioTrack
+      audioTrack = encodingJob.audioTrack
       postCommands = []
 
       if audioTrack != nil then
-
-      end
-
-      #Cycle through tracks to see if any of them are audio tracks
-      case mediaFile.mediaContainerType
-      when MediaContainers::MKV, MediaContainers::MP4
-        mediaFile.tracks.each{|e|
-          case e.trackFormat
-          when TrackFormat::FLAC
-            audioTrack = e.trackID
-            postCommand.clear
-            postCommand << :DECODE_FLAC
-            postCommand << :ENCODE_AAC
-            break
-          when TrackFormat::WAV
-            audioTrack = e.trackID
-            postCommand.clear
-            postCommand << :ENCODE_AAC
-            break
-          when TrackFormat::AAC
-            audioTrack = e.trackID
-            break
-          when TrackFormat::Vorbis
-            audioTrack = e.trackID
-            postCommand << :DECODE_VORBIS
-            postCommand << :ENCODE_AAC
-          when TrackFormat::AC3
-            audioTrack = e.trackID
-          end
-        }
-      end
-
-      if audioTrack > -1 then #Make sure we actually got a track
-        #Extract Track, whatever it is
-        extractionCommand = nil
+        #First see if there's a particular audio track the user wants us to extract
+        postCommands = getPostJobsForAudioTrack(mediafile.getTrack(audioTrack))
+      else
+        #Otherwise, cycle through tracks to see if any of them are audio tracks
         case mediaFile.mediaContainerType
         when MediaContainers::MKV, MediaContainers::MP4
-          extractionCommand = ContainerTools.generateExtractTrackCommand(e, audioTrack)
+          mediaFile.tracks.each{|e|
+            case e.trackFormat
+            when TrackFormat::FLAC
+              audioTrack = e.trackID
+              postCommands = getPostJobsforAudioTrack(e)
+              break
+            when TrackFormat::WAV
+              audioTrack = e.trackID
+              postCommands = getPostJobsforAudioTrack(e)
+              break
+            when TrackFormat::AAC
+              audioTrack = e.trackID
+              break
+            when TrackFormat::Vorbis
+              audioTrack = e.trackID
+              postCommands = getPostJobsforAudioTrack(e)
+            when TrackFormat::AC3
+              audioTrack = e.trackID
+            end
+          }
         end
+      end
+
+      if audioTrack != nil then #Make sure we actually got a track
+        #Extract Track, whatever it is
+        extractionCommand = ContainerTools.generateExtractTrackCommand(e, audioTrack)
 
         facade.send_notification(Notifications::EXECUTE_EXTERNAL_COMMAND, extractionCommand[0])
 
@@ -292,7 +285,6 @@ module Commands
 
             previousFile = postComm[1]
           when :DECODE_VORBIS
-            #TODO: Decode stuff
             postComm = OggDecoder.generateDecodeOggToWavCommand(previousFile)
 
             facade.send_notification(Notifications::EXECUTE_EXTERNAL_COMMAND, postComm[0])
@@ -318,7 +310,78 @@ module Commands
 
   class ExtractSubtitleTrackCommand < SimpleCommand
     def execute(note)
+      facade = Facade.instance
+      encodingJob = note.body
+      mediaFile = encodingJob.mediaFile
+      encodingJobProxy = facade.retrieve_proxy(ProxyConstants::ENCODING_JOBS_PROXY)
 
+      subtitleTrack = encodingJob.subtitleTrack
+
+      if subtitleTrack == nil && mediafile.mediaContainerType == MediaContainers::MKV then
+        #See if the user wants to extract a particular track. If they do, then
+        #we don't have to cycle through the tracks
+
+        #Also, we can't extract subtitle tracks from any other type of media format
+        mediaFile.tracks.each{|e|
+          case e.trackFormat
+          when TrackFormat::ASS
+            subtitleTrack = e.trackID
+            break
+          when TrackFormat::SSA, TrackFormat::UTF_EIGHT
+            subtitleTrack = e.trackID
+          end
+        }
+      end
+
+      if subtitleTrack != nil then
+        #Check to see if the subtitle track actually was found
+        extractionCommand = ContainerTools.generateExtractTrackCommand(e, subtitleTrack)
+        
+        facade.send_notification(Notifications::EXECUTE_EXTERNAL_COMMAND, extractionCommand[0])
+        
+        encodingJobProxy.addSubtitleTrackFile(encodingJob, extractionCommand[1])
+      end
+    end
+  end
+  
+  class GenerateAvisynthFileCommand < SimpleCommand
+    def execute(note)
+      facade = Facade.instance
+      encodingJob = note.body
+      mediaFile = encodingJob.mediaFile
+      avsFile = encodingJob.avsFile
+      
+      outputFile = mediafile.getBaseName << AVSFile::AVS_EXTENSION
+      
+      avsFile.outputAvsFile(outputFile)
+      
+      facade.retrieve_proxy(ProxyConstants::AVISYNTH_FILE_PROXY).addAvisynthFile(encodingJob, outputFile)
+    end
+  end
+  
+  class EncodeFileCommand < SimpleCommand
+    def execute(note)
+      facade = Facade.instance
+      encodingJob = note.body
+      mediafile = encodingJob.mediafile
+      
+      #form command
+      command = EncodingConstants::X264
+      encodingJob.encodingOptions.each{|e|
+        command << " " << e
+      }
+      avsFile = facade.retrieve_proxy(ProxyConstants::AVISYNTH_FILE_PROXY).getAvisynthFile(encodingJob)
+      
+      command << " " << EncodingConstants::OUTPUT_ARG << " \"#{encodingJob.outputfile}\""<< " \"#{avsFile}\""
+      
+      facade.send_notification(Notifications::EXECUTE_EXTERNAL_COMMAND, command)
+      
+    end
+  end
+  
+  class MultiplexFileCommand < SimpleCommand
+    def execute(note)
+      
     end
   end
 end
