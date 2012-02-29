@@ -48,7 +48,43 @@ module MediaTaskObjects
     end
   end
 
+  class EncodedFileProxy < Proxy
+    def initialize
+      super(ProxyConstants::ENCODED_FILE_PROXY)
+      @encodedFileHash = Hash.new
+    end
+    
+    def addEncodedFile(encodingJob, encodedFile)
+      @encodedFileHash[encodingJob] = encodedFile
+    end
+    
+    def getEncodedFile(encodingJob)
+      return @encodedFileHash[encodingJob]
+    end
+  end
 
+  class TemporaryFilesProxy < Proxy
+    def initialize 
+      super(ProxyConstants::TEMPORARY_FILES_PROXY)
+      @temporaryFiles = Hash.new
+    end
+    
+    def addTemporaryFile(encodingJob, file)
+      arr = @temporaryFiles[encodingJob]
+      
+      if arr == nil then
+        arr = []
+        @temporaryFiles[encodingJob] = arr
+      end
+      
+      arr << file
+    end
+    
+    def getTemporaryFiles(encodingJob)
+      return @temporaryFiles[encodingJob].compact
+    end
+  end
+  
   class EncodingConstants
     X264 = "x264.exe"
 
@@ -100,8 +136,18 @@ module MediaTaskObjects
     end
   end
 
+  class AvisynthFilterConstants
+    FFINDEX = "ffindex"
+    DIRECTSHOW_SOURCE = "directShowSource"
+    FFVIDEO_SOURCE = "ffvideosource"
+    TEXTSUB_FILTER = "textsub"
+    GRADFUN_2_DB = "gradfun2db"
+    LANCZOS_RESIZE = "lanczosResize"
+    SPLINE_64_RESIZE = "spline64Resize"
+  end
+  
   class AVSFile
-    attr_accessor :mediaSource, :filters
+    attr_accessor :mediaSource, :preFilters, :filters
 
     STANDARD_AVS_SCRIPT = "ffindex(x)\ny=directshowsource(x)\nffvideosource(x, fpsnum=24000, fpsden=1001)\ngradfun2db()\n"
     AVS_EXTENSION = ".avs"
@@ -109,14 +155,27 @@ module MediaTaskObjects
     def initialize(mediaSource, filters)
       @mediaSource = mediaSource
       @filters = filters
+      @preFilters = [] #These filters are meant to be executed before any user-defined filters
     end
 
+    def addPreFilter(filter)
+      @preFilters << filter
+    end
+    
+    def addPostFilter(filter)
+      @filters << filter
+    end
+    
     def outputAvsFile(outputFileName)
       begin
         avsFile = File.open(outputFileName, 'w')
 
         script = "x = #{@mediaSource}\n#{STANDARD_AVS_SCRIPT}"
 
+        @preFilters.each{|e|
+          script << "#{e}\n"
+        }
+        
         if @filters != nil then
           @filters.each{|e|
             script << "#{e}\n"

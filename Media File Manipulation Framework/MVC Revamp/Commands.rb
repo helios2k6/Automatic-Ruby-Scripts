@@ -10,14 +10,32 @@ require './TicketMaster'
 require './AudioEncoders'
 require './MediaContainerTools'
 require './ScreenMediators'
+require './Loggers'
 
 module Commands
 
   #General Commands
+  class PrintHelpCommand < SimpleCommand
+    def execute(note)
+      InputParser.printHelp
+    end
+  end
+  #Fail out commands
+  class ExitCommand < SimpleCommand
+    def execute(note)
+      case note.name
+      when Notifications::EXIT_SUCCESS
+        exit(0)
+      when Notifications::EXIT_FAILURE
+        exit(1)
+      end
+    end
+  end
   class FireExternalExecutionCommand < SimpleCommand
     #Exepect note.body = command
     def execute(note)
       facade = Facade.instance
+      facade.send_notification(Notifications::LOG_INFO, "Executing External Command #{note.body}")
       executorProxy = facade.retrieve_proxy(ProxyConstants::EXECUTOR_PROXY)
 
       executorProxy.submitCommand(note.body)
@@ -50,13 +68,14 @@ module Commands
         facade.send_notification(Notifications::RETRIEVE_MEDIA_FILES)
       else
         facade.send_notification(Notifications::LOG_ERROR, "Invalid Arguments Passed")
+        facade.send_notification(Notifications::PRINT_HELP)
         facade.send_notification(Notifications::EXIT_FAILURE)
       end
 
     end
 
     def isValidFiles(files)
-      if files != nil && files.is_a? Array && (files[0].casecmp(ValidInputConstants::ALL_FILES) == 0) then
+      if files != nil && files.is_a?(Array) && (files[0].casecmp(ValidInputConstants::ALL_FILES) == 0) then
         return true
       end
 
@@ -112,7 +131,7 @@ module Commands
 
     def processFile(file, blacklist)
       if MediaInfoTools.isAMediaFile(file) && !blacklist.include?(file) then
-        Facade.instance.send_notification(Notifications::LOG_INFO, "Adding file #{file}")
+        Facade.instance.send_notification(Notifications::LOG_INFO, "Adding File #{file}")
         mediaFile = MediaInfoTools.getMediaInfo(file)
 
         mediaFileProxy = Facade.instance.retrieve_proxy(ProxyConstants::MEDIA_FILE_PROXY)
@@ -153,23 +172,38 @@ module Commands
       #Generate command array
       case quality
       when ValidInputConstants::LOW_QUALITY
+
+        facade.send_notification(Notifications::LOG_INFO, "Using Low Quality Settings")
         encodingOptions << EncodingConstants::QUALITY_LOW
+
       when ValidInputConstants::MEDIUM_QUALITY
+
+        facade.send_notification(Notifications::LOG_INFO, "Using Medium Quality Settings")
         encodingOptions << EncodingConstants::QUALITY_MEDIUM
+
       when ValidInputConstants::HIGH_QUALITY
+
+        facade.send_notification(Notifications::LOG_INFO, "Using High Quality Settings")
         encodingOptions << EncodingConstants::QUALITY_HIGH
+
       when ValidInputConstants::EXTREME_QUALITY
+
+        facade.send_notification(Notifications::LOG_INFO, "Using Extreme Quality Settings")
         encodingOptions << EncodingConstants::QUALITY_EXTREME
+
       end
 
       case device
       when DeviceConstants::PS3_CONSTANT
+        facade.send_notification(Notifications::LOG_INFO, "Encoding for PS3")
         encodingOptions << EncodingConstants::PS3_COMPAT_ARGS
       when DeviceConstants::IPHONE4_CONSTANT
+        facade.send_notification(Notifications::LOG_INFO, "Encoding for iPhone 4")
         encodingOptions << EncodingConstants::IPHONE4_COMPAT_ARGS
       end
 
       mediaFileProxy.mediaFiles.each{|e|
+        facade.send_notification(Notifications::LOG_INFO, "Creating Encoding Job for #{e}")
         avsFile = AVSFile.new(e.file, avsCommands)
         encodingJob = EncodingJob.new(e, avsFile, generateDefaultOutputName(e.file), noMux, encodingOptions)
 
@@ -189,10 +223,11 @@ module Commands
   #Encoding Cycle Super-State
   class ExecuteAllEncodingJobsCommand < SimpleCommand
     def execute(note)
+
       facade = Facade.instance
       encodingJobProxy = facade.retrieve_proxy(ProxyConstants::ENCODING_JOBS_PROXY)
       ticketMasterProxy = facade.retrieve_proxy(ProxyConstants::TICKET_MASTER_PROXY)
-
+      facade.send_notification(Notifications::LOG_INFO, "Executing All Encoding Jobs")
       encodingJobProxy.encodingJobs.each{|e|
         Thread.new do
           ticketMasterProxy.getTicket
@@ -202,7 +237,7 @@ module Commands
           facade.send_notification(Notifications::ENCODE_FILE, e)
           facade.send_notification(Notifications::MULTIPLEX_FILE, e)
           facade.send_notification(Notifications::CLEANUP_FILES, e)
-          facade.send_notification(Notifications::EXECUTE_POST_ENCODING_COMMANDS, e)
+          #facade.send_notification(Notifications::EXECUTE_POST_ENCODING_COMMANDS, e) #Does nothing at the moment
           ticketMasterProxy.returnTicket
         end
       }
@@ -217,10 +252,8 @@ module Commands
       when TrackFormat::FLAC
         postCommand << :DECODE_FLAC
         postCommand << :ENCODE_AAC
-        break
       when TrackFormat::WAV
         postCommand << :ENCODE_AAC
-        break
       when TrackFormat::Vorbis
         postCommand << :DECODE_VORBIS
         postCommand << :ENCODE_AAC
@@ -230,14 +263,15 @@ module Commands
     end
 
     def execute(note)
+
       facade = Facade.instance
       encodingJob = note.body
       mediaFile = encodingJob.mediaFile
       encodingJobProxy = facade.retrieve_proxy(ProxyConstants::ENCODING_JOBS_PROXY)
-
+      tempFileProxy = facade.retrieve_proxy(ProxyConstants::TEMPORARY_FILES_PROXY)
       audioTrack = encodingJob.audioTrack
       postCommands = []
-
+      facade.send_notification(Notifications::LOG_INFO, "begin Extracting Audio Track for #{mediaFile}")
       if audioTrack != nil then
         #First see if there's a particular audio track the user wants us to extract
         postCommands = getPostJobsForAudioTrack(mediafile.getTrack(audioTrack))
@@ -248,20 +282,25 @@ module Commands
           mediaFile.tracks.each{|e|
             case e.trackFormat
             when TrackFormat::FLAC
+              facade.send_notification(Notifications::LOG_INFO, "Found FLAC Audio for #{mediaFile}")
               audioTrack = e.trackID
               postCommands = getPostJobsforAudioTrack(e)
               break
             when TrackFormat::WAV
+              facade.send_notification(Notifications::LOG_INFO, "Found WAV Audio for #{mediaFile}")
               audioTrack = e.trackID
               postCommands = getPostJobsforAudioTrack(e)
               break
             when TrackFormat::AAC
+              facade.send_notification(Notifications::LOG_INFO, "Found AAC Audio for #{mediaFile}")
               audioTrack = e.trackID
               break
             when TrackFormat::Vorbis
+              facade.send_notification(Notifications::LOG_INFO, "Found Vorbis Audio for #{mediaFile}")
               audioTrack = e.trackID
               postCommands = getPostJobsforAudioTrack(e)
             when TrackFormat::AC3
+              facade.send_notification(Notifications::LOG_INFO, "Found AC3 Audio for #{mediaFile}")
               audioTrack = e.trackID
             end
           }
@@ -270,6 +309,7 @@ module Commands
 
       if audioTrack != nil then #Make sure we actually got a track
         #Extract Track, whatever it is
+        facade.send_notification(Notifications::LOG_INFO, "Extracting Audio Track for #{mediaFile}")
         extractionCommand = ContainerTools.generateExtractTrackCommand(e, audioTrack)
 
         facade.send_notification(Notifications::EXECUTE_EXTERNAL_COMMAND, extractionCommand[0])
@@ -300,7 +340,7 @@ module Commands
 
         #Assign the AAC file to the EncodingJobProxy
         encodingJobProxy.addAudioTrackFile(encodingJob, previousFile)
-
+        tempFileProxy.addTemporaryFile(encodingJob, previousFile)
         #Done
       end
 
@@ -314,9 +354,9 @@ module Commands
       encodingJob = note.body
       mediaFile = encodingJob.mediaFile
       encodingJobProxy = facade.retrieve_proxy(ProxyConstants::ENCODING_JOBS_PROXY)
-
+      tempFileProxy = facade.retrieve_proxy(ProxyConstants::TEMPORARY_FILES_PROXY)
       subtitleTrack = encodingJob.subtitleTrack
-
+      facade.send_notification(Notifications::LOG_INFO, "Begin Extracting Subtitle Track for #{mediaFile}")
       if subtitleTrack == nil && mediafile.mediaContainerType == MediaContainers::MKV then
         #See if the user wants to extract a particular track. If they do, then
         #we don't have to cycle through the tracks
@@ -325,9 +365,11 @@ module Commands
         mediaFile.tracks.each{|e|
           case e.trackFormat
           when TrackFormat::ASS
+            facade.send_notification(Notifications::LOG_INFO, "Found ASS Track for #{mediaFile}")
             subtitleTrack = e.trackID
             break
           when TrackFormat::SSA, TrackFormat::UTF_EIGHT
+            facade.send_notification(Notifications::LOG_INFO, "Found #{e.trackFormat} Track for #{mediaFile}")
             subtitleTrack = e.trackID
           end
         }
@@ -335,53 +377,110 @@ module Commands
 
       if subtitleTrack != nil then
         #Check to see if the subtitle track actually was found
+        facade.send_notification(Notifications::LOG_INFO, "Extracting Subtitle Track")
         extractionCommand = ContainerTools.generateExtractTrackCommand(e, subtitleTrack)
-        
+
         facade.send_notification(Notifications::EXECUTE_EXTERNAL_COMMAND, extractionCommand[0])
-        
+
         encodingJobProxy.addSubtitleTrackFile(encodingJob, extractionCommand[1])
+        tempFileProxy.addTemporaryFile(encodingJob, extractionCommand[1])
       end
     end
   end
-  
+
   class GenerateAvisynthFileCommand < SimpleCommand
     def execute(note)
       facade = Facade.instance
       encodingJob = note.body
       mediaFile = encodingJob.mediaFile
       avsFile = encodingJob.avsFile
-      
+      tempFileProxy = facade.retrieve_proxy(ProxyConstants::TEMPORARY_FILES_PROXY)
+
       outputFile = mediafile.getBaseName << AVSFile::AVS_EXTENSION
-      
+      facade.send_notification(Notifications::LOG_INFO, "Begin Avisynth File Generation for #{mediafile}")
+      #Get subtitle track
+      encodingJobProxy = facade.retrieve_proxy(ProxyConstants::ENCODING_JOBS_PROXY)
+      subtitleTrack = encodingJobProxy.getSubtitleTrackFile(encodingJob)
+
+      if subtitleTrack != nil then
+        avsFile.addPreFilter(AvisynthFilterConstants::TEXTSUB_FILTER + "(\"#{subtitleTrack}\")")
+        facade.send_notification(Notifications::LOG_INFO, "Adding Textsub Prefilter for #{subtitleTrack}")
+      end
+
       avsFile.outputAvsFile(outputFile)
-      
+      facade.send_notification(Notifications::LOG_INFO, "Output Avisynth File for #{mediaFile}")
       facade.retrieve_proxy(ProxyConstants::AVISYNTH_FILE_PROXY).addAvisynthFile(encodingJob, outputFile)
+      tempFileProxy.addTemporaryFile(encodingJob, outputFile)
     end
   end
-  
+
   class EncodeFileCommand < SimpleCommand
     def execute(note)
       facade = Facade.instance
       encodingJob = note.body
-      mediafile = encodingJob.mediafile
-      
+      mediafile = encodingJob.mediaFile
+      tempFileProxy = facade.retrieve_proxy(ProxyConstants::TEMPORARY_FILES_PROXY)
+      facade.send_notification(Notifications::LOG_INFO, "Begin Encoding #{mediaFile}")
       #form command
       command = EncodingConstants::X264
       encodingJob.encodingOptions.each{|e|
         command << " " << e
       }
       avsFile = facade.retrieve_proxy(ProxyConstants::AVISYNTH_FILE_PROXY).getAvisynthFile(encodingJob)
-      
+
       command << " " << EncodingConstants::OUTPUT_ARG << " \"#{encodingJob.outputfile}\""<< " \"#{avsFile}\""
-      
+
       facade.send_notification(Notifications::EXECUTE_EXTERNAL_COMMAND, command)
-      
+
+      #add .ffindex file
+      tempFileProxy.addTemporaryFile(encodingJob, mediaFile.getBaseFileName + ".ffindex")
+
     end
   end
-  
+
   class MultiplexFileCommand < SimpleCommand
     def execute(note)
-      
+      facade = Facade.instance
+      encodingJob = note.body
+      encodedFileProxy = facade.retrieve_proxy(ProxyConstants::ENCODED_FILE_PROXY)
+      encodingJobsProxy = facade.retrieve_proxy(ProxyConstants::ENCODING_JOBS_PROXY)
+      facade.send_notification(Notifications::LOG_INFO, "Begin Multiplexing #{encodingJob.mediaFile}")
+      encodedByteFile = encodedFileProxy.getEncodedFile(encodingJob)
+      audioFile = encodingJobsProxy.getAudioTrackFile(encodingJob)
+
+      #Multiplex only if we're suppose to and if there's an audio file to multiplex. Otherwise
+      #skip multiplexing if there's only a raw 264 byte stream
+      if !encodingJob.noMux && encodedByteFile != nil && audioFile != nil then
+        facade.send_notification(Notifications::LOG_INFO, "Executing Multiplexing Commands for #{encodingJob.mediaFile}")
+        multiplexingCommands = []
+        multiplexingCommands << ContainerTools.generateMultiplexToMP4Command(encodedByteFile, encodingJob.outputFile)
+        multiplexingCommands << ContainerTools.generateMultiplexToMP4Command(audioFile, encodingJob.outputFile)
+
+        multiplexingCommands.each{|e|
+          facade.send_notification(Notifications::EXECUTE_EXTERNAL_COMMAND, e)
+        }
+
+        tempFileProxy = facade.retrieve_proxy(ProxyConstants::TEMPORARY_FILES_PROXY)
+
+
+      end
     end
   end
+
+  class CleanUpEncodingJobCommand < SimpleCommand
+
+    def execute(note)
+      facade = Facade.instance
+      encodingJob = note.body
+      facade.send_notification(Notifications::LOG_INFO, "Cleaning Up Files For #{encodingJob.mediaFile}")
+      tempFiles = facade.retrieve_proxy(ProxyConstants::TEMPORARY_FILES_PROXY).getTemporaryFiles(encodingJob)
+
+      tempFiles.each{|e|
+        facade.send_notification(Notifications::LOG_INFO, "Deleting File #{e}")
+        File.delete("\"#{e}\"")
+      }
+    end
+
+  end
+
 end

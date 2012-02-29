@@ -2,13 +2,24 @@ require 'PureMVC_Ruby'
 require './Constants'
 
 module InputModule
-  class InputConstants
+  class ValidInputConstants
+    ALL_FILES = "all"
+
+    LOW_QUALITY = "low"
+    MEDIUM_QUALITY = "medium"
+    HIGH_QUALITY = "high"
+    EXTREME_QUALITY = "extreme"
+
+    QUALITY_VECTOR = [LOW_QUALITY, MEDIUM_QUALITY, HIGH_QUALITY, EXTREME_QUALITY]
+  end
+  
+  class InputConstants    
     #Program Version
     VERSION = "2012.2.1"
     PROG_HELP_HEADER = 	"Auto Device Encoder #{VERSION}\nAuthor: Andrew Johnson\n\nUsage: ruby <this script> [options]\n\nOptions:\n\n"
 
     FILE_ARG = "--files"
-    FILE_ARG_HELP_STRING =	"\t#{FILE_ARG} <file 1>[ <file 2> <file 3>...]\n\t\tThe name(s) of the media files you want to encode\n\t\tAllowed to put \"#{ALL_FILES}\" to specify all media files in current dir\n\n"
+    FILE_ARG_HELP_STRING =	"\t#{FILE_ARG} <file 1>[ <file 2> <file 3>...]\n\t\tThe name(s) of the media files you want to encode\n\t\tAllowed to put \"#{ValidInputConstants::ALL_FILES}\" to specify all media files in current dir\n\n"
 
     #Special
     DEVICE_ARG = "--device"
@@ -54,23 +65,12 @@ module InputModule
 
     PROG_ARG_DEFAULTS_HASH = {
       BLACKLIST_ARG => [],
-      DEVICE_ARG => DeviceConstants::IPHONE4_CONSTANT,
-      QUALITY_ARG => ValidInputConstants::MEDIUM_QUALITY,
+      DEVICE_ARG => Constants.DeviceConstants::IPHONE4_CONSTANT,
+      QUALITY_ARG => Constants.ValidInputConstants::MEDIUM_QUALITY,
       AVS_ADD_ARG => [],
       NO_MUX_ARG => false,
       POST_ENCODING_ARG => []
     }
-  end
-
-  class ValidInputConstants
-    ALL_FILES = "all"
-
-    LOW_QUALITY = "low"
-    MEDIUM_QUALITY = "medium"
-    HIGH_QUALITY = "high"
-    EXTREME_QUALITY = "extreme"
-
-    QUALITY_VECTOR = [LOW_QUALITY, MEDIUM_QUALITY, HIGH_QUALITY, EXTREME_QUALITY]
   end
 
   class InputParser
@@ -134,11 +134,11 @@ module InputModule
     end
 
     def files
-     getItemOrDefault(InputConstants::FILE_ARG])
+     getItemOrDefault(InputConstants::FILE_ARG)
     end
 
     def avsCommands
-      getItemOrDefault(InputConstants::AVS_ADD_ARG])
+      getItemOrDefault(InputConstants::AVS_ADD_ARG)
     end
 
     def noMultiplex

@@ -2,7 +2,7 @@ require 'PureMVC_Ruby'
 require './Constants'
 module ScreenObjects
   class ScreenProxy < Proxy
-    def initialize(file)
+    def initialize
       super(ProxyConstants::SCREEN_PROXY)
       @screens = Array.new
       @screenHash = Hash.new

@@ -5,6 +5,8 @@ module Notifications
     LOG_INFO = "LOG_INFO"
     LOG_ERROR = "LOG_ERROR"
     
+    PRINT_HELP = "PRINT_HELP"
+    
 		UPDATE_SCREEN = "UPDATE_SCREEN" #Used to instruct the screen to refresh with some sort of message
 		EXECUTE_EXTERNAL_COMMAND = "EXECUTE_EXTERNAL_COMMAND" #Used to instruct the execution of a command
 		
