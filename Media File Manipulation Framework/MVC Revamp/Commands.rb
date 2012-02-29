@@ -9,8 +9,34 @@ require './MediaTaskObjects'
 require './TicketMaster'
 require './AudioEncoders'
 require './MediaContainerTools'
+require './ScreenMediators'
 
 module Commands
+
+  #General Commands
+  class FireExternalExecutionCommand < SimpleCommand
+    #Exepect note.body = command
+    def execute(note)
+      facade = Facade.instance
+      executorProxy = facade.retrieve_proxy(ProxyConstants::EXECUTOR_PROXY)
+
+      executorProxy.submitCommand(note.body)
+    end
+  end
+
+  class HandleExternalExecutionOutputCommand < SimpleCommand
+    def execute(note) #Expect note.body = [command, stdout]
+      facade = Facade.instance
+
+      note.body[1].each{|line|
+        facade.send_notification(Notifications::UPDATE_SCREEN, [ScreenCommand::PRINT_NEW_LINE, note.body[0], line])
+      }
+
+      facade.send_notification(Notifications::UPDATE_SCREEN, [ScreenCommand::KILL_SCREEN, note.body[0]])
+
+      facade.send_notification(Notifications::EXTERNAL_COMMAND_FINISHED_EXECUTING)#Doesn't do anything for now
+    end
+  end
 
   #Input Parsing State - Initialization is automatic, but we need to validate the program args
   class ValidateProgramArgsCommand < SimpleCommand
@@ -185,14 +211,36 @@ module Commands
   end
 
   class ExtractAudioTrackCommand < SimpleCommand
+    def getPostJobsForAudioTrack(track)
+      postCommand = []
+      case track.trackFormat
+      when TrackFormat::FLAC
+        postCommand << :DECODE_FLAC
+        postCommand << :ENCODE_AAC
+        break
+      when TrackFormat::WAV
+        postCommand << :ENCODE_AAC
+        break
+      when TrackFormat::Vorbis
+        postCommand << :DECODE_VORBIS
+        postCommand << :ENCODE_AAC
+      end
+      
+      return postCommand
+    end
+
     def execute(note)
       facade = Facade.instance
       encodingJob = note.body
       mediaFile = encodingJob.mediaFile
       encodingJobProxy = facade.retrieve_proxy(ProxyConstants::ENCODING_JOBS_PROXY)
 
-      audioTrack = -1
+      audioTrack = audioTrack = encodingJob.audioTrack
       postCommands = []
+
+      if audioTrack != nil then
+
+      end
 
       #Cycle through tracks to see if any of them are audio tracks
       case mediaFile.mediaContainerType
@@ -245,17 +293,22 @@ module Commands
             previousFile = postComm[1]
           when :DECODE_VORBIS
             #TODO: Decode stuff
+            postComm = OggDecoder.generateDecodeOggToWavCommand(previousFile)
+
+            facade.send_notification(Notifications::EXECUTE_EXTERNAL_COMMAND, postComm[0])
+
+            previousFile = postComm[1]
           when :ENCODE_AAC
             postComm = AacEncoder.generateEncodeWavToAacCommand(previousFile)
             facade.send_notification(Notifications::EXECUTE_EXTERNAL_COMMAND, postComm[0])
-            
+
             previousFile = postComm[1]
           end
         }
-        
+
         #Assign the AAC file to the EncodingJobProxy
         encodingJobProxy.addAudioTrackFile(encodingJob, previousFile)
-        
+
         #Done
       end
 
@@ -263,4 +316,9 @@ module Commands
 
   end
 
+  class ExtractSubtitleTrackCommand < SimpleCommand
+    def execute(note)
+
+    end
+  end
 end

@@ -16,6 +16,18 @@ module AudioEncoders
     end
   end
   
+  class OggDecoder
+    OGG_DECODER = "oggdec"
+    
+    OUTPUT_ARG = "-w"
+    
+    def self.generateDecodeOggToWavCommand(file)
+      outputFile = File.basename(file, File.extname(file)) << TrackFormat::EXTENSION_HASH[TrackFormat::WAV]
+      command = OGG_DECODER << " " << OUTPUT_ARG << " \"#{outputFile}\" \"#{file}\""
+      
+      return [command, outputFile]
+  end
+  
   class AacEncoder
     NERO_AAC = "neroAacEnc"
     

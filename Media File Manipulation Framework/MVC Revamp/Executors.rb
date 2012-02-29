@@ -19,7 +19,7 @@ module Executors
         executor.execute
         
         #Send Notification with stdout reference to execution
-        Facade.instance.sendNotification(Notifications::EXTERNAL_COMMAND_EXECUTED, executor.stdout)
+        Facade.instance.sendNotification(Notifications::EXTERNAL_COMMAND_EXECUTED, [command, executor.stdout])
       else
         Facade.instance.sendNotification(Notifications::EXTERNAL_COMMAND_NOT_EXECUTED)
       end
