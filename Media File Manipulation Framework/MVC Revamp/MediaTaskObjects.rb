@@ -84,30 +84,6 @@ module MediaTaskObjects
       return @temporaryFiles[encodingJob].compact
     end
   end
-  
-  class EncodingConstants
-    X264 = "x264.exe"
-
-    QUALITY_LOW = "--crf 24"
-
-    QUALITY_MEDIUM = "--crf 22 --subme 8"
-
-    QUALITY_HIGH = "--crf 20 --subme 9"
-
-    QUALITY_EXTREME = "--crf 18 --subme 10 --trellis 2"
-
-    PS3_COMPAT_ARGS = "--level 4.2 --profile high --aud --sar 1:1 --vbv-maxrate 31250 --vbv-bufsize 31250"
-    IPHONE4_COMPAT_ARGS = "--level 3.1 --profile main --sar 1:1"
-
-    DEVICE_COMPAT_HASH=[PS3_CONSTANT => PS3_COMPAT_ARGS, IPHONE4_CONSTANT => IPHONE4_COMPAT_ARGS]
-
-    DIAGNOSTIC_ARGS = "--psnr --ssim"
-    OPTIONAL_ENHANCEMENTS = "--non-deterministic"
-
-    OUTPUT_ARG = "--output"
-
-    ANIME_TUNE_ARGS = "--deblock 2:2 --psy-rd 0.3 --bframes 16 --b-pyramid none"
-  end
 
   class EncodingJob
     attr_accessor :mediaFile, :avsFile, :outputFile, :noMux, :encodingOptions, :audioTrack, :subtitleTrack, :postEncodingJobs, :tempFiles
@@ -136,16 +112,6 @@ module MediaTaskObjects
     end
   end
 
-  class AvisynthFilterConstants
-    FFINDEX = "ffindex"
-    DIRECTSHOW_SOURCE = "directShowSource"
-    FFVIDEO_SOURCE = "ffvideosource"
-    TEXTSUB_FILTER = "textsub"
-    GRADFUN_2_DB = "gradfun2db"
-    LANCZOS_RESIZE = "lanczosResize"
-    SPLINE_64_RESIZE = "spline64Resize"
-  end
-  
   class AVSFile
     attr_accessor :mediaSource, :preFilters, :filters
 

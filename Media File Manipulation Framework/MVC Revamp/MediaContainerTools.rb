@@ -2,12 +2,6 @@ require './MediaObjects'
 require './Executors'
 
 module MediaContainerTools	
-	class ExtractionToolsConstant
-		MKV_EXTRACT = "mkvextract.exe"
-		MKV_MERGE = "mkvmerge.exe"
-		MP4BOX = "mp4box.exe"
-	end
-	
 	class ContainerTools
 		MKV_EXTRACT_BASE_COMMAND = "\"#{ExtractionToolsConstant::MKV_EXTRACT}\" --ui-language en tracks"
 		MP4_EXTRACT_BASE_COMMAND = ""

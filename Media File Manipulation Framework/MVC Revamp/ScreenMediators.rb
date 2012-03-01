@@ -3,14 +3,6 @@ require './Constants'
 require './ScreenObject'
 
 module ScreenMediators
-  class ScreenCommand
-    PRINT_SAME_LINE = "PRINT_SAME_LINE"
-    PRINT_NEW_LINE = "PRINT_NEW_LINE"
-    KILL_SCREEN = "KILL_SCREEN" #this automatically gives us a new-line
-    
-    COMMAND_TO_CHARACTER_HASH = [PRINT_SAME_LINE => '\r', PRINT_NEW_LINE => '\n', KILL_SCREEN => '\n']
-  end
-
   class ScreenMediator < Mediator
     def initialize(file = $stdout)
       super(MediatorConstants::SCREEN_MEDIATOR)
