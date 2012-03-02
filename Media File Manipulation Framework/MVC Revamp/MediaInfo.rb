@@ -14,17 +14,17 @@ module MediaInfo
     ID_ELEMENT = "ID"
 
     def self.isAMediaFile(file)
-      MediaContainers::EXTENSION_HASH.has_key?(File.extname(file))
+      Constants::MediaContainers::EXTENSION_HASH.has_value?(File.extname(file))
     end
 
     def self.processElement(element, tracks)
       trackTypeS = element.attributes[TYPE_ELEMENT]
-      if TrackType::TRACK_TYPE_VECTOR.include?(trackTypeS) then
+      if Constants::TrackType::TRACK_TYPE_VECTOR.include?(trackTypeS) then
         formatS = element.elements[FORMAT_ELEMENT].get_text.to_s
         trackID = element.elements[ID_ELEMENT].get_text.to_s.to_i
 
-        if TrackFormat::TRACK_FORMAT_VECTOR.include?(formatS) then
-          newTrack = MediaTrack.new(trackTypeS, trackID, formatS)
+        if Constants::TrackFormat::TRACK_FORMAT_VECTOR.include?(formatS) then
+          newTrack = MediaObjects::MediaTrack.new(trackTypeS, trackID, formatS)
           tracks << newTrack
         end
       end
@@ -43,10 +43,10 @@ module MediaInfo
 
       rootInfo.elements.each{|e| processElement(e, tracks)}
 
-      mediaType = rootInfo.elements["track[@type='#{TrackType::GENERAL}']/Format"].get_text.to_s
+      mediaType = rootInfo.elements["track[@type='#{Constants::TrackType::GENERAL}']/Format"].get_text.to_s
 
-      if MediaContainers::CONTAINER_VECTOR.include?(mediaType) then
-        mediaFile = MediaFile.new(file, tracks, mediaType)
+      if Constants::MediaContainers::CONTAINER_VECTOR.include?(mediaType) then
+        mediaFile = MediaObjects::MediaFile.new(file, tracks, mediaType)
         return mediaFile
       end
 

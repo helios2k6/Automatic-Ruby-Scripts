@@ -4,10 +4,12 @@ require './Constants'
 module InputModule
   class InputParser
     def self.printHelp
+      puts
       puts Constants::InputConstants::PROG_HELP_HEADER
       Constants::InputConstants::PROG_ARG_HELP_HASH.each{ |key, value|
         puts value
       }
+      puts
     end
 
     def self.processArgs(argVector)
@@ -52,7 +54,7 @@ module InputModule
       item = @argHash[key]
       
       if item == nil then
-        item = Constants::InputConstants::PROG_ARGS_DEFAULTS_HASH[key]
+        item = Constants::InputConstants::PROG_ARG_DEFAULTS_HASH[key]
       end
       
       return item
@@ -87,7 +89,7 @@ module InputModule
     end
 
     def quality
-      getIndexElementOrNil(Constants::InputConstants::QUALITY_ARG, 0)
+      getItemOrDefault(Constants::InputConstants::QUALITY_ARG)
     end
 
     def postJobs

@@ -1,5 +1,6 @@
 require 'PureMVC_Ruby'
 require './Constants'
+require 'logger'
 
 module Loggers
   class LoggerProxy < Proxy
@@ -34,5 +35,10 @@ module Loggers
         loggerProxy.logError(note.body)
       end
     end
+    
+    def list_notification_interests
+      [Constants::Notifications::LOG_INFO, Constants::Notifications::LOG_ERROR]
+    end
+    
   end
 end

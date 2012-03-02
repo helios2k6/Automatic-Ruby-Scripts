@@ -1,6 +1,6 @@
 require 'PureMVC_Ruby'
 require './Constants'
-
+require './ScreenObjects'
 require './AudioEncoders'
 require './Commands'
 require './Executors'
@@ -8,59 +8,56 @@ require './InputModule'
 require './Loggers'
 require './MediaObjects'
 require './MediaTaskObjects'
-require './Notifications'
 require './ScreenMediators'
-require './ScreenObjects'
 require './TicketMaster'
 
 def main
   facade = Facade.instance
 	#Initialize All Proxies
-  facade.register_proxy(EncodingJobsProxy.new)
-  facade.register_proxy(LoggerProxy.new)
-  facade.register_proxy(ProgramArgsProxy.new(ARGV))
-  facade.register_proxy(ExecuteProxy.new)
-  facade.register_proxy(ScreenProxy.new)
-  facade.register_proxy(MediaFileProxy.new)
-  facade.register_proxy(TicketProxy.new(1))
-  facade.register_proxy(EncodedFileProxy.new)
-  facade.register_proxy(AvisynthFileProxy.new)
-  facade.register_proxy(TemporaryFilesProxy.new)
+  facade.register_proxy(MediaTaskObjects::EncodingJobsProxy.new)
+  facade.register_proxy(Loggers::LoggerProxy.new)
+  facade.register_proxy(InputModule::ProgramArgsProxy.new(ARGV))
+  facade.register_proxy(Executors::ExecutorProxy.new)
+  facade.register_proxy(ScreenObjects::ScreenProxy.new)
+  facade.register_proxy(MediaObjects::MediaFileProxy.new)
+  facade.register_proxy(TicketMaster::TicketProxy.new(1))
+  facade.register_proxy(MediaTaskObjects::EncodedFileProxy.new)
+  facade.register_proxy(MediaTaskObjects::AvisynthFileProxy.new)
+  facade.register_proxy(MediaTaskObjects::TemporaryFilesProxy.new)
 	  
 	#Initialize All Commands
-  facade.register_command(Notifications::Notifications::PRINT_HELP, PrintHelpCommand.new)
+  facade.register_command(Constants::Notifications::PRINT_HELP, Commands::PrintHelpCommand)
   
-  facade.register_command(Notifications::Notifications::EXECUTE_EXTERNAL_COMMAND, FireExternalExecutionCommand.new)
-  facade.register_command(Notifications::Notifications::EXTERNAL_COMMAND_EXECUTED, HandleExternalExecutionOutputCommand.new)
+  facade.register_command(Constants::Notifications::EXECUTE_EXTERNAL_COMMAND, Commands::FireExternalExecutionCommand)
+  facade.register_command(Constants::Notifications::EXTERNAL_COMMAND_EXECUTED, Commands::HandleExternalExecutionOutputCommand)
   
-  exitCommand = ExitCommand.new
-  facade.register_command(Notifications::EXIT_SUCCESS, exitCommand)
-  facade.register_command(Notifications::EXIT_FAILURE, exitCommand)
+  facade.register_command(Constants::Notifications::EXIT_SUCCESS, Commands::ExitCommand)
+  facade.register_command(Constants::Notifications::EXIT_FAILURE, Commands::ExitCommand)
   
-  facade.register_command(Notifications::VALIDATE_PROGRAM_ARGS, ValidateProgramArgsCommand.new)
+  facade.register_command(Constants::Notifications::VALIDATE_PROGRAM_ARGS, Commands::ValidateProgramArgsCommand)
   
-  facade.register_command(Notifications::RETRIEVE_MEDIA_FILES, RetrieveAllMediaFilesCommand.new)
-  facade.register_command(Notifications::GENERATE_ENCODING_JOBS, GenerateEncodingJobsCommand.new)
+  facade.register_command(Constants::Notifications::RETRIEVE_MEDIA_FILES, Commands::RetrieveAllMediaFilesCommand)
+  facade.register_command(Constants::Notifications::GENERATE_ENCODING_JOBS, Commands::GenerateEncodingJobsCommand)
   
-  facade.register_command(Notifications::EXECUTE_ALL_ENCODING_JOBS, ExecuteAllEncodingJobsCommand.new)
+  facade.register_command(Constants::Notifications::EXECUTE_ALL_ENCODING_JOBS, Commands::ExecuteAllEncodingJobsCommand)
   
-  facade.register_command(Notifications::EXTRACT_AUDIO_TRACK, ExtractAudioTrackCommand.new)
-  facade.register_command(Notifications::EXTRACT_SUBTITLE_TRACK, ExtractSubtitleTrackCommand.new)
+  facade.register_command(Constants::Notifications::EXTRACT_AUDIO_TRACK, Commands::ExtractAudioTrackCommand)
+  facade.register_command(Constants::Notifications::EXTRACT_SUBTITLE_TRACK, Commands::ExtractSubtitleTrackCommand)
   
-  facade.register_command(Notifications::GENERATE_AVISYNTH_FILE, GenerateAvisynthFileCommand.new)
+  facade.register_command(Constants::Notifications::GENERATE_AVISYNTH_FILE, Commands::GenerateAvisynthFileCommand)
   
-  facade.register_command(Notifications::ENCODE_FILE, EncodeFileCommand.new)
+  facade.register_command(Constants::Notifications::ENCODE_FILE, Commands::EncodeFileCommand)
   
-  facade.register_command(Notifications::MULTIPLEX_FILE, MultiplexFileCommand.new)
+  facade.register_command(Constants::Notifications::MULTIPLEX_FILE, Commands::MultiplexFileCommand)
   
-  facade.register_command(Notifications::CLEANUP_FILES, CleanUpEncodingJobCommand.new)
+  facade.register_command(Constants::Notifications::CLEANUP_FILES, Commands::CleanUpEncodingJobCommand)
   
   #Initialize the Mediator
-  facade.register_mediator(LoggerMediator.new)
-  facade.register_mediator(ScreenMediator.new)
+  facade.register_mediator(Loggers::LoggerMediator.new)
+  facade.register_mediator(ScreenMediators::ScreenMediator.new)
   
   #Fire off the very first command with a notification
-  facade.send_notification(Notifications::VALIDATE_PROGRAM_ARGS)
+  facade.send_notification(Constants::Notifications::VALIDATE_PROGRAM_ARGS)
 end
 
 main

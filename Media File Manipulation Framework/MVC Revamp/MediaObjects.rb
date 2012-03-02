@@ -6,7 +6,7 @@ module MediaObjects
     attr_accessor :mediaFiles
 
     def initialize
-      super(ProxyConstants::MEDIA_FILE_PROXY)
+      super(Constants::ProxyConstants::MEDIA_FILE_PROXY)
       @mediaFiles = Array.new
     end
 

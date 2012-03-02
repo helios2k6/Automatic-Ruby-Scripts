@@ -10,13 +10,14 @@ require './AudioEncoders'
 require './MediaContainerTools'
 require './ScreenMediators'
 require './Loggers'
+require './MediaInfo'
 
 module Commands
 
   #General Commands
   class PrintHelpCommand < SimpleCommand
     def execute(note)
-      InputParser.printHelp
+      InputModule::InputParser.printHelp
     end
   end
   #Fail out commands
@@ -82,7 +83,7 @@ module Commands
     end
 
     def isValidDevice(device)
-      if device != nil && Constants::DeviceConstants::DEVICE_VECTOR.includes?(device) then
+      if device != nil && Constants::DeviceConstants::DEVICE_VECTOR.include?(device) then
         return true
       end
       return false
@@ -129,9 +130,9 @@ module Commands
     end
 
     def processFile(file, blacklist)
-      if MediaInfoTools.isAMediaFile(file) && !blacklist.include?(file) then
+      if MediaInfo::MediaInfoTools.isAMediaFile(file) && !blacklist.include?(file) then
         Facade.instance.send_notification(Constants::Notifications::LOG_INFO, "Adding File #{file}")
-        mediaFile = MediaInfoTools.getMediaInfo(file)
+        mediaFile = MediaInfo::MediaInfoTools.getMediaInfo(file)
 
         mediaFileProxy = Facade.instance.retrieve_proxy(Constants::ProxyConstants::MEDIA_FILE_PROXY)
 
@@ -168,6 +169,8 @@ module Commands
       #Always have optional optimizations
       encodingOptions << Constants::EncodingConstants::OPTIONAL_ENHANCEMENTS
 
+      facade.send_notification(Constants::Notifications::LOG_INFO, "Generating Encoding Jobs")
+      
       #Generate command array
       case quality
       when Constants::ValidInputConstants::LOW_QUALITY
@@ -203,8 +206,8 @@ module Commands
 
       mediaFileProxy.mediaFiles.each{|e|
         facade.send_notification(Constants::Notifications::LOG_INFO, "Creating Encoding Job for #{e}")
-        avsFile = AVSFile.new(e.file, avsCommands)
-        encodingJob = EncodingJob.new(e, avsFile, generateDefaultOutputName(e.file), noMux, encodingOptions)
+        avsFile = MediaTaskObjects::AVSFile.new(e.file, avsCommands)
+        encodingJob = MediaTaskObjects::EncodingJob.new(e, avsFile, generateDefaultOutputName(e.file), noMux, encodingOptions)
 
         encodingJob.audioTrack = audioTrack
         encodingJob.subtitleTrack = subtitleTrack
@@ -212,6 +215,8 @@ module Commands
         encodingJobsProxy.addEncodingJob(encodingJob)
       }
 
+      facade.send_notification(Constants::Notifications::EXECUTE_ALL_ENCODING_JOBS)
+      
     end
 
     def generateDefaultOutputName(file)
@@ -248,12 +253,12 @@ module Commands
     def getPostJobsForAudioTrack(track)
       postCommand = []
       case track.trackFormat
-      when TrackFormat::FLAC
+      when Constants::TrackFormat::FLAC
         postCommand << :DECODE_FLAC
         postCommand << :ENCODE_AAC
-      when TrackFormat::WAV
+      when Constants::TrackFormat::WAV
         postCommand << :ENCODE_AAC
-      when TrackFormat::Vorbis
+      when Constants::TrackFormat::Vorbis
         postCommand << :DECODE_VORBIS
         postCommand << :ENCODE_AAC
       end
@@ -309,7 +314,7 @@ module Commands
       if audioTrack != nil then #Make sure we actually got a track
         #Extract Track, whatever it is
         facade.send_notification(Constants::Notifications::LOG_INFO, "Extracting Audio Track for #{mediaFile}")
-        extractionCommand = ContainerTools.generateExtractTrackCommand(e, audioTrack)
+        extractionCommand = MediaContainerTools::ContainerTools.generateExtractTrackCommand(e, audioTrack)
 
         facade.send_notification(Constants::Notifications::EXECUTE_EXTERNAL_COMMAND, extractionCommand[0])
 
@@ -318,19 +323,19 @@ module Commands
         postCommand.each{|comm|
           case comm
           when :DECODE_FLAC
-            postComm = FlacDecoder.generateDecodeFlacToWavCommand(previousFile)
+            postComm = AudioEncoders::FlacDecoder.generateDecodeFlacToWavCommand(previousFile)
 
             facade.send_notification(Constants::Notifications::EXECUTE_EXTERNAL_COMMAND, postComm[0])
 
             previousFile = postComm[1]
           when :DECODE_VORBIS
-            postComm = OggDecoder.generateDecodeOggToWavCommand(previousFile)
+            postComm = AudioEncoders::OggDecoder.generateDecodeOggToWavCommand(previousFile)
 
             facade.send_notification(Constants::Notifications::EXECUTE_EXTERNAL_COMMAND, postComm[0])
 
             previousFile = postComm[1]
           when :ENCODE_AAC
-            postComm = AacEncoder.generateEncodeWavToAacCommand(previousFile)
+            postComm = AudioEncoders::AacEncoder.generateEncodeWavToAacCommand(previousFile)
             facade.send_notification(Constants::Notifications::EXECUTE_EXTERNAL_COMMAND, postComm[0])
 
             previousFile = postComm[1]
@@ -377,7 +382,7 @@ module Commands
       if subtitleTrack != nil then
         #Check to see if the subtitle track actually was found
         facade.send_notification(Constants::Notifications::LOG_INFO, "Extracting Subtitle Track")
-        extractionCommand = ContainerTools.generateExtractTrackCommand(e, subtitleTrack)
+        extractionCommand = MediaContainerTools::ContainerTools.generateExtractTrackCommand(e, subtitleTrack)
 
         facade.send_notification(Constants::Notifications::EXECUTE_EXTERNAL_COMMAND, extractionCommand[0])
 
@@ -395,7 +400,7 @@ module Commands
       avsFile = encodingJob.avsFile
       tempFileProxy = facade.retrieve_proxy(Constants::ProxyConstants::TEMPORARY_FILES_PROXY)
 
-      outputFile = mediafile.getBaseName << AVSFile::AVS_EXTENSION
+      outputFile = mediafile.getBaseName << MediaTaskObjects::AVSFile::AVS_EXTENSION
       facade.send_notification(Constants::Notifications::LOG_INFO, "Begin Avisynth File Generation for #{mediafile}")
       #Get subtitle track
       encodingJobProxy = facade.retrieve_proxy(Constants::ProxyConstants::ENCODING_JOBS_PROXY)
@@ -452,8 +457,8 @@ module Commands
       if !encodingJob.noMux && encodedByteFile != nil && audioFile != nil then
         facade.send_notification(Constants::Notifications::LOG_INFO, "Executing Multiplexing Commands for #{encodingJob.mediaFile}")
         multiplexingCommands = []
-        multiplexingCommands << ContainerTools.generateMultiplexToMP4Command(encodedByteFile, encodingJob.outputFile)
-        multiplexingCommands << ContainerTools.generateMultiplexToMP4Command(audioFile, encodingJob.outputFile)
+        multiplexingCommands << MediaContainerTools::ContainerTools.generateMultiplexToMP4Command(encodedByteFile, encodingJob.outputFile)
+        multiplexingCommands << MediaContainerTools::ContainerTools.generateMultiplexToMP4Command(audioFile, encodingJob.outputFile)
 
         multiplexingCommands.each{|e|
           facade.send_notification(Constants::Notifications::EXECUTE_EXTERNAL_COMMAND, e)

@@ -5,8 +5,10 @@ require 'PureMVC_Ruby'
 module MediaTaskObjects
   attr_accessor :encodingJobs
   class EncodingJobsProxy < Proxy
-    def initialize
-      super(ProxyConstants::ENCODING_JOBS_PROXY)
+    attr_accessor :encodingJobs
+    
+    def initialize      
+      super(Constants::ProxyConstants::ENCODING_JOBS_PROXY)
       @encodingJobs = []
       @audioFileHash = Hash.new
       @subtitleFileHash = Hash.new
@@ -35,7 +37,7 @@ module MediaTaskObjects
   
   class AvisynthFileProxy < Proxy
     def initialize
-      super(ProxyConstants::AVISYNTH_FILE_PROXY)
+      super(Constants::ProxyConstants::AVISYNTH_FILE_PROXY)
       @avisynthFileHash = Hash.new
     end
     
@@ -50,7 +52,7 @@ module MediaTaskObjects
 
   class EncodedFileProxy < Proxy
     def initialize
-      super(ProxyConstants::ENCODED_FILE_PROXY)
+      super(Constants::ProxyConstants::ENCODED_FILE_PROXY)
       @encodedFileHash = Hash.new
     end
     
@@ -65,7 +67,7 @@ module MediaTaskObjects
 
   class TemporaryFilesProxy < Proxy
     def initialize 
-      super(ProxyConstants::TEMPORARY_FILES_PROXY)
+      super(Constants::ProxyConstants::TEMPORARY_FILES_PROXY)
       @temporaryFiles = Hash.new
     end
     

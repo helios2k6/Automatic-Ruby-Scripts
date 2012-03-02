@@ -4,7 +4,7 @@ require './Constants'
 module TicketMaster
   class TicketProxy < Proxy
     def initialize(maxTickets)
-      super(ProxyConstants::TICKET_MASTER_PROXY)
+      super(Constants::ProxyConstants::TICKET_MASTER_PROXY)
       @masterCounter = 0
       @maxTickets = maxTickets
       @tickets = Array.new

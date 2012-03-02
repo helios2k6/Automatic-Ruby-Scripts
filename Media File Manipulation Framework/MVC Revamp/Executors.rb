@@ -1,6 +1,5 @@
 require 'PureMVC_Ruby'
 require './Constants'
-require 'pty'
 
 module Executors
   class ExecutorProxy < Proxy
@@ -18,7 +17,7 @@ module Executors
         executor.execute
         
         #Send Notification with stdout reference to execution
-        Facade.instance.sendNotification(Constants::Notifications::EXTERNAL_COMMAND_EXECUTED, [command, executor.stdout])
+        Facade.instance.sendNotification(Constants::Notifications::EXTERNAL_COMMAND_EXECUTED, [command, executor.io])
       else
         Facade.instance.sendNotification(Constants::Notifications::EXTERNAL_COMMAND_NOT_EXECUTED)
       end
@@ -26,25 +25,15 @@ module Executors
   end
 
   class Executor
-    attr_accessor :callable, :stdin, :stdout, :pid, :isDone
+    attr_accessor :command, :io
 
-    def initialize(callable)
-      @callable = callable
-      @isDone = false
-      @stdin = nil
-      @stdout = nil
-      @pid = nil
+    def initialize(command)
+      @command = command
     end
 
     def execute
-      spawnedCommand = PTY.spawn(@callable.call)
-      @stdout = spawnedCommand[0]
-      @stdin = spawnedCommand[1]
-      @pid = spawnedCommand[2]
+      @io = IO.open(command)
     end
 
-    def isDone
-      return check(@pid) != nil
-    end
   end
 end

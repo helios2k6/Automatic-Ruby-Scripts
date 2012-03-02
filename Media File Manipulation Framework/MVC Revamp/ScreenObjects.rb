@@ -3,7 +3,7 @@ require './Constants'
 module ScreenObjects
   class ScreenProxy < Proxy
     def initialize
-      super(ProxyConstants::SCREEN_PROXY)
+      super(Constants::ProxyConstants::SCREEN_PROXY)
       @screens = Array.new
       @screenHash = Hash.new
       @mutex = Mutex.new
