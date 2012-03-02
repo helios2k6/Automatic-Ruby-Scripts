@@ -1,6 +1,6 @@
 require 'PureMVC_Ruby'
 require './Constants'
-require './Notifications'
+
 module Loggers
   class LoggerProxy < Proxy
     LOGGER = Logger.new(STDERR)
@@ -8,7 +8,7 @@ module Loggers
     LOGGER.formatter = proc {|severity, datetime, progname, msg| "#{severity}: #{msg}\n"}
 
     def initialize
-      super(ProxyConstants::LOGGER_PROXY)
+      super(Constants::ProxyConstants::LOGGER_PROXY)
     end
 
     def logInfo(msg)
@@ -22,15 +22,15 @@ module Loggers
 
   class LoggerMediator < Mediator
     def initialize
-      super(MediatorConstants::LOGGER_MEDIATOR)
+      super(Constants::MediatorConstants::LOGGER_MEDIATOR)
     end
 
     def handle_notification(note)
-      loggerProxy = Facade.instance.retrieve_proxy(ProxyConstants::LOGGER_PROXY)
+      loggerProxy = Facade.instance.retrieve_proxy(Constants::ProxyConstants::LOGGER_PROXY)
       case note.name
-      when Notifications::LOG_INFO
+      when Constants::Notifications::LOG_INFO
         loggerProxy.logInfo(note.body)
-      when Notifications::LOG_ERROR
+      when Constants::Notifications::LOG_ERROR
         loggerProxy.logError(note.body)
       end
     end

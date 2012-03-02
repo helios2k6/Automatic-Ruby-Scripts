@@ -1,5 +1,7 @@
 require "rexml/document"
 include REXML
+
+require './Constants'
 require './MediaObjects'
 
 module MediaInfo

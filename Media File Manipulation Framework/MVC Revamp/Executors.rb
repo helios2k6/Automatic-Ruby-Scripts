@@ -1,12 +1,11 @@
 require 'PureMVC_Ruby'
 require './Constants'
-require './Notifications'
 require 'pty'
 
 module Executors
   class ExecutorProxy < Proxy
     def initialize
-      super(ProxyConstants::EXECUTOR_PROXY)
+      super(Constants::ProxyConstants::EXECUTOR_PROXY)
       @executors = []
     end
 
@@ -19,9 +18,9 @@ module Executors
         executor.execute
         
         #Send Notification with stdout reference to execution
-        Facade.instance.sendNotification(Notifications::EXTERNAL_COMMAND_EXECUTED, [command, executor.stdout])
+        Facade.instance.sendNotification(Constants::Notifications::EXTERNAL_COMMAND_EXECUTED, [command, executor.stdout])
       else
-        Facade.instance.sendNotification(Notifications::EXTERNAL_COMMAND_NOT_EXECUTED)
+        Facade.instance.sendNotification(Constants::Notifications::EXTERNAL_COMMAND_NOT_EXECUTED)
       end
     end
   end

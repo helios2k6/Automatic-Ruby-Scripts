@@ -145,8 +145,8 @@ module Constants
 
     PROG_ARG_DEFAULTS_HASH = {
       BLACKLIST_ARG => [],
-      DEVICE_ARG => Constants.DeviceConstants::IPHONE4_CONSTANT,
-      QUALITY_ARG => Constants.ValidInputConstants::MEDIUM_QUALITY,
+      DEVICE_ARG => DeviceConstants::IPHONE4_CONSTANT,
+      QUALITY_ARG => ValidInputConstants::MEDIUM_QUALITY,
       AVS_ADD_ARG => [],
       NO_MUX_ARG => false,
       POST_ENCODING_ARG => []
@@ -188,7 +188,7 @@ module Constants
     VIDEO_FORMAT_VECTOR = [AVC, VC_ONE]
     SUBTITLE_FORMAT_VECTOR = [ASS, SSA, UTF_EIGHT]
     
-		EXTENSION_HASH = [AVC => ".264", AAC => ".aac", FLAC => ".flac", AC3 => ".ac3", VORBIS => ".ogg", ASS => ".ass", SSA => ".ssa", UTF_EIGHT => ".srt", WAV => ".wav"]
+		EXTENSION_HASH = {AVC => ".264", AAC => ".aac", FLAC => ".flac", AC3 => ".ac3", VORBIS => ".ogg", ASS => ".ass", SSA => ".ssa", UTF_EIGHT => ".srt", WAV => ".wav"}
 	end
 	
 	class MediaContainers
@@ -199,7 +199,7 @@ module Constants
     
 		CONTAINER_VECTOR = [MKV, MP4, AVI, WMV]
 		
-		EXTENSION_HASH = [MKV => ".mkv", MP4 => ".mp4", AVI => ".avi", WMV => ".wmv"]
+		EXTENSION_HASH = {MKV => ".mkv", MP4 => ".mp4", AVI => ".avi", WMV => ".wmv"}
 	end
   
    class EncodingConstants
@@ -216,7 +216,7 @@ module Constants
     PS3_COMPAT_ARGS = "--level 4.2 --profile high --aud --sar 1:1 --vbv-maxrate 31250 --vbv-bufsize 31250"
     IPHONE4_COMPAT_ARGS = "--level 3.1 --profile main --sar 1:1"
 
-    DEVICE_COMPAT_HASH=[PS3_CONSTANT => PS3_COMPAT_ARGS, IPHONE4_CONSTANT => IPHONE4_COMPAT_ARGS]
+    DEVICE_COMPAT_HASH= {DeviceConstants::PS3_CONSTANT => PS3_COMPAT_ARGS, DeviceConstants::IPHONE4_CONSTANT => IPHONE4_COMPAT_ARGS}
 
     DIAGNOSTIC_ARGS = "--psnr --ssim"
     OPTIONAL_ENHANCEMENTS = "--non-deterministic"
@@ -241,6 +241,6 @@ module Constants
     PRINT_NEW_LINE = "PRINT_NEW_LINE"
     KILL_SCREEN = "KILL_SCREEN" #this automatically gives us a new-line
     
-    COMMAND_TO_CHARACTER_HASH = [PRINT_SAME_LINE => '\r', PRINT_NEW_LINE => '\n', KILL_SCREEN => '\n']
+    COMMAND_TO_CHARACTER_HASH = {PRINT_SAME_LINE => '\r', PRINT_NEW_LINE => '\n', KILL_SCREEN => '\n'}
   end
 end

@@ -4,8 +4,8 @@ require './Constants'
 module InputModule
   class InputParser
     def self.printHelp
-      puts InputConstants::PROG_HELP_HEADER
-      InputConstants::PROG_ARG_HELP_HASH.each{ |key, value|
+      puts Constants::InputConstants::PROG_HELP_HEADER
+      Constants::InputConstants::PROG_ARG_HELP_HASH.each{ |key, value|
         puts value
       }
     end
@@ -15,7 +15,7 @@ module InputModule
       currentSwitch = nil
 
       for currentArg in argVector
-        if InputConstants::PROG_ARG_VECTOR.include?(currentArg) then
+        if Constants::InputConstants::PROG_ARG_VECTOR.include?(currentArg) then
           currentSwitch = currentArg
 
           if argCollector[currentArg] == nil then
@@ -52,46 +52,46 @@ module InputModule
       item = @argHash[key]
       
       if item == nil then
-        item = InputConstants::PROG_ARGS_DEFAULTS_HASH[key]
+        item = Constants::InputConstants::PROG_ARGS_DEFAULTS_HASH[key]
       end
       
       return item
     end
 
     def device
-      getIndexElementOrNil(InputConstants::DEVICE_ARG, 0)
+      getIndexElementOrNil(Constants::InputConstants::DEVICE_ARG, 0)
     end
 
     def files
-     getItemOrDefault(InputConstants::FILE_ARG)
+     getItemOrDefault(Constants::InputConstants::FILE_ARG)
     end
 
     def avsCommands
-      getItemOrDefault(InputConstants::AVS_ADD_ARG)
+      getItemOrDefault(Constants::InputConstants::AVS_ADD_ARG)
     end
 
     def noMultiplex
-     getItemOrDefault(InputConstants::NO_MUX_ARG)
+     getItemOrDefault(Constants::InputConstants::NO_MUX_ARG)
     end
 
     def audioTrack
-      getIndexElementOrNil(InputConstants::FORCE_AUDIO_TRACK, 0)
+      getIndexElementOrNil(Constants::InputConstants::FORCE_AUDIO_TRACK, 0)
     end
 
     def subtitleTrack
-      getIndexElementOrNil(InputConstants::FORCE_SUBTITLE_TRACK, 0)
+      getIndexElementOrNil(Constants::InputConstants::FORCE_SUBTITLE_TRACK, 0)
     end
 
     def blacklist
-     getItemOrDefault(InputConstants::BLACKLIST_ARG)
+     getItemOrDefault(Constants::InputConstants::BLACKLIST_ARG)
     end
 
     def quality
-      getIndexElementOrNil(InputConstants::QUALITY_ARG, 0)
+      getIndexElementOrNil(Constants::InputConstants::QUALITY_ARG, 0)
     end
 
     def postJobs
-      getItemOrDefault(InputConstants::POST_ENCODING_ARG)
+      getItemOrDefault(Constants::InputConstants::POST_ENCODING_ARG)
     end
   end
 
@@ -99,7 +99,7 @@ module InputModule
     attr_accessor :programArgs
 
     def initialize(argVector)
-      super(ProxyConstants::PROGRAM_ARGS_PROXY)
+      super(Constants::ProxyConstants::PROGRAM_ARGS_PROXY)
       @programArgs = ProgramArgs.new(argVector)
     end
   end

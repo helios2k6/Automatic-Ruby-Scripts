@@ -1,7 +1,8 @@
 require 'PureMVC_Ruby'
+require './Constants'
+
 require './AudioEncoders'
 require './Commands'
-require './Constants'
 require './Executors'
 require './InputModule'
 require './Loggers'
