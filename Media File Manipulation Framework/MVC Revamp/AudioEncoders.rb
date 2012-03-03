@@ -11,7 +11,7 @@ module AudioEncoders
 
     def self.generateDecodeFlacToWavCommand(file)
       outputFile = File.basename(file, File.extname(file)) << Constants::TrackFormat::EXTENSION_HASH[Constants::TrackFormat::WAV]
-      command = FLAC << " " << DECODING_ARG << " \"#{file}\" #{OUTPUT_ARG} \"#{outputFile}\""
+      command = FLAC + " " + DECODING_ARG + " \"#{file}\" #{OUTPUT_ARG} \"#{outputFile}\""
 
       return [command, outputFile]
     end
@@ -24,7 +24,7 @@ module AudioEncoders
 
     def self.generateDecodeOggToWavCommand(file)
       outputFile = File.basename(file, File.extname(file)) << Constants::TrackFormat::EXTENSION_HASH[Constants::TrackFormat::WAV]
-      command = OGG_DECODER << " " << OUTPUT_ARG << " \"#{outputFile}\" \"#{file}\""
+      command = OGG_DECODER + " " + OUTPUT_ARG + " \"#{outputFile}\" \"#{file}\""
 
       return [command, outputFile]
     end
@@ -40,7 +40,7 @@ module AudioEncoders
 
       def self.generateEncodeWavToAacCommand(file)
         outputFile = File.basename(file, File.extname(file)) << Constants::TrackFormat::EXTENSION_HASH[Constants::TrackFormat::AAC]
-        command = NERO_AAC << " " << ARG << " \"#{file}\" #{OUTPUT_ARG} \"#{outputFile}\""
+        command = NERO_AAC + " " + ARG + " \"#{file}\" #{OUTPUT_ARG} \"#{outputFile}\""
         return [command, outputFile]
       end
     end

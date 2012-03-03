@@ -17,22 +17,22 @@ module Executors
         executor.execute
         
         #Send Notification with stdout reference to execution
-        Facade.instance.sendNotification(Constants::Notifications::EXTERNAL_COMMAND_EXECUTED, [command, executor.io])
+        Facade.instance.send_notification(Constants::Notifications::EXTERNAL_COMMAND_EXECUTED, [command, executor.io])
       else
-        Facade.instance.sendNotification(Constants::Notifications::EXTERNAL_COMMAND_NOT_EXECUTED)
+        Facade.instance.send_notification(Constants::Notifications::EXTERNAL_COMMAND_NOT_EXECUTED)
       end
     end
   end
 
   class Executor
-    attr_accessor :command, :io
+    attr_accessor :command, :io, :pid
 
     def initialize(command)
       @command = command
     end
 
     def execute
-      @io = IO.open(command)
+      @io = IO.popen(command)
     end
 
   end

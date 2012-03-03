@@ -4,6 +4,7 @@ require 'PureMVC_Ruby'
 
 module MediaTaskObjects
   attr_accessor :encodingJobs
+  
   class EncodingJobsProxy < Proxy
     attr_accessor :encodingJobs
     
@@ -138,19 +139,19 @@ module MediaTaskObjects
       begin
         avsFile = File.open(outputFileName, 'w')
 
-        script = "x = #{@mediaSource}\n#{STANDARD_AVS_SCRIPT}"
+        script = "x = \"#{@mediaSource}\"\n#{STANDARD_AVS_SCRIPT}"
 
         @preFilters.each{|e|
-          script << "#{e}\n"
+          script = script + "#{e}\n"
         }
         
         if @filters != nil then
           @filters.each{|e|
-            script << "#{e}\n"
+            script = script + "#{e}\n"
           }
         end
 
-        avsFile.put(script)
+        avsFile.puts(script)
 
       rescue
         return false

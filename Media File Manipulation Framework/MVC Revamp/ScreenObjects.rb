@@ -35,7 +35,7 @@ module ScreenObjects
       @mutex.lock
       string = ""
       @screens.each{|e|
-        string << e.string << " | "
+        string = string + e.string + " | "
       }
       @mutex.unlock
       

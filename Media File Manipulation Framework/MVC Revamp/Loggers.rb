@@ -6,7 +6,7 @@ module Loggers
   class LoggerProxy < Proxy
     LOGGER = Logger.new(STDERR)
     LOGGER.level = Logger::INFO
-    LOGGER.formatter = proc {|severity, datetime, progname, msg| "#{severity}: #{msg}\n"}
+    LOGGER.formatter = proc {|severity, datetime, progname, msg| "\n#{severity}: #{msg}\n"}
 
     def initialize
       super(Constants::ProxyConstants::LOGGER_PROXY)

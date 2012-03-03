@@ -24,7 +24,7 @@ module MediaInfo
         trackID = element.elements[ID_ELEMENT].get_text.to_s.to_i
 
         if Constants::TrackFormat::TRACK_FORMAT_VECTOR.include?(formatS) then
-          newTrack = MediaObjects::MediaTrack.new(trackTypeS, trackID, formatS)
+          newTrack = MediaObjects::MediaTrack.new(trackID, trackTypeS, formatS)
           tracks << newTrack
         end
       end
@@ -34,7 +34,7 @@ module MediaInfo
       args = "--output=XML \"#{file}\""
 
       #Don't ask why we have to execute this command like this. It's the stupidest thing ever
-      xmlOutput = %x("#{@MEDIAINFO}" #{args})
+      xmlOutput = %x("#{MEDIAINFO}" #{args})
 
       document = Document.new(xmlOutput)
       rootInfo = document.elements["Mediainfo/File"]

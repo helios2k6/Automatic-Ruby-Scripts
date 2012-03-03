@@ -89,7 +89,12 @@ module InputModule
     end
 
     def quality
-      getItemOrDefault(Constants::InputConstants::QUALITY_ARG)
+      e = getIndexElementOrNil(Constants::InputConstants::QUALITY_ARG, 0)
+      if e == nil then
+        e = getItemOrDefault(Constants::InputConstants::QUALITY_ARG)
+      end
+      
+      return e
     end
 
     def postJobs

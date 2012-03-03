@@ -10,14 +10,14 @@ module MediaContainerTools
 		
 		def self.generateExtractTrackCommand(mediaFile, trackID)
 			extractedTrackFileName = nil
-			if mediaFile.is_a?(mediaFile) && Constants::MediaContainers::CONTAINER_VECTOR.include?(mediaFile.mediaContainerType) then
+			if mediaFile.is_a?(MediaObjects::MediaFile) && Constants::MediaContainers::CONTAINER_VECTOR.include?(mediaFile.mediaContainerType) then
 				extractedTrackFileName = mediaFile.getBaseName + Constants::TrackFormat::EXTENSION_HASH[mediaFile.getTrack(trackID).trackFormat]
 				command = ""
 				case mediaFile.mediaContainerType
 					when Constants::MediaContainers::MKV
-						command << MKV_EXTRACT_BASE_COMMAND << " \"#{mediaFile.file}\" #{trackID - INDEX_OFFSET}:\"#{extractedTrackFileName}\""
+						command = command + MKV_EXTRACT_BASE_COMMAND + " \"#{mediaFile.file}\" #{trackID - INDEX_OFFSET}:\"#{extractedTrackFileName}\""
 					when Constants::MediaContainers::MP4
-						command << MP4_EXTRACT_BASE_COMMAND << " -raw #{trackID} \"#{mediaFile.file}\" -out \"#{extractedTrackFileName}\""
+						command = command + MP4_EXTRACT_BASE_COMMAND + " -raw #{trackID} \"#{mediaFile.file}\" -out \"#{extractedTrackFileName}\""
 				end
 				
 				return [command, extractedTrackFileName]				
@@ -25,9 +25,7 @@ module MediaContainerTools
 		end
 		
 		def self.generateMultiplexToMP4Command(file, outputfile)
-			command = "#{Constants::ExtractionToolsConstant::MP4BOX} -add \"#{file}\" -out \"#{outputfile}\""
-			
-			return command
+			return "#{Constants::ExtractionToolsConstant::MP4BOX} -add \"#{file}\" \"#{outputfile}\""
 		end
 	end
 end

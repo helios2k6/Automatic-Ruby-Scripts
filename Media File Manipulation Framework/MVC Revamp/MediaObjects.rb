@@ -12,7 +12,7 @@ module MediaObjects
 
     def addMediaFile(mediaFile)
       if mediaFile.is_a? MediaFile then
-        @mediafiles << mediaFile
+        @mediaFiles << mediaFile
       end
     end
   end
