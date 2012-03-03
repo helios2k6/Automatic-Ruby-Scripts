@@ -38,9 +38,13 @@ module Commands
     def execute(note)
       facade = Facade.instance
       facade.send_notification(Constants::Notifications::LOG_INFO, "Executing External Command #{note.body}")
-      executorProxy = facade.retrieve_proxy(Constants::ProxyConstants::EXECUTOR_PROXY)
+	  
+	  #Skip these steps for now and directly execute the command
+      #executorProxy = facade.retrieve_proxy(Constants::ProxyConstants::EXECUTOR_PROXY)
 
-      executorProxy.submitCommand(note.body)
+      #executorProxy.submitCommand(note.body)
+	  
+	  system(note.body)
     end
   end
 
@@ -219,7 +223,7 @@ module Commands
       mediaFileProxy.mediaFiles.each{|e|
         facade.send_notification(Constants::Notifications::LOG_INFO, "Creating Encoding Job for #{e.file}")
         avsFile = MediaTaskObjects::AVSFile.new(e.file, avsCommands)
-        encodingJob = MediaTaskObjects::EncodingJob.new(e, avsFile, generateDefaultOutputName(e.file), noMux, encodingOptions)
+        encodingJob = MediaTaskObjects::EncodingJob.new(e, avsFile, generateDefaultOutputName(e.getBaseName), noMux, encodingOptions)
 
         encodingJob.audioTrack = audioTrack
         encodingJob.subtitleTrack = subtitleTrack
@@ -250,18 +254,24 @@ module Commands
 
       encodingJobProxy.encodingJobs.each{|e|
         threads << Thread.new do
-          ticketNumber = ticketMasterProxy.getTicket
-          facade.send_notification(Constants::Notifications::EXTRACT_AUDIO_TRACK, e)
-          facade.send_notification(Constants::Notifications::EXTRACT_SUBTITLE_TRACK, e)
-          facade.send_notification(Constants::Notifications::GENERATE_AVISYNTH_FILE, e)
-          facade.send_notification(Constants::Notifications::ENCODE_FILE, e)
-          facade.send_notification(Constants::Notifications::MULTIPLEX_FILE, e)
-          facade.send_notification(Constants::Notifications::CLEANUP_FILES, e)
-          #facade.send_notification(Constants::Notifications::EXECUTE_POST_ENCODING_COMMANDS, e) #Does nothing at the moment
-          ticketMasterProxy.returnTicket(ticketNumber)
-        end
+			ticketNumber = ticketMasterProxy.getTicket
+			begin
+				facade.send_notification(Constants::Notifications::EXTRACT_AUDIO_TRACK, e)
+				facade.send_notification(Constants::Notifications::EXTRACT_SUBTITLE_TRACK, e)
+				facade.send_notification(Constants::Notifications::GENERATE_AVISYNTH_FILE, e)
+				facade.send_notification(Constants::Notifications::ENCODE_FILE, e)
+				facade.send_notification(Constants::Notifications::MULTIPLEX_FILE, e)
+				facade.send_notification(Constants::Notifications::CLEANUP_FILES, e)
+			rescue
+				facade.send_notification(Constants::Notifications::LOG_ERROR, "Could not complete the encoding cycle due to the following error: #{$!}")
+			ensure
+				ticketMasterProxy.returnTicket(ticketNumber)
+			end
+		  #facade.send_notification(Constants::Notifications::EXECUTE_POST_ENCODING_COMMANDS, e) #Does nothing at the moment
+		end
       }
-
+	  
+	  #Join on threads
       threads.each{|t|
         t.join
       }
@@ -277,7 +287,7 @@ module Commands
         postCommand << :ENCODE_AAC
       when Constants::TrackFormat::WAV
         postCommand << :ENCODE_AAC
-      when Constants::TrackFormat::Vorbis
+      when Constants::TrackFormat::VORBIS
         postCommand << :DECODE_VORBIS
         postCommand << :ENCODE_AAC
       end
@@ -308,12 +318,12 @@ module Commands
             when Constants::TrackFormat::FLAC
               facade.send_notification(Constants::Notifications::LOG_INFO, "Found FLAC Audio for #{realFile}")
               audioTrack = e.trackID
-              postCommands = getPostJobsforAudioTrack(e)
+              postCommands = getPostJobsForAudioTrack(e)
               break
             when Constants::TrackFormat::WAV
               facade.send_notification(Constants::Notifications::LOG_INFO, "Found WAV Audio for #{realFile}")
               audioTrack = e.trackID
-              postCommands = getPostJobsforAudioTrack(e)
+              postCommands = getPostJobsForAudioTrack(e)
               break
             when Constants::TrackFormat::AAC
               facade.send_notification(Constants::Notifications::LOG_INFO, "Found AAC Audio for #{realFile}")
@@ -322,7 +332,7 @@ module Commands
             when Constants::TrackFormat::VORBIS
               facade.send_notification(Constants::Notifications::LOG_INFO, "Found Vorbis Audio for #{realFile}")
               audioTrack = e.trackID
-              postCommands = getPostJobsforAudioTrack(e)
+              postCommands = getPostJobsForAudioTrack(e)
             when Constants::TrackFormat::AC3
               facade.send_notification(Constants::Notifications::LOG_INFO, "Found AC3 Audio for #{realFile}")
               audioTrack = e.trackID
@@ -348,12 +358,14 @@ module Commands
             facade.send_notification(Constants::Notifications::EXECUTE_EXTERNAL_COMMAND, postComm[0])
 
             previousFile = postComm[1]
+			tempFileProxy.addTemporaryFile(encodingJob, previousFile)
           when :DECODE_VORBIS
             postComm = AudioEncoders::OggDecoder.generateDecodeOggToWavCommand(previousFile)
 
             facade.send_notification(Constants::Notifications::EXECUTE_EXTERNAL_COMMAND, postComm[0])
 
             previousFile = postComm[1]
+			tempFileProxy.addTemporaryFile(encodingJob, previousFile)
           when :ENCODE_AAC
             postComm = AudioEncoders::AacEncoder.generateEncodeWavToAacCommand(previousFile)
             facade.send_notification(Constants::Notifications::EXECUTE_EXTERNAL_COMMAND, postComm[0])

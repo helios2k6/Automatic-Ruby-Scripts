@@ -22,13 +22,14 @@ module AudioEncoders
 
     OUTPUT_ARG = "-w"
 
-    def self.generateDecodeOggToWavCommand(file)
-      outputFile = File.basename(file, File.extname(file)) << Constants::TrackFormat::EXTENSION_HASH[Constants::TrackFormat::WAV]
-      command = OGG_DECODER + " " + OUTPUT_ARG + " \"#{outputFile}\" \"#{file}\""
+		def self.generateDecodeOggToWavCommand(file)
+			outputFile = File.basename(file, File.extname(file)) << Constants::TrackFormat::EXTENSION_HASH[Constants::TrackFormat::WAV]
+			command = OGG_DECODER + " " + OUTPUT_ARG + " \"#{outputFile}\" \"#{file}\""
 
-      return [command, outputFile]
-    end
-
+			return [command, outputFile]
+		end
+	end
+	
     class AacEncoder
       NERO_AAC = "neroAacEnc"
 
@@ -44,5 +45,5 @@ module AudioEncoders
         return [command, outputFile]
       end
     end
-  end
+	
 end
