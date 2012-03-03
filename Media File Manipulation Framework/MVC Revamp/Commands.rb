@@ -184,7 +184,10 @@ module Commands
 
       #Always have optional optimizations
       encodingOptions << Constants::EncodingConstants::OPTIONAL_ENHANCEMENTS
-
+	  
+	  #Always have color matrix on
+	  encodingOptions << Constants::EncodingConstants::COLOR_MATRIX
+	  
       facade.send_notification(Constants::Notifications::LOG_INFO, "Generating Encoding Jobs")
 
       #Generate command array
@@ -354,18 +357,22 @@ module Commands
           case comm
           when :DECODE_FLAC
             postComm = AudioEncoders::FlacDecoder.generateDecodeFlacToWavCommand(previousFile)
-
+			
+			tempFileProxy.addTemporaryFile(encodingJob, previousFile) # Add Flac file
+			
             facade.send_notification(Constants::Notifications::EXECUTE_EXTERNAL_COMMAND, postComm[0])
 
             previousFile = postComm[1]
-			tempFileProxy.addTemporaryFile(encodingJob, previousFile)
+			tempFileProxy.addTemporaryFile(encodingJob, previousFile) # Add Wav File
           when :DECODE_VORBIS
             postComm = AudioEncoders::OggDecoder.generateDecodeOggToWavCommand(previousFile)
+			
+			tempFileProxy.addTemporaryFile(encodingJob, previousFile) # Add Vorbis file
 
             facade.send_notification(Constants::Notifications::EXECUTE_EXTERNAL_COMMAND, postComm[0])
 
             previousFile = postComm[1]
-			tempFileProxy.addTemporaryFile(encodingJob, previousFile)
+			tempFileProxy.addTemporaryFile(encodingJob, previousFile) # Add Wav File
           when :ENCODE_AAC
             postComm = AudioEncoders::AacEncoder.generateEncodeWavToAacCommand(previousFile)
             facade.send_notification(Constants::Notifications::EXECUTE_EXTERNAL_COMMAND, postComm[0])
@@ -376,7 +383,7 @@ module Commands
 
         #Assign the AAC file to the EncodingJobProxy
         encodingJobProxy.addAudioTrackFile(encodingJob, previousFile)
-        tempFileProxy.addTemporaryFile(encodingJob, previousFile)
+        tempFileProxy.addTemporaryFile(encodingJob, previousFile) #Add AAC file
         #Done
       end
 

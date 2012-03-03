@@ -205,6 +205,8 @@ module Constants
    class EncodingConstants
     X264 = "x264.exe"
 
+	COLOR_MATRIX = "--colormatrix bt709"
+	
     QUALITY_LOW = "--crf 24"
 
     QUALITY_MEDIUM = "--crf 22 --subme 8"
