@@ -56,7 +56,9 @@ module Commands
 			result = io.read(fixedLength, buffer)
 
 			while result != nil 
-				print buffer
+				#print buffer
+				facade.send_notification(Constants::Notifications::UPDATE_SCREEN, [Constants::ScreenCommand::PRINT_AS_IS, note.body[0], buffer])
+				
 				result = io.read(fixedLength, buffer)
 			end
 
@@ -67,7 +69,7 @@ module Commands
 		end
 	end
 
-#Input Parsing State - Initialization is automatic, but we need to validate the program args
+	#Input Parsing State - Initialization is automatic, but we need to validate the program args
 	class ValidateProgramArgsCommand < SimpleCommand
 		def execute(note)
 			facade = Facade.instance
@@ -75,18 +77,18 @@ module Commands
 			programArgs = facade.retrieve_proxy(Constants::ProxyConstants::PROGRAM_ARGS_PROXY).programArgs
 
 			if isValidFiles(programArgs.files) && isValidDevice(programArgs.device) && isValidQuality(programArgs.quality) then
-			facade.send_notification(Constants::Notifications::LOG_INFO, "Arguments Validated. Moving to Discovery State")
-			facade.send_notification(Constants::Notifications::RETRIEVE_MEDIA_FILES)
+				facade.send_notification(Constants::Notifications::LOG_INFO, "Arguments Validated. Moving to Discovery State")
+				facade.send_notification(Constants::Notifications::RETRIEVE_MEDIA_FILES)
 			else
-			facade.send_notification(Constants::Notifications::LOG_ERROR, "Invalid Arguments Passed")
-			facade.send_notification(Constants::Notifications::PRINT_HELP)
-			facade.send_notification(Constants::Notifications::EXIT_FAILURE)
+				facade.send_notification(Constants::Notifications::LOG_ERROR, "Invalid Arguments Passed")
+				facade.send_notification(Constants::Notifications::PRINT_HELP)
+				facade.send_notification(Constants::Notifications::EXIT_FAILURE)
 			end
 		end
 
 		def isValidFiles(files)
 			if files != nil && files.is_a?(Array) && files.size > 0 then
-			return true
+				return true
 			end
 
 			return false
@@ -94,14 +96,15 @@ module Commands
 
 		def isValidDevice(device)
 			if device != nil && Constants::DeviceConstants::DEVICE_VECTOR.include?(device) then
-			return true
+				return true
 			end
+			
 			return false
 		end
 
 		def isValidQuality(quality)      
 			if quality == nil || Constants::ValidInputConstants::QUALITY_VECTOR.include?(quality) then
-			return true
+				return true
 			end
 
 			return false
@@ -141,12 +144,12 @@ module Commands
 
 		def processFile(file, blacklist)
 			if MediaInfo::MediaInfoTools.isAMediaFile(file) && !blacklist.include?(file) then
-			Facade.instance.send_notification(Constants::Notifications::LOG_INFO, "Adding File #{file}")
-			mediaFile = MediaInfo::MediaInfoTools.getMediaInfo(file)
+				Facade.instance.send_notification(Constants::Notifications::LOG_INFO, "Adding File #{file}")
+				mediaFile = MediaInfo::MediaInfoTools.getMediaInfo(file)
 
-			mediaFileProxy = Facade.instance.retrieve_proxy(Constants::ProxyConstants::MEDIA_FILE_PROXY)
+				mediaFileProxy = Facade.instance.retrieve_proxy(Constants::ProxyConstants::MEDIA_FILE_PROXY)
 
-			mediaFileProxy.addMediaFile(mediaFile)
+				mediaFileProxy.addMediaFile(mediaFile)
 			end
 		end
 	end
@@ -187,20 +190,20 @@ module Commands
 			#Generate command array
 			case quality
 				when Constants::ValidInputConstants::LOW_QUALITY
-				facade.send_notification(Constants::Notifications::LOG_INFO, "Using Low Quality Settings")
-				encodingOptions << Constants::EncodingConstants::QUALITY_LOW
+					facade.send_notification(Constants::Notifications::LOG_INFO, "Using Low Quality Settings")
+					encodingOptions << Constants::EncodingConstants::QUALITY_LOW
 
 				when Constants::ValidInputConstants::MEDIUM_QUALITY
-				facade.send_notification(Constants::Notifications::LOG_INFO, "Using Medium Quality Settings")
-				encodingOptions << Constants::EncodingConstants::QUALITY_MEDIUM
+					facade.send_notification(Constants::Notifications::LOG_INFO, "Using Medium Quality Settings")
+					encodingOptions << Constants::EncodingConstants::QUALITY_MEDIUM
 
 				when Constants::ValidInputConstants::HIGH_QUALITY
-				facade.send_notification(Constants::Notifications::LOG_INFO, "Using High Quality Settings")
-				encodingOptions << Constants::EncodingConstants::QUALITY_HIGH
+					facade.send_notification(Constants::Notifications::LOG_INFO, "Using High Quality Settings")
+					encodingOptions << Constants::EncodingConstants::QUALITY_HIGH
 
 				when Constants::ValidInputConstants::EXTREME_QUALITY
-				facade.send_notification(Constants::Notifications::LOG_INFO, "Using Extreme Quality Settings")
-				encodingOptions << Constants::EncodingConstants::QUALITY_EXTREME
+					facade.send_notification(Constants::Notifications::LOG_INFO, "Using Extreme Quality Settings")
+					encodingOptions << Constants::EncodingConstants::QUALITY_EXTREME
 			end
 
 			case device
@@ -246,19 +249,13 @@ module Commands
 		encodingJobProxy.encodingJobs.each{|e|
 			threads << Thread.new do
 				ticketNumber = ticketMasterProxy.getTicket
-				begin
-					facade.send_notification(Constants::Notifications::EXTRACT_AUDIO_TRACK, e)
-					facade.send_notification(Constants::Notifications::EXTRACT_SUBTITLE_TRACK, e)
-					facade.send_notification(Constants::Notifications::GENERATE_AVISYNTH_FILE, e)
-					facade.send_notification(Constants::Notifications::ENCODE_FILE, e)
-					facade.send_notification(Constants::Notifications::MULTIPLEX_FILE, e)
-					facade.send_notification(Constants::Notifications::CLEANUP_FILES, e)
-				rescue
-					facade.send_notification(Constants::Notifications::LOG_ERROR, "Could not complete the encoding cycle due to the following error: #{$!}")
-				ensure
-					ticketMasterProxy.returnTicket(ticketNumber)
-				end
-				#facade.send_notification(Constants::Notifications::EXECUTE_POST_ENCODING_COMMANDS, e) #Does nothing at the moment
+				facade.send_notification(Constants::Notifications::EXTRACT_AUDIO_TRACK, e)
+				facade.send_notification(Constants::Notifications::EXTRACT_SUBTITLE_TRACK, e)
+				facade.send_notification(Constants::Notifications::GENERATE_AVISYNTH_FILE, e)
+				facade.send_notification(Constants::Notifications::ENCODE_FILE, e)
+				facade.send_notification(Constants::Notifications::MULTIPLEX_FILE, e)
+				facade.send_notification(Constants::Notifications::CLEANUP_FILES, e)
+				ticketMasterProxy.returnTicket(ticketNumber)
 			end
 		}
 

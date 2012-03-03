@@ -12,28 +12,23 @@ module ScreenMediators
 		#We assume that the body of this notification is formatted as follows
 		#[ScreenWriteType, key, message]
 		def handle_notification(note)
-			case note.name
-			when Constants::Notifications::UPDATE_SCREEN
-				#Bypass this stuff for now
-				if false then
-					screenProxy = Facade.instance.retrieve_proxy(Constants::ProxyConstants::SCREEN_PROXY)
-
-					if note.body[0] == Constants::ScreenCommand::KILL_SCREEN then
-						screenProxy.removeScreen(note.body[1])
-					else
-						screenProxy.addOrUpdateString(note.body[1], note.body[2])
-					end
-
-					screenString = Constants::ScreenCommand::COMMAND_TO_CHARACTER_HASH[note.body[0]] + screenProxy.resolveScreensToString
-
-					@file.print screenString
-				end
-
-				if note.body[2] != nil then
-					screenString =  Constants::ScreenCommand::COMMAND_TO_CHARACTER_HASH[note.body[0]] + note.body[2]
-					@file.print screenString
-				end
+			screenProxy = Facade.instance.retrieve_proxy(Constants::ProxyConstants::SCREEN_PROXY)
+			screenCommand = note.body[0]
+			screenKey = note.body[1]
+			screenMsg = note.body[2]
+			
+			case 
+			when Constants::ScreenCommand::SCREEN_COMMAND_VECTOR.include?(screenCommand)
+				screenProxy.addOrUpdateString(screenKey, screenMsg)
+				
+			when Constants::ScreenCommand::KILL_SCREEN
+				screenProxy.removeScreen(screenKey)
+				
 			end
+			
+			screenMsg = screenProxy.resolveScreensToString
+			
+			@file.print(screenMsg)
 		end
 
 		def list_notification_interests
