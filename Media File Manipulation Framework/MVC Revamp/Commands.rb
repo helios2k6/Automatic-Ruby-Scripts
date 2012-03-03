@@ -476,8 +476,10 @@ module Commands
 
 			facade.send_notification(Constants::Notifications::EXECUTE_EXTERNAL_COMMAND, command)
 
-			#Add file to encodedFileProxy proxy
-			encodedFileProxy.addEncodedFile(encodingJob, byteFile)
+			#Add file to encodedFileProxy proxy only if noMux = false
+			if !encodingJob.noMux then
+				encodedFileProxy.addEncodedFile(encodingJob, byteFile)
+			end
 
 			#add .ffindex file
 			tempFileProxy.addTemporaryFile(encodingJob, mediaFile.file + ".ffindex")

@@ -106,7 +106,7 @@ module Constants
 		DEVICE_ARG_HELP_STRING =	"\t#{DEVICE_ARG} <string>\n\t\tSpecifies the device to encode for\n\t\tValid inputs: ps3, iphone4\n\n"
 
 		QUALITY_ARG = "--quality"
-		QUALITY_ARG_HELP_STRING = "\t#{QUALITY_ARG} <string>\n\t\tSpecifies the quality level for the encode\n\t\tValid inputs: low, medium, high, extreme"
+		QUALITY_ARG_HELP_STRING = "\t#{QUALITY_ARG} <string>\n\t\tSpecifies the quality level for the encode\n\t\tValid inputs: low, medium, high, extreme\n"
 
 		AVS_ADD_ARG = "--avs-add"
 		AVS_ADD_ARG_HELP_STRING =	"\t#{AVS_ADD_ARG} <string 1>[ <string 2> <string 3>...]\n\t\tAdds extra lines into the avisynth file\n\n"
