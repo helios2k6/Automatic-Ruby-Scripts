@@ -75,12 +75,17 @@ module Commands
 			facade = Facade.instance
 			facade.send_notification(Constants::Notifications::LOG_INFO, "Validating Program Arguments")
 			programArgs = facade.retrieve_proxy(Constants::ProxyConstants::PROGRAM_ARGS_PROXY).programArgs
-
-			if isValidFiles(programArgs.files) && isValidDevice(programArgs.device) && isValidQuality(programArgs.quality) then
+			
+			validateFiles = isValidFiles(programArgs.files)
+			validateDevice = isValidDevice(programArgs.device)
+			validateQuality = isValidQuality(programArgs.quality)
+			
+			if  validateFiles &&  validateDevice && validateQuality then
 				facade.send_notification(Constants::Notifications::LOG_INFO, "Arguments Validated. Moving to Discovery State")
 				facade.send_notification(Constants::Notifications::RETRIEVE_MEDIA_FILES)
 			else
 				facade.send_notification(Constants::Notifications::LOG_ERROR, "Invalid Arguments Passed")
+				
 				facade.send_notification(Constants::Notifications::PRINT_HELP)
 				facade.send_notification(Constants::Notifications::EXIT_FAILURE)
 			end
@@ -90,7 +95,9 @@ module Commands
 			if files != nil && files.is_a?(Array) && files.size > 0 then
 				return true
 			end
-
+			
+			Facade.instance.send_notification(Constants::Notifications::LOG_ERROR, "No Files Passed")
+			
 			return false
 		end
 
@@ -98,7 +105,7 @@ module Commands
 			if device != nil && Constants::DeviceConstants::DEVICE_VECTOR.include?(device) then
 				return true
 			end
-			
+			Facade.instance.send_notification(Constants::Notifications::LOG_ERROR, "No Device or Unknown Device Passed (#{device})")
 			return false
 		end
 
@@ -106,7 +113,8 @@ module Commands
 			if quality == nil || Constants::ValidInputConstants::QUALITY_VECTOR.include?(quality) then
 				return true
 			end
-
+			
+			Facade.instance.send_notification(Constants::Notifications::LOG_ERROR, "Unknown Quality Passed (#{quality})")
 			return false
 		end
 	end
@@ -332,8 +340,9 @@ module Commands
 					}
 				end
 			end
-
-			if audioTrack != nil then #Make sure we actually got a track
+			
+			#Make sure we actually got a track and that we're not in "no-mux" mode
+			if audioTrack != nil && !encodingJob.noMux then 
 				#Extract Track, whatever it is
 				facade.send_notification(Constants::Notifications::LOG_INFO, "Extracting Track (Audio) ##{audioTrack} for #{realFile}")
 				extractionCommand = MediaContainerTools::ContainerTools.generateExtractTrackCommand(mediaFile, audioTrack)
@@ -373,7 +382,7 @@ module Commands
 				}
 					#Assign the AAC file to the EncodingJobProxy
 					encodingJobProxy.addAudioTrackFile(encodingJob, previousFile)
-					tempFileProxy.addTemporaryFile(encodingJob, previousFile) #Add AAC file
+					tempFileProxy.addTemporaryFile(encodingJob, previousFile) #Add AAC file to temp file proxy
 					#Done
 				end
 
@@ -478,12 +487,14 @@ module Commands
 
 			#Add file to encodedFileProxy proxy only if noMux = false
 			if !encodingJob.noMux then
-				encodedFileProxy.addEncodedFile(encodingJob, byteFile)
+				tempFileProxy.addTemporaryFile(encodingJob, byteFile)
 			end
-
+			
+			#Add the file to the encoded file proxy
+			encodedFileProxy.addEncodedFile(encodingJob, byteFile)
+			
 			#add .ffindex file
 			tempFileProxy.addTemporaryFile(encodingJob, mediaFile.file + ".ffindex")
-			tempFileProxy.addTemporaryFile(encodingJob, byteFile)
 		end
 	end
 
@@ -497,12 +508,10 @@ module Commands
 			encodedByteFile = encodedFileProxy.getEncodedFile(encodingJob)
 			audioFile = encodingJobsProxy.getAudioTrackFile(encodingJob)
 
-			facade.send_notification(Constants::Notifications::LOG_INFO, "Multiplexing files \"#{encodedByteFile}\" and \"#{audioFile}\" to form \"#{encodingJob.outputFile}\"")
-
 			#Multiplex only if we're suppose to and if there's an audio file to multiplex. Otherwise
 			#skip multiplexing if there's only a raw 264 byte stream
 			if !encodingJob.noMux && encodedByteFile != nil && audioFile != nil then
-				facade.send_notification(Constants::Notifications::LOG_INFO, "Executing Multiplexing Commands for #{encodingJob.outputFile}")
+				facade.send_notification(Constants::Notifications::LOG_INFO, "Multiplexing files \"#{encodedByteFile}\" and \"#{audioFile}\" to form \"#{encodingJob.outputFile}\"")
 				
 				multiplexingCommands = []
 				multiplexingCommands << MediaContainerTools::ContainerTools.generateMultiplexToMP4Command(encodedByteFile, encodingJob.outputFile)
