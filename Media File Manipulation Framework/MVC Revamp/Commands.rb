@@ -172,8 +172,8 @@ module Commands
 
 			#Retrieve encoding settings; defaults are already set and guaranteed to work
 			device = programArgsProxy.programArgs.device
-			audioTrack = programArgsProxy.programArgs.audioTrack
-			subtitleTrack = programArgsProxy.programArgs.subtitleTrack
+			audioTrackNumber = programArgsProxy.programArgs.audioTrack
+			subtitleTrackNumber = programArgsProxy.programArgs.subtitleTrack
 			quality = programArgsProxy.programArgs.quality
 			avsCommands = programArgsProxy.programArgs.avsCommands
 			postJobs = programArgsProxy.programArgs.postJobs
@@ -228,9 +228,14 @@ module Commands
 				facade.send_notification(Constants::Notifications::LOG_INFO, "Creating Encoding Job for #{e.file}")
 				avsFile = MediaTaskObjects::AVSFile.new(e.file, avsCommands)
 				encodingJob = MediaTaskObjects::EncodingJob.new(e, avsFile, generateDefaultOutputName(e.getBaseName), noMux, encodingOptions)
-
-				encodingJob.audioTrack = audioTrack
-				encodingJob.subtitleTrack = subtitleTrack
+				
+				if audioTrackNumber != nil then
+					encodingJob.audioTrack = e.getTrack(audioTrackNumber.to_i)
+				end
+				
+				if subtitleTrackNumber != nil then
+					encodingJob.subtitleTrack = e.getTrack(subtitleTrackNumber.to_i)
+				end
 
 				encodingJobsProxy.addEncodingJob(encodingJob)
 			}
@@ -303,7 +308,7 @@ module Commands
 			facade.send_notification(Constants::Notifications::LOG_INFO, "begin Extracting Audio Track for #{realFile}")
 			if audioTrack != nil then
 				#First see if there's a particular audio track the user wants us to extract
-				postCommands = getPostJobsForAudioTrack(mediafile.getTrack(audioTrack))
+				postCommands = getPostJobsForAudioTrack(mediaFile.getTrack(audioTrack))
 			else
 				#Otherwise, cycle through tracks to see if any of them are audio tracks
 				case mediaFile.mediaContainerType
