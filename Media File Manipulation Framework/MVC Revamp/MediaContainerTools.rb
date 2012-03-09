@@ -6,7 +6,7 @@ module MediaContainerTools
 		MKV_EXTRACT_BASE_COMMAND = "\"#{Constants::ExtractionToolsConstant::MKV_EXTRACT}\" --ui-language en tracks"
 		MP4_EXTRACT_BASE_COMMAND = ""
 		
-		INDEX_OFFSET = 1 #Due to the way that MKV indexes its tracks, we must subtract 1 from most things now. not sure why they decided to fuck everyone
+		INDEX_OFFSET = 1 #This is retarded
 		
 		def self.generateExtractTrackCommand(mediaFile, trackID)
 			extractedTrackFileName = nil

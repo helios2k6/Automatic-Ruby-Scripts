@@ -230,11 +230,11 @@ module Commands
 				encodingJob = MediaTaskObjects::EncodingJob.new(e, avsFile, generateDefaultOutputName(e.getBaseName), noMux, encodingOptions)
 				
 				if audioTrackNumber != nil then
-					encodingJob.audioTrack = e.getTrack(audioTrackNumber.to_i)
+					encodingJob.audioTrack = audioTrackNumber.to_i
 				end
 				
 				if subtitleTrackNumber != nil then
-					encodingJob.subtitleTrack = e.getTrack(subtitleTrackNumber.to_i)
+					encodingJob.subtitleTrack = subtitleTrackNumber.to_i
 				end
 
 				encodingJobsProxy.addEncodingJob(encodingJob)
