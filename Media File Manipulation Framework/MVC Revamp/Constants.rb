@@ -91,6 +91,8 @@ module Constants
 		EXTREME_QUALITY = "extreme"
 
 		QUALITY_VECTOR = [LOW_QUALITY, MEDIUM_QUALITY, HIGH_QUALITY, EXTREME_QUALITY]
+		
+		ARGUMENT_PREFIX = "--"
 	end
 
 	class InputConstants    
