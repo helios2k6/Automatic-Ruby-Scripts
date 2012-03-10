@@ -1,4 +1,12 @@
 module Constants
+	
+	class AudioExecutables
+		FLAC = "flac.exe"
+		OGG_DECODER = "oggdec.exe"
+		NERO_AAC = "neroAacEnc.exe"
+		FFMPEG = "ffmpeg.exe"
+	end
+
 	class ProxyConstants
 		ENCODING_JOBS_PROXY = "ENCODING_JOBS_PROXY"
 		LOGGER_PROXY = "LOGGER_PROXY"

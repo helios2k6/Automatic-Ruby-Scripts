@@ -288,8 +288,8 @@ module Commands
 					postCommand << :ENCODE_AAC
 				when Constants::TrackFormat::WAV
 					postCommand << :ENCODE_AAC
-				when Constants::TrackFormat::VORBIS
-					postCommand << :DECODE_VORBIS
+				else
+					postCommand << :DECODE_FFMPEG
 					postCommand << :ENCODE_AAC
 			end
 
@@ -305,7 +305,7 @@ module Commands
 			tempFileProxy = facade.retrieve_proxy(Constants::ProxyConstants::TEMPORARY_FILES_PROXY)
 			audioTrack = encodingJob.audioTrack
 			postCommands = []
-			facade.send_notification(Constants::Notifications::LOG_INFO, "begin Extracting Audio Track for #{realFile}")
+			facade.send_notification(Constants::Notifications::LOG_INFO, "Begin Extracting Audio Track for #{realFile}")
 			if audioTrack != nil then
 				#First see if there's a particular audio track the user wants us to extract
 				postCommands = getPostJobsForAudioTrack(mediaFile.getTrack(audioTrack))
@@ -314,33 +314,29 @@ module Commands
 				case mediaFile.mediaContainerType
 				when Constants::MediaContainers::MKV, Constants::MediaContainers::MP4
 					mediaFile.tracks.each{|e|
-						case e.trackFormat
-						when Constants::TrackFormat::FLAC
-							facade.send_notification(Constants::Notifications::LOG_INFO, "Found FLAC Audio for #{realFile}")
-							audioTrack = e.trackID
-							postCommands = getPostJobsForAudioTrack(e)
-							break
-						
-						when Constants::TrackFormat::WAV
-							facade.send_notification(Constants::Notifications::LOG_INFO, "Found WAV Audio for #{realFile}")
-							audioTrack = e.trackID
-							postCommands = getPostJobsForAudioTrack(e)
-							break
-							
-						when Constants::TrackFormat::AAC
-							facade.send_notification(Constants::Notifications::LOG_INFO, "Found AAC Audio for #{realFile}")
-							audioTrack = e.trackID
-							break
-							
-						when Constants::TrackFormat::VORBIS
-							facade.send_notification(Constants::Notifications::LOG_INFO, "Found Vorbis Audio for #{realFile}")
-							audioTrack = e.trackID
-							postCommands = getPostJobsForAudioTrack(e)
-							
-						when Constants::TrackFormat::AC3
-							facade.send_notification(Constants::Notifications::LOG_INFO, "Found AC3 Audio for #{realFile}")
-							audioTrack = e.trackID
-							
+						if e.trackType == Constants::TrackType::AUDIO then
+							case e.trackFormat
+								when Constants::TrackFormat::FLAC
+									facade.send_notification(Constants::Notifications::LOG_INFO, "Found FLAC Audio for #{realFile}")
+									audioTrack = e.trackID
+									postCommands = getPostJobsForAudioTrack(e)
+									break
+								
+								when Constants::TrackFormat::WAV
+									facade.send_notification(Constants::Notifications::LOG_INFO, "Found WAV Audio for #{realFile}")
+									audioTrack = e.trackID
+									postCommands = getPostJobsForAudioTrack(e)
+									break
+									
+								when Constants::TrackFormat::AAC
+									facade.send_notification(Constants::Notifications::LOG_INFO, "Found AAC Audio for #{realFile}")
+									audioTrack = e.trackID
+									break
+								else
+									facade.send_notification(Constants::Notifications::LOG_INFO, "Found #{e.trackFormat} Audio for #{realFile}")
+									audioTrack = e.trackID
+									postCommands = getPostJobsForAudioTrack(e)
+							end
 						end
 					}
 				end
@@ -368,13 +364,13 @@ module Commands
 						previousFile = postComm[1]
 						tempFileProxy.addTemporaryFile(encodingJob, previousFile) # Add Wav File
 						
-					when :DECODE_VORBIS
-						postComm = AudioEncoders::OggDecoder.generateDecodeOggToWavCommand(previousFile)
-
-						tempFileProxy.addTemporaryFile(encodingJob, previousFile) # Add Vorbis file
-
+					when :DECODE_FFMPEG
+						postComm = AudioEncoders::FFMpegDecoder.generateDecodeAudioToWav(previousFile)
+						
+						tempFileProxy.addTemporaryFile(encodingJob, previousFile) # Add generic audio file
+						
 						facade.send_notification(Constants::Notifications::EXECUTE_EXTERNAL_COMMAND, postComm[0])
-
+						
 						previousFile = postComm[1]
 						tempFileProxy.addTemporaryFile(encodingJob, previousFile) # Add Wav File
 						
@@ -385,13 +381,12 @@ module Commands
 						previousFile = postComm[1]
 					end
 				}
-					#Assign the AAC file to the EncodingJobProxy
-					encodingJobProxy.addAudioTrackFile(encodingJob, previousFile)
-					tempFileProxy.addTemporaryFile(encodingJob, previousFile) #Add AAC file to temp file proxy
-					#Done
-				end
-
+				
+				#Assign the AAC file to the EncodingJobProxy
+				encodingJobProxy.addAudioTrackFile(encodingJob, previousFile)
+				tempFileProxy.addTemporaryFile(encodingJob, previousFile) #Add AAC file to temp file proxy
 			end
+		end
 	end
 
 	class ExtractSubtitleTrackCommand < SimpleCommand

@@ -27,7 +27,7 @@ module InputModule
 						argCollector[currentArg] = Array.new
 					end
 				
-				elsif currentArg[0,2] == Constants::ValidInputConstantsARGUMENT_PREFIX then
+				elsif currentArg[0,2] == Constants::ValidInputConstants::ARGUMENT_PREFIX then
 					#We know this is an invalid argument since we failed the previous if statement
 					invalidArgs << currentArg
 				else
