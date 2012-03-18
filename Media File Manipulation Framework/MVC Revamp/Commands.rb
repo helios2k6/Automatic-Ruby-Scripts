@@ -102,10 +102,15 @@ module Commands
 		end
 
 		def isValidDevice(device)
-			if device != nil && Constants::DeviceConstants::DEVICE_VECTOR.include?(device) then
+			if device.is_a?(Array) then
+				device.each{|i|
+					if !Constants::DeviceConstants::DEVICE_VECTOR.include?(i) then
+						Facade.instance.send_notification(Constants::Notifications::LOG_ERROR, "Unknown Device Passed (#{i})")
+						return false
+					end
+				}
 				return true
 			end
-			Facade.instance.send_notification(Constants::Notifications::LOG_ERROR, "No Device or Unknown Device Passed (#{device})")
 			return false
 		end
 
@@ -126,11 +131,6 @@ module Commands
 			mediaFileProxy = facade.retrieve_proxy(Constants::ProxyConstants::PROGRAM_ARGS_PROXY)
 			files = mediaFileProxy.programArgs.files
 			blacklist = mediaFileProxy.programArgs.blacklist
-
-			#Quick check
-			if blacklist == nil then
-				blacklist = []
-			end
 
 			facade.send_notification(Constants::Notifications::LOG_INFO, "Gathering Media Files")
 
@@ -180,49 +180,43 @@ module Commands
 			noMux = programArgsProxy.programArgs.noMultiplex
 
 			facade.send_notification(Constants::Notifications::LOG_INFO, "Generating Encoding Jobs")
-
-			#Generate command array
-			encodingOptions = Constants::EncodingConstants.STANDARD_ENCODING_PREFIX
 			
-			#Determine quality
-			if Constants::ValidInputConstants::QUALITY_VECTOR.include?(quality) then
+			#Cycle through each device
+			device.each{|d|
+				#Generate command array
+				encodingOptions = Constants::EncodingConstants.STANDARD_ENCODING_PREFIX
+				
+				#Determine quality
 				encodingOptions << Constants::EncodingConstants::ENCODING_QUALITY_HASH[quality]
-			else
-				facade.send_notification(Constants::Notifications::LOG_ERROR, "Unknown quality #{quality}. Aborting")
-				facade.send_notification(Constants::Notifications::EXIT_FAILURE)
-			end
-			
-			#Abstract way to get device args
-			if Constants::DeviceConstants::DEVICE_VECTOR.include?(device) then
-				facade.send_notification(Constants::Notifications::LOG_INFO, "Encoding for #{device}")
-				encodingOptions << Constants::EncodingConstants::DEVICE_COMPAT_HASH[device]
-			else
-				facade.send_notification(Constants::Notifications::LOG_ERROR, "Unknown device #{device}. Aborting")
-				facade.send_notification(Constants::Notifications::EXIT_FAILURE)
-			end
-
-			mediaFileProxy.mediaFiles.each{|e|
-				facade.send_notification(Constants::Notifications::LOG_INFO, "Creating Encoding Job for #{e.file}")
-				avsFile = MediaTaskObjects::AVSFile.new(e.file, avsCommands)
-				encodingJob = MediaTaskObjects::EncodingJob.new(e, avsFile, generateDefaultOutputName(e.getBaseName), noMux, encodingOptions)
 				
-				if audioTrackNumber != nil then
-					encodingJob.audioTrack = audioTrackNumber.to_i
-				end
+				#Abstract way to get device args			
+				encodingOptions << Constants::EncodingConstants::DEVICE_COMPAT_HASH[d]
 				
-				if subtitleTrackNumber != nil then
-					encodingJob.subtitleTrack = subtitleTrackNumber.to_i
-				end
+				#Go through each media file
+				mediaFileProxy.mediaFiles.each{|e|
+					outputName = generateDefaultOutputName(e.getBaseName, d)
+					facade.send_notification(Constants::Notifications::LOG_INFO, "Creating Encoding Job for #{e.file} for #{d} at #{quality} quality. Output file: #{outputName}")
+					avsFile = MediaTaskObjects::AVSFile.new(e.file, avsCommands)
+					encodingJob = MediaTaskObjects::EncodingJob.new(e, avsFile, outputName, noMux, encodingOptions)
+					
+					if audioTrackNumber != nil then
+						encodingJob.audioTrack = audioTrackNumber.to_i
+					end
+					
+					if subtitleTrackNumber != nil then
+						encodingJob.subtitleTrack = subtitleTrackNumber.to_i
+					end
 
-				encodingJobsProxy.addEncodingJob(encodingJob)
+					encodingJobsProxy.addEncodingJob(encodingJob)
+				}
 			}
-
+			
 			facade.send_notification(Constants::Notifications::EXECUTE_ALL_ENCODING_JOBS)
 
 		end
 
-		def generateDefaultOutputName(file)
-			return file + "_ADE.mp4"
+		def generateDefaultOutputName(file, device)
+			return file + Constants::DeviceConstants::DEFAULT_NAME_BY_DEVICE[device] + ".mp4"
 		end
 	end
 

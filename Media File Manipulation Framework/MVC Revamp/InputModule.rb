@@ -45,78 +45,38 @@ module InputModule
 	end
 
 	class ProgramArgs
-	def initialize(argVector)	
-		@argHash = InputParser.processArgs(argVector)
-	end
-
-	#Used just in case the user ever enters in a switch without any arguements "--avs-add --no-mux..."
-	def getIndexElementOrNil(key, index)
-		e = @argHash[key]
-		if e != nil && e.is_a?(Array) && e[index] != nil then
-			return e[index]
-		end
-
-		return nil
-	end
-
-	def getItemOrDefault(key)
-		item = @argHash[key]
-
-		if item == nil then
-			item = Constants::InputConstants::PROG_ARG_DEFAULTS_HASH[key]
-		end
-
-		return item
-	end
-
-	def device
-		getIndexElementOrNil(Constants::InputConstants::DEVICE_ARG, 0)
-	end
-
-	def files
-		getItemOrDefault(Constants::InputConstants::FILE_ARG)
-	end
-
-	def avsCommands
-		getItemOrDefault(Constants::InputConstants::AVS_ADD_ARG)
-	end
-
-	def noMultiplex
-		getItemOrDefault(Constants::InputConstants::NO_MUX_ARG)
-	end
-
-	def audioTrack
-		getIndexElementOrNil(Constants::InputConstants::FORCE_AUDIO_TRACK, 0)
-	end
-
-	def subtitleTrack
-		getIndexElementOrNil(Constants::InputConstants::FORCE_SUBTITLE_TRACK, 0)
-	end
-
-	def blacklist
-		getItemOrDefault(Constants::InputConstants::BLACKLIST_ARG)
-	end
-
-	def quality
-		e = getIndexElementOrNil(Constants::InputConstants::QUALITY_ARG, 0)
-		if e == nil then
-			e = getItemOrDefault(Constants::InputConstants::QUALITY_ARG)
-		end
-
-		return e
-	end
-
-	def postJobs
-		getItemOrDefault(Constants::InputConstants::POST_ENCODING_ARG)
+		attr_accessor :device, :files, :avsCommands, :noMultiplex, :audioTrack, :subtitleTrack, :blacklist, :quality, :postJobs
+		def initialize(argVector)	
+			argHash = InputParser.processArgs(argVector)
+			
+			#List based arguments
+			@device = argHash[Constants::InputConstants::DEVICE_ARG]
+			@files = argHash[Constants::InputConstants::FILE_ARG]
+			@avsCommands = argHash[Constants::InputConstants::AVS_ADD_ARG] || []
+			@blacklist = argHash[Constants::InputConstants::BLACKLIST_ARG] || []
+			@postJobs = argHash[Constants::InputConstants::POST_ENCODING_ARG] || []
+			
+			#Flag based arguments
+			@noMultiplex = argHash[Constants::InputConstants::NO_MUX_ARG] == nil ? false : true #Confusing. Here's what this means: If the noMultiplex flag exists, then return true; otherwise false
+			
+			#Single item arguments
+			audioTrackItem = argHash[Constants::InputConstants::FORCE_AUDIO_TRACK] 
+			@audioTrack = (audioTrackItem != nil && audioTrackItem[0]) || audioTrackItem
+			
+			subtitleTrackItem = argHash[Constants::InputConstants::FORCE_SUBTITLE_TRACK]
+			@subtitleTrack = (subtitleTrackItem != nil && subtitleTrackItem[0]) || subtitleTrackItem
+			
+			qualityItem = argHash[Constants::InputConstants::QUALITY_ARG]
+			@quality = (qualityItem != nil && qualityItem[0]) || Constants::ValidInputConstants::MEDIUM_QUALITY
 		end
 	end
 
 	class ProgramArgsProxy < Proxy
-	attr_accessor :programArgs
+		attr_accessor :programArgs
 
-	def initialize(argVector)
-		super(Constants::ProxyConstants::PROGRAM_ARGS_PROXY)
-		@programArgs = ProgramArgs.new(argVector)
+		def initialize(argVector)
+			super(Constants::ProxyConstants::PROGRAM_ARGS_PROXY)
+			@programArgs = ProgramArgs.new(argVector)
 		end
 	end
 end

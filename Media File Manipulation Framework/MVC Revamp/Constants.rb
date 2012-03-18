@@ -31,6 +31,8 @@ module Constants
 		IPAD_3_CONSTANT = "ipad3"
 
 		DEVICE_VECTOR = [PS3_CONSTANT, IPHONE4_CONSTANT, IPAD_3_CONSTANT]
+		
+		DEFAULT_NAME_BY_DEVICE = {PS3_CONSTANT => "_PS3", IPHONE4_CONSTANT => "_iPhone4", IPAD_3_CONSTANT => "_iPad3"}
 	end
 
 	class Notifications
@@ -153,15 +155,6 @@ module Constants
 			FORCE_SUBTITLE_TRACK => FORCE_SUBTITLE_TRACK_HELP_STRING,
 			POST_ENCODING_ARG => POST_ENCODING_ARG_HELP_STRING
 		}
-
-		PROG_ARG_DEFAULTS_HASH = {
-			BLACKLIST_ARG => [],
-			DEVICE_ARG => DeviceConstants::IPHONE4_CONSTANT,
-			QUALITY_ARG => ValidInputConstants::MEDIUM_QUALITY,
-			AVS_ADD_ARG => [],
-			NO_MUX_ARG => false,
-			POST_ENCODING_ARG => []
-		}
 	end
 
 	class ExtractionToolsConstant
@@ -240,7 +233,7 @@ module Constants
 		
 		OUTPUT_ARG = "--output"
 		
-		def self.STANDARD_ENCODING_PREFIX
+		def self.STANDARD_ENCODING_PREFIX #Have to return a brandnew array each time
 			return [COLOR_MATRIX, ANIME_TUNE_ARGS, DIAGNOSTIC_ARGS, OPTIONAL_ENHANCEMENTS]
 		end
 		
