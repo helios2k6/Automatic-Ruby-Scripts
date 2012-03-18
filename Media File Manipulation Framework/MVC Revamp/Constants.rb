@@ -28,8 +28,9 @@ module Constants
 	class DeviceConstants
 		PS3_CONSTANT = "ps3"
 		IPHONE4_CONSTANT = "iphone4"
+		IPAD_3_CONSTANT = "ipad3"
 
-		DEVICE_VECTOR = [PS3_CONSTANT, IPHONE4_CONSTANT]
+		DEVICE_VECTOR = [PS3_CONSTANT, IPHONE4_CONSTANT, IPAD_3_CONSTANT]
 	end
 
 	class Notifications
@@ -113,7 +114,7 @@ module Constants
 
 		#Special
 		DEVICE_ARG = "--device"
-		DEVICE_ARG_HELP_STRING =	"\t#{DEVICE_ARG} <string>\n\t\tSpecifies the device to encode for\n\t\tValid inputs: ps3, iphone4\n\n"
+		DEVICE_ARG_HELP_STRING =	"\t#{DEVICE_ARG} <string>\n\t\tSpecifies the device to encode for\n\t\tValid inputs: ps3, iphone4, ipad3\n\n"
 
 		QUALITY_ARG = "--quality"
 		QUALITY_ARG_HELP_STRING = "\t#{QUALITY_ARG} <string>\n\t\tSpecifies the quality level for the encode\n\t\tValid inputs: low, medium, high, extreme\n\n"
@@ -217,6 +218,12 @@ module Constants
 
 		COLOR_MATRIX = "--colormatrix bt709"
 
+		ANIME_TUNE_ARGS = "--deblock 2:2 --psy-rd 0.3 --bframes 16 --b-pyramid none"
+		
+		DIAGNOSTIC_ARGS = "--psnr --ssim"
+		
+		OPTIONAL_ENHANCEMENTS = "--non-deterministic"
+		
 		QUALITY_LOW = "--crf 24"
 
 		QUALITY_MEDIUM = "--crf 22 --subme 8"
@@ -226,16 +233,27 @@ module Constants
 		QUALITY_EXTREME = "--crf 18 --subme 10 --trellis 2"
 
 		PS3_COMPAT_ARGS = "--level 4.2 --profile high --aud --sar 1:1 --vbv-maxrate 31250 --vbv-bufsize 31250"
+		
 		IPHONE4_COMPAT_ARGS = "--level 3.1 --profile main --sar 1:1"
-
-		DEVICE_COMPAT_HASH= {DeviceConstants::PS3_CONSTANT => PS3_COMPAT_ARGS, DeviceConstants::IPHONE4_CONSTANT => IPHONE4_COMPAT_ARGS}
-
-		DIAGNOSTIC_ARGS = "--psnr --ssim"
-		OPTIONAL_ENHANCEMENTS = "--non-deterministic"
-
+		
+		IPAD_3_COMPAT_ARGS = "--level 4.1 --profile high --aud --sar 1:1"
+		
 		OUTPUT_ARG = "--output"
-
-		ANIME_TUNE_ARGS = "--deblock 2:2 --psy-rd 0.3 --bframes 16 --b-pyramid none"
+		
+		def self.STANDARD_ENCODING_PREFIX
+			return [COLOR_MATRIX, ANIME_TUNE_ARGS, DIAGNOSTIC_ARGS, OPTIONAL_ENHANCEMENTS]
+		end
+		
+		ENCODING_QUALITY_HASH = {
+			ValidInputConstants::LOW_QUALITY => QUALITY_LOW,
+			ValidInputConstants::MEDIUM_QUALITY => QUALITY_MEDIUM,
+			ValidInputConstants::HIGH_QUALITY => QUALITY_HIGH,
+			ValidInputConstants::EXTREME_QUALITY => QUALITY_EXTREME}
+		
+		DEVICE_COMPAT_HASH= {
+			DeviceConstants::PS3_CONSTANT => PS3_COMPAT_ARGS, 
+			DeviceConstants::IPHONE4_CONSTANT => IPHONE4_COMPAT_ARGS, 
+			DeviceConstants::IPAD_3_CONSTANT => IPAD_3_COMPAT_ARGS}
 	end
 
 	class AvisynthFilterConstants

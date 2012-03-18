@@ -179,49 +179,26 @@ module Commands
 			postJobs = programArgsProxy.programArgs.postJobs
 			noMux = programArgsProxy.programArgs.noMultiplex
 
-			encodingOptions = []
-
-			#Default until we change this to accodate other forms of media
-			encodingOptions << Constants::EncodingConstants::ANIME_TUNE_ARGS
-
-			#Always have diagnostics on
-			encodingOptions << Constants::EncodingConstants::DIAGNOSTIC_ARGS
-
-			#Always have optional optimizations
-			encodingOptions << Constants::EncodingConstants::OPTIONAL_ENHANCEMENTS
-
-			#Always have color matrix on
-			encodingOptions << Constants::EncodingConstants::COLOR_MATRIX
-
 			facade.send_notification(Constants::Notifications::LOG_INFO, "Generating Encoding Jobs")
 
 			#Generate command array
-			case quality
-				when Constants::ValidInputConstants::LOW_QUALITY
-					facade.send_notification(Constants::Notifications::LOG_INFO, "Using Low Quality Settings")
-					encodingOptions << Constants::EncodingConstants::QUALITY_LOW
-
-				when Constants::ValidInputConstants::MEDIUM_QUALITY
-					facade.send_notification(Constants::Notifications::LOG_INFO, "Using Medium Quality Settings")
-					encodingOptions << Constants::EncodingConstants::QUALITY_MEDIUM
-
-				when Constants::ValidInputConstants::HIGH_QUALITY
-					facade.send_notification(Constants::Notifications::LOG_INFO, "Using High Quality Settings")
-					encodingOptions << Constants::EncodingConstants::QUALITY_HIGH
-
-				when Constants::ValidInputConstants::EXTREME_QUALITY
-					facade.send_notification(Constants::Notifications::LOG_INFO, "Using Extreme Quality Settings")
-					encodingOptions << Constants::EncodingConstants::QUALITY_EXTREME
+			encodingOptions = Constants::EncodingConstants.STANDARD_ENCODING_PREFIX
+			
+			#Determine quality
+			if Constants::ValidInputConstants::QUALITY_VECTOR.include?(quality) then
+				encodingOptions << Constants::EncodingConstants::ENCODING_QUALITY_HASH[quality]
+			else
+				facade.send_notification(Constants::Notifications::LOG_ERROR, "Unknown quality #{quality}. Aborting")
+				facade.send_notification(Constants::Notifications::EXIT_FAILURE)
 			end
-
-			case device
-			when Constants::DeviceConstants::PS3_CONSTANT
-				facade.send_notification(Constants::Notifications::LOG_INFO, "Encoding for PS3")
-				encodingOptions << Constants::EncodingConstants::PS3_COMPAT_ARGS
-				
-			when Constants::DeviceConstants::IPHONE4_CONSTANT
-				facade.send_notification(Constants::Notifications::LOG_INFO, "Encoding for iPhone 4")
-				encodingOptions << Constants::EncodingConstants::IPHONE4_COMPAT_ARGS
+			
+			#Abstract way to get device args
+			if Constants::DeviceConstants::DEVICE_VECTOR.include?(device) then
+				facade.send_notification(Constants::Notifications::LOG_INFO, "Encoding for #{device}")
+				encodingOptions << Constants::EncodingConstants::DEVICE_COMPAT_HASH[device]
+			else
+				facade.send_notification(Constants::Notifications::LOG_ERROR, "Unknown device #{device}. Aborting")
+				facade.send_notification(Constants::Notifications::EXIT_FAILURE)
 			end
 
 			mediaFileProxy.mediaFiles.each{|e|
