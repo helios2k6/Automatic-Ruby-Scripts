@@ -438,7 +438,10 @@ module Commands
 			encodingJob = note.body
 			mediaFile = encodingJob.mediaFile
 			realFile = mediaFile.file
-			byteFile = mediaFile.getBaseName + ".264"
+			#We use the output file because we don't know the device and if we flag the job as "noMux", we'll end up overriding our previous bytefile
+			#when we're encoding for multiple devices
+			outputFile = encodingJob.outputFile
+			byteFile = File.basename(outputFile, File.extname(outputFile)) + ".264"
 
 			encodedFileProxy = facade.retrieve_proxy(Constants::ProxyConstants::ENCODED_FILE_PROXY)
 			tempFileProxy = facade.retrieve_proxy(Constants::ProxyConstants::TEMPORARY_FILES_PROXY)

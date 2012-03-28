@@ -57,7 +57,7 @@ module InputModule
 			@postJobs = argHash[Constants::InputConstants::POST_ENCODING_ARG] || []
 			
 			#Flag based arguments
-			@noMultiplex = argHash[Constants::InputConstants::NO_MUX_ARG] == nil ? false : true #Confusing. Here's what this means: If the noMultiplex flag exists, then return true; otherwise false
+			@noMultiplex = argHash[Constants::InputConstants::NO_MUX_ARG] != nil #Confusing. Here's what this means: If the noMultiplex flag exists, then return true; otherwise false
 			
 			#Single item arguments
 			audioTrackItem = argHash[Constants::InputConstants::FORCE_AUDIO_TRACK] 
