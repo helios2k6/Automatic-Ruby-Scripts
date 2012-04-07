@@ -254,6 +254,8 @@ module Commands
 		def getPostJobsForAudioTrack(track)
 			postCommand = []
 			case track.trackFormat
+				when Constants::TrackFormat::AAC, Constants::TrackFormat::MP3
+					return postCommand
 				when Constants::TrackFormat::FLAC
 					postCommand << :DECODE_FLAC
 					postCommand << :ENCODE_AAC
