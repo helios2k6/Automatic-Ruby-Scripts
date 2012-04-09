@@ -140,9 +140,18 @@ module Constants
 		BLACKLIST_ARG_HELP_STRING =		"\t#{BLACKLIST_ARG} <file 1>[ <file 2> <file 3>...]\n\t\tThe name(s) of the files you want to explicitly blacklist\n\t\tCan be used in conjunction with a list of files that have been whitelisted\n\t\tThe blacklist takes precedence over the whitelist\n\n"
 
 		POST_ENCODING_ARG = "--post-encoding (not implemented)"
-		POST_ENCODING_ARG_HELP_STRING = "\t#{POST_ENCODING_ARG} <command 1>;args[ <command 2>;args]"
-
-		PROG_ARG_VECTOR = [FILE_ARG, DEVICE_ARG, QUALITY_ARG, AVS_ADD_ARG, NO_MUX_ARG, HELP_ARG, FORCE_AUDIO_TRACK, FORCE_SUBTITLE_TRACK, BLACKLIST_ARG, POST_ENCODING_ARG]
+		POST_ENCODING_ARG_HELP_STRING = "\t#{POST_ENCODING_ARG} <command 1>;args[ <command 2>;args]\n\n"
+		
+		NO_AUDIO_ARG = "--no-audio"
+		NO_AUDIO_ARG_HELP_STRING = "\t#{NO_AUDIO_ARG}\n\t\tDon't extract or encode the audio track. Overrides \"#{FORCE_AUDIO_TRACK}\"\n\n"
+		
+		NO_SUBS_ARG = "--no-subtitles"
+		NO_SUBS_ARG_HELP_STRING = "\t#{NO_SUBS_ARG}\n\t\tDon't hardcode any subtitles. Override \"#{FORCE_SUBTITLE_TRACK}\"\n\n"
+		
+		VERY_HIGH_QUALITY_AUDIO_ARG = "--hq-audio"
+		VERY_HIGH_QUALITY_AUDIO_ARG_HELP_STRING = "\t#{VERY_HIGH_QUALITY_AUDIO_ARG}\n\t\tSet bitrate to 256k for all AAC encoded audio\n\n"
+		
+		PROG_ARG_VECTOR = [FILE_ARG, DEVICE_ARG, QUALITY_ARG, AVS_ADD_ARG, NO_MUX_ARG, HELP_ARG, FORCE_AUDIO_TRACK, FORCE_SUBTITLE_TRACK, BLACKLIST_ARG, POST_ENCODING_ARG, NO_SUBS_ARG, NO_AUDIO_ARG, VERY_HIGH_QUALITY_AUDIO_ARG]
 
 		PROG_ARG_HELP_HASH = {
 			FILE_ARG => FILE_ARG_HELP_STRING,
@@ -151,9 +160,12 @@ module Constants
 			QUALITY_ARG => QUALITY_ARG_HELP_STRING,
 			AVS_ADD_ARG => AVS_ADD_ARG_HELP_STRING,
 			NO_MUX_ARG => NO_MUX_ARG_HELP_STRING,
+			NO_AUDIO_ARG => NO_AUDIO_ARG_HELP_STRING,
+			NO_SUBS_ARG => NO_SUBS_ARG_HELP_STRING,
 			FORCE_AUDIO_TRACK => FORCE_AUDIO_TRACK_HELP_STRING,
 			FORCE_SUBTITLE_TRACK => FORCE_SUBTITLE_TRACK_HELP_STRING,
-			POST_ENCODING_ARG => POST_ENCODING_ARG_HELP_STRING
+			POST_ENCODING_ARG => POST_ENCODING_ARG_HELP_STRING,
+			VERY_HIGH_QUALITY_AUDIO_ARG => VERY_HIGH_QUALITY_AUDIO_ARG_HELP_STRING
 		}
 	end
 
@@ -180,7 +192,7 @@ module Constants
 		FLAC = "FLAC"
 		AC3 = "AC-3"
 		VORBIS = "Vorbis"
-		MP3 = "MP3"
+		MP3 = "MPEG Audio"
 		WAV = "Wave"
 
 		ASS = "ASS"

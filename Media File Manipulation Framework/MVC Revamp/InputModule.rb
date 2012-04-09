@@ -45,7 +45,7 @@ module InputModule
 	end
 
 	class ProgramArgs
-		attr_accessor :device, :files, :avsCommands, :noMultiplex, :audioTrack, :subtitleTrack, :blacklist, :quality, :postJobs
+		attr_accessor :device, :files, :avsCommands, :noMultiplex, :audioTrack, :subtitleTrack, :blacklist, :quality, :postJobs, :noSubtitles, :noAudio, :hqAudio
 		def initialize(argVector)	
 			argHash = InputParser.processArgs(argVector)
 			
@@ -58,6 +58,9 @@ module InputModule
 			
 			#Flag based arguments
 			@noMultiplex = argHash[Constants::InputConstants::NO_MUX_ARG] != nil #Confusing. Here's what this means: If the noMultiplex flag exists, then return true; otherwise false
+			@noAudio = argHash[Constants::InputConstants::NO_AUDIO_ARG] != nil
+			@noSubtitles = argHash[Constants::InputConstants::NO_SUBS_ARG] != nil
+			@hqAudio = argHash[Constants::InputConstants::VERY_HIGH_QUALITY_AUDIO_ARG] != nil
 			
 			#Single item arguments
 			audioTrackItem = argHash[Constants::InputConstants::FORCE_AUDIO_TRACK] 

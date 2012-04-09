@@ -89,16 +89,19 @@ module MediaTaskObjects
   end
 
   class EncodingJob
-    attr_accessor :mediaFile, :avsFile, :outputFile, :noMux, :encodingOptions, :audioTrack, :subtitleTrack, :postEncodingJobs, :tempFiles
+    attr_accessor :mediaFile, :avsFile, :outputFile, :noMux, :noAudio, :noSubtitles, :encodingOptions, :audioTrack, :subtitleTrack, :postEncodingJobs, :tempFiles, :hqAudio
 
-    def initialize(mediaFile, avsFile, outputFile, noMux, encodingOptions, postEncodingJobs=[])
+    def initialize(mediaFile, avsFile, outputFile, noMux, noAudio, noSubtitles, encodingOptions, postEncodingJobs=[], hqAudio=false)
       @mediaFile = mediaFile
       @avsFile = avsFile
       @outputFile = outputFile
       @noMux = noMux
+	  @noAudio = noAudio
+	  @noSubtitles = noSubtitles
       @encodingOptions = encodingOptions #This should be an array of "EncodingConstants"
       @postEncodingJobs = postEncodingJobs
       @tempFiles = []
+	  @hqAudio = hqAudio
     end
 
     def getEncodingOptionsAsString
