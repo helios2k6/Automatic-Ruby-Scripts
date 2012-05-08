@@ -2,31 +2,29 @@ FundimentalMatch = /(\(\d+\))/
 
 AcceptedExtentions = [".mp4", ".mkv", ".avi", ".wmv"]
 
-def processFile(file, knownFiles)
+def processFile(file)
 	extName = File.extname(file)
-	if File.directory?(file) || !AcceptedExtentions.include(extName)? then
+	if File.directory?(file) || !AcceptedExtentions.include?(extName) then
 		return
 	end
 
 	baseName = File.basename(file, extName)
 	
-	fundimentalName = baseName.split(FundimentalMatch)[0]
+	fundimentalName = (baseName.split(FundimentalMatch)[0]).strip
 	
-	if !knownFiles.include(fundimentalName)? then
-		knownFiles[file] = fundimentalName
-		#Dir.mkdir("./#{fundimentalName}")
-		puts("Directory #{fundimentalName} created")
+	if !Dir.exists?(fundimentalName) then
+		Dir.mkdir("./#{fundimentalName}")
+		puts("Directory \"#{fundimentalName}\" created")
 	end
 	
-	#File.rename(file, "#{fundimentalName}/#{file}")
-	puts("#{file} moved to #{fundimentalName}/#{file}")
+	File.rename("#{file}", "./#{fundimentalName}/#{file}")
+	puts("\"#{file}\" moved to \"./#{fundimentalName}/#{file}\"")
 end
 
 def main
 	cd = Dir.new(".")
-	knownFiles = Array.new
 	cd.each{|f|
-		processFile(f, knownFiles)
+		processFile(f)
 	}	
 end
 
