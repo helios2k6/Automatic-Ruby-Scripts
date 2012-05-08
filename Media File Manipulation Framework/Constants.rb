@@ -1,5 +1,29 @@
+#This file is part of Auto Device Encoder.
+#
+#Auto Device Encoder is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#Auto Device Encoder is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with Auto Device Encoder.  If not, see <http://www.gnu.org/licenses/>.
+
 module Constants
 	
+	class ProgramName
+		PROGRAM_NAME = "Auto Device Encoder"
+		VERSION = "2012.2.4"
+	end
+
+	class CopyLeftConstants
+		COPYLEFT_NOTICE = "#{ProgramName::PROGRAM_NAME}\nCopyright (C) 2012 Andrew Johnson\nThis program comes with ABSOLUTELY NO WARRANTY.\nThis is free software, and you are welcome to redistribute it\nunder certain conditions."
+	end
+
 	class AudioExecutables
 		FLAC = "flac.exe"
 		OGG_DECODER = "oggdec.exe"
@@ -51,6 +75,9 @@ module Constants
 		EXTERNAL_COMMAND_FINISHED_EXECUTING = "EXTERNAL_COMMAND_FINISHED_EXECUTING" #Used to signal that a command has finished executing
 
 		#Command Notifications
+
+		#Copyleft Command
+		OUTPUT_COPYLEFT = "OUTPUT_COPYLEFT"
 
 		#Program Failure
 		EXIT_SUCCESS = "EXIT_SUCCESS"
@@ -107,9 +134,7 @@ module Constants
 	end
 
 	class InputConstants    
-		#Program Version
-		VERSION = "2012.2.1"
-		PROG_HELP_HEADER = 	"Auto Device Encoder #{VERSION}\nAuthor: Andrew Johnson\n\nUsage: ruby <this script> [options]\n\nOptions:\n\n"
+		PROG_HELP_HEADER = 	"#{ProgramName::PROGRAM_NAME} #{ProgramName::VERSION}\nAuthor: Andrew Johnson\n\nUsage: ruby <this script> [options]\n\nOptions:\n\n"
 
 		FILE_ARG = "--files"
 		FILE_ARG_HELP_STRING =	"\t#{FILE_ARG} <file 1>[ <file 2> <file 3>...]\n\t\tThe name(s) of the media files you want to encode\n\t\tAllowed to put \"#{ValidInputConstants::ALL_FILES}\" to specify all media files in current dir\n\n"
@@ -140,7 +165,7 @@ module Constants
 		BLACKLIST_ARG_HELP_STRING =		"\t#{BLACKLIST_ARG} <file 1>[ <file 2> <file 3>...]\n\t\tThe name(s) of the files you want to explicitly blacklist\n\t\tCan be used in conjunction with a list of files that have been whitelisted\n\t\tThe blacklist takes precedence over the whitelist\n\n"
 
 		POST_ENCODING_ARG = "--post-encoding (not implemented)"
-		POST_ENCODING_ARG_HELP_STRING = "\t#{POST_ENCODING_ARG} <command 1>;args[ <command 2>;args]\n\n"
+		POST_ENCODING_ARG_HELP_STRING = "\t#{POST_ENCODING_ARG}\n\t\t<command 1>;args[ <command 2>;args]\n\n"
 		
 		NO_AUDIO_ARG = "--no-audio"
 		NO_AUDIO_ARG_HELP_STRING = "\t#{NO_AUDIO_ARG}\n\t\tDon't extract or encode the audio track. Overrides \"#{FORCE_AUDIO_TRACK}\"\n\n"

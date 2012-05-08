@@ -1,3 +1,18 @@
+#This file is part of Auto Device Encoder.
+#
+#Auto Device Encoder is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#Auto Device Encoder is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with Auto Device Encoder.  If not, see <http://www.gnu.org/licenses/>.
+
 require 'PureMVC_Ruby'
 require './Constants'
 require './ScreenObjects'
@@ -13,7 +28,8 @@ require './TicketMaster'
 
 def main
   facade = Facade.instance
-	#Initialize All Proxies
+
+  #Initialize All Proxies
   facade.register_proxy(MediaTaskObjects::EncodingJobsProxy.new)
   facade.register_proxy(Loggers::LoggerProxy.new)
   facade.register_proxy(InputModule::ProgramArgsProxy.new(ARGV))
@@ -51,12 +67,17 @@ def main
   facade.register_command(Constants::Notifications::MULTIPLEX_FILE, Commands::MultiplexFileCommand)
   
   facade.register_command(Constants::Notifications::CLEANUP_FILES, Commands::CleanUpEncodingJobCommand)
+
+  facade.register_command(Constants::Notifications::OUTPUT_COPYLEFT, Commands::OutputCopyLeftNotice)
   
   #Initialize the Mediator
   facade.register_mediator(Loggers::LoggerMediator.new)
   facade.register_mediator(ScreenMediators::ScreenMediator.new)
   
-  #Fire off the very first command with a notification
+  #Show copyleft notification
+  facade.send_notification(Constants::Notifications::OUTPUT_COPYLEFT)
+
+  #Fire off the program with a notification
   facade.send_notification(Constants::Notifications::VALIDATE_PROGRAM_ARGS)
 end
 
