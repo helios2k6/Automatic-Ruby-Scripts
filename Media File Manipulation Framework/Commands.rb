@@ -30,7 +30,7 @@ module Commands
 	#General Commands
 	class PrintHelpCommand < SimpleCommand
 		def execute(note)
-		InputModule::InputParser.printHelp
+			InputModule::InputParser.printHelp
 		end
 	end
 
