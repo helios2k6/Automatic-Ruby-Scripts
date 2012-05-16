@@ -122,6 +122,11 @@ module Commands
 		end
 
 		def isValidDevice(device)
+			if device == nil then
+				Facade.instance.send_notification(Constants::Notifications::LOG_ERROR, "No device passed in")
+				return false;
+			end
+
 			if device.is_a?(Array) then
 				device.each{|i|
 					if !Constants::DeviceConstants::DEVICE_VECTOR.include?(i) then
