@@ -18,7 +18,7 @@ require './MediaObjects'
 module MediaContainerTools	
 	class ContainerTools
 		MKV_EXTRACT_BASE_COMMAND = "\"#{Constants::ExtractionToolsConstant::MKV_EXTRACT}\" --ui-language en tracks"
-		MP4_EXTRACT_BASE_COMMAND = ""
+		MP4_EXTRACT_BASE_COMMAND = "\"#{Constants::ExtractionToolsConstant::MP4BOX}\""
 		
 		INDEX_OFFSET = 1 #This is retarded
 		
