@@ -219,18 +219,19 @@ module Constants
 		VORBIS = "Vorbis"
 		MP3 = "MPEG Audio"
 		WAV = "Wave"
+		DTS = "DTS"
 
 		ASS = "ASS"
 		SSA = "SSA"
 		UTF_EIGHT = "UTF-8"
 
-		TRACK_FORMAT_VECTOR = [AVC, VC_ONE, AAC, FLAC, AC3, VORBIS, ASS, UTF_EIGHT, WAV, MP3]
+		TRACK_FORMAT_VECTOR = [AVC, VC_ONE, AAC, FLAC, AC3, VORBIS, ASS, UTF_EIGHT, WAV, MP3, DTS]
 
-		AUDIO_FORMAT_VECTOR = [AAC, FLAC, AC3, VORBIS, WAV, MP3]
+		AUDIO_FORMAT_VECTOR = [AAC, FLAC, AC3, VORBIS, WAV, MP3, DTS]
 		VIDEO_FORMAT_VECTOR = [AVC, VC_ONE]
 		SUBTITLE_FORMAT_VECTOR = [ASS, SSA, UTF_EIGHT]
 
-		EXTENSION_HASH = {AVC => ".264", AAC => ".aac", FLAC => ".flac", AC3 => ".ac3", VORBIS => ".ogg", ASS => ".ass", SSA => ".ssa", UTF_EIGHT => ".srt", WAV => ".wav", MP3 => ".mp3"}
+		EXTENSION_HASH = {AVC => ".264", AAC => ".aac", FLAC => ".flac", AC3 => ".ac3", VORBIS => ".ogg", ASS => ".ass", SSA => ".ssa", UTF_EIGHT => ".srt", WAV => ".wav", MP3 => ".mp3", DTS => ".dts"}
 	end
 
 	class MediaContainers
