@@ -1,0 +1,915 @@
+
+Pinging 192.168.1.140 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.140:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.170 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.170:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.160 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.160:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.130 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.130:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.100 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.100:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.150 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.150:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.180 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.180:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.120 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.120:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.190 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.190:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.110 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.110:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.141 with 32 bytes of data:
+Reply from 192.168.1.141: bytes=32 time<1ms TTL=128
+Reply from 192.168.1.141: bytes=32 time<1ms TTL=128
+Reply from 192.168.1.141: bytes=32 time<1ms TTL=128
+Reply from 192.168.1.141: bytes=32 time<1ms TTL=128
+
+Ping statistics for 192.168.1.141:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 0ms, Average = 0ms
+
+Pinging 192.168.1.161 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.161:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.171 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.171:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.181 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.181:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.191 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.191:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.111 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.111:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.131 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.131:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.101 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.101:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.121 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.121:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.151 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.151:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.142 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.142:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.102 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.102:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.162 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.162:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.172 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.172:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.182 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.182:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.152 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.152:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.192 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.192:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.112 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.112:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.122 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.122:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.132 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.132:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.143 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.143:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.103 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.103:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.173 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.173:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.163 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.163:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.193 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.193:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.153 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.153:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.113 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.113:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.133 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.133:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.183 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.183:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.123 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.123:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.144 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.144:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.104 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.104:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.164 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.164:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.114 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.114:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.134 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.134:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.184 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.184:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.124 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.124:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.154 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.154:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.194 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.194:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.174 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.174:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.145 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.145:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.105 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.105:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.155 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.155:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.195 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.195:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.135 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.135:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.165 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.165:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.115 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.115:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.175 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.175:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.125 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.125:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.185 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.185:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.146 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.146:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.147 with 32 bytes of data:
+Reply from 192.168.1.147: bytes=32 time=125ms TTL=64
+Reply from 192.168.1.147: bytes=32 time=41ms TTL=64
+Reply from 192.168.1.147: bytes=32 time=79ms TTL=64
+Reply from 192.168.1.147: bytes=32 time=94ms TTL=64
+
+Ping statistics for 192.168.1.147:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 41ms, Maximum = 125ms, Average = 84ms
+
+Pinging 192.168.1.148 with 32 bytes of data:
+Reply from 192.168.1.148: bytes=32 time<1ms TTL=255
+Reply from 192.168.1.148: bytes=32 time<1ms TTL=255
+Reply from 192.168.1.148: bytes=32 time<1ms TTL=255
+Reply from 192.168.1.148: bytes=32 time<1ms TTL=255
+
+Ping statistics for 192.168.1.148:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 0ms, Average = 0ms
+
+Pinging 192.168.1.106 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.106:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.136 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.136:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.156 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.156:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.116 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.116:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.186 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.186:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.166 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.166:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.126 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.126:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.176 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.176:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.196 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.196:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.107 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.107:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.137 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.137:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.187 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.187:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.167 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.167:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.157 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.157:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.197 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.197:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.117 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.117:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.177 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.177:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.127 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.127:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.149 with 32 bytes of data:
+Request timed out.
+Request timed out.
+Request timed out.
+Request timed out.
+
+Ping statistics for 192.168.1.149:
+    Packets: Sent = 4, Received = 0, Lost = 4 (100% loss),
+
+Pinging 192.168.1.108 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.108:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.128 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.128:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.178 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.178:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.138 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.138:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.198 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.198:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.158 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.158:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.188 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.188:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.168 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.168:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.118 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.118:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.109 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.109:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.139 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.139:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.179 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.179:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.199 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.199:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.129 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.129:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.159 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.159:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.119 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.119:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.169 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.169:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.189 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.189:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+Pinging 192.168.1.200 with 32 bytes of data:
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+Reply from 192.168.1.141: Destination host unreachable.
+
+Ping statistics for 192.168.1.200:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
