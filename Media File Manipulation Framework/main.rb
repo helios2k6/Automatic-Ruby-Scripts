@@ -25,7 +25,6 @@ require './Loggers'
 require './MediaObjects'
 require './MediaTaskObjects'
 require './ScreenMediators'
-require './TicketMaster'
 
 def main
   facade = Facade.instance
@@ -37,7 +36,6 @@ def main
   facade.register_proxy(Executors::ExecutorProxy.new)
   facade.register_proxy(ScreenObjects::ScreenProxy.new)
   facade.register_proxy(MediaObjects::MediaFileProxy.new)
-  facade.register_proxy(TicketMaster::TicketProxy.new(1))
   facade.register_proxy(MediaTaskObjects::EncodedFileProxy.new)
   facade.register_proxy(MediaTaskObjects::AvisynthFileProxy.new)
   facade.register_proxy(MediaTaskObjects::TemporaryFilesProxy.new)

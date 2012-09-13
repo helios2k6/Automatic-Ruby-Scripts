@@ -20,7 +20,6 @@ require './Constants'
 #All Modules should probably go here
 require './InputModule'
 require './MediaTaskObjects'
-require './TicketMaster'
 require './AudioEncoders'
 require './MediaContainerTools'
 require './ScreenMediators'
@@ -258,33 +257,27 @@ module Commands
 		def execute(note)
 		facade = Facade.instance
 		encodingJobProxy = facade.retrieve_proxy(Constants::ProxyConstants::ENCODING_JOBS_PROXY)
-		ticketMasterProxy = facade.retrieve_proxy(Constants::ProxyConstants::TICKET_MASTER_PROXY)
 		facade.send_notification(Constants::Notifications::LOG_INFO, "Executing All Encoding Jobs")
 
 		threads = []
 
 		encodingJobProxy.encodingJobs.each{|e|
-			threads << Thread.new do
-				ticketNumber = ticketMasterProxy.getTicket
-				
-				if !e.noAudio then
-					facade.send_notification(Constants::Notifications::EXTRACT_AUDIO_TRACK, e)
-				end
-				
-				if !e.noSubtitles then
-					facade.send_notification(Constants::Notifications::EXTRACT_SUBTITLE_TRACK, e)
-				end
-				
-				facade.send_notification(Constants::Notifications::GENERATE_AVISYNTH_FILE, e)
-				facade.send_notification(Constants::Notifications::ENCODE_FILE, e)
-				
-				if !e.noMux then
-					facade.send_notification(Constants::Notifications::MULTIPLEX_FILE, e)
-				end
-				
-				facade.send_notification(Constants::Notifications::CLEANUP_FILES, e)
-				ticketMasterProxy.returnTicket(ticketNumber)
+			if !e.noAudio then
+				facade.send_notification(Constants::Notifications::EXTRACT_AUDIO_TRACK, e)
 			end
+			
+			if !e.noSubtitles then
+				facade.send_notification(Constants::Notifications::EXTRACT_SUBTITLE_TRACK, e)
+			end
+			
+			facade.send_notification(Constants::Notifications::GENERATE_AVISYNTH_FILE, e)
+			facade.send_notification(Constants::Notifications::ENCODE_FILE, e)
+			
+			if !e.noMux then
+				facade.send_notification(Constants::Notifications::MULTIPLEX_FILE, e)
+			end
+			
+			facade.send_notification(Constants::Notifications::CLEANUP_FILES, e)
 		}
 
 		#Join on threads
