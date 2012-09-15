@@ -316,7 +316,6 @@ module Commands
 				facade.send_notification(Constants::Notifications::LOG_INFO, "Extracting Track (Audio) ##{audioTrack} for #{realFile}")
 				extractionCommand = MediaContainerTools::ContainerTools.generateExtractTrackCommand(mediaFile, audioTrack)
 
-				#facade.send_notification(Constants::Notifications::EXECUTE_EXTERNAL_COMMAND, extractionCommand[0])
 				system(extractionCommand[0])
 
 				previousFile = extractionCommand[1]
