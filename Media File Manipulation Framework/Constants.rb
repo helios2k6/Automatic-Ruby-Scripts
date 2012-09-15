@@ -14,7 +14,6 @@
 #along with Auto Device Encoder.  If not, see <http://www.gnu.org/licenses/>.
 
 module Constants
-	
 	class ProgramName
 		PROGRAM_NAME = "Auto Device Encoder"
 		VERSION = "2012.2.4"
@@ -35,8 +34,6 @@ module Constants
 		ENCODING_JOBS_PROXY = "ENCODING_JOBS_PROXY"
 		LOGGER_PROXY = "LOGGER_PROXY"
 		PROGRAM_ARGS_PROXY = "PROGRAM_ARGS_PROXY"
-		EXECUTOR_PROXY = "EXECUTOR_PROXY"
-		SCREEN_PROXY = "SCREEN_PROXY"
 		MEDIA_FILE_PROXY = "MEDIA_FILE_PROXY"
 		ENCODED_FILE_PROXY = "ENCODED_FILE_PROXY"
 		AVISYNTH_FILE_PROXY = "AVISYNTH_FILE_PROXY"
@@ -64,14 +61,6 @@ module Constants
 		LOG_ERROR = "LOG_ERROR"
 
 		PRINT_HELP = "PRINT_HELP"
-
-		UPDATE_SCREEN = "UPDATE_SCREEN" #Used to instruct the screen to refresh with some sort of message
-		EXECUTE_EXTERNAL_COMMAND = "EXECUTE_EXTERNAL_COMMAND" #Used to instruct the execution of a command
-
-		EXTERNAL_COMMAND_NOT_EXECUTED = "EXTERNAL_COMMAND_NOT_EXECUTED"
-
-		EXTERNAL_COMMAND_EXECUTED = "EXTERNAL_COMMAND_EXECUTED" #Used to signal that a command has been executed
-		EXTERNAL_COMMAND_FINISHED_EXECUTING = "EXTERNAL_COMMAND_FINISHED_EXECUTING" #Used to signal that a command has finished executing
 
 		#Copyleft Command
 		OUTPUT_COPYLEFT = "OUTPUT_COPYLEFT"
@@ -296,15 +285,5 @@ module Constants
 		GRADFUN_2_DB = "gradfun2db"
 		LANCZOS_RESIZE = "lanczosResize"
 		SPLINE_64_RESIZE = "spline64Resize"
-	end
-
-	class ScreenCommand
-		PRINT_SAME_LINE = "PRINT_SAME_LINE"
-		PRINT_NEW_LINE = "PRINT_NEW_LINE"
-		PRINT_AS_IS = "PRINT_AS_IS"
-		KILL_SCREEN = "KILL_SCREEN" #this automatically gives us a new-line
-		
-		SCREEN_COMMAND_VECTOR = [PRINT_SAME_LINE, PRINT_NEW_LINE, PRINT_AS_IS]
-		COMMAND_TO_CHARACTER_HASH = {PRINT_SAME_LINE => "\r", PRINT_NEW_LINE => "\n", KILL_SCREEN => "\n", PRINT_AS_IS => ""}
 	end
 end

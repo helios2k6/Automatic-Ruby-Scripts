@@ -22,7 +22,6 @@ require './InputModule'
 require './MediaTaskObjects'
 require './AudioEncoders'
 require './MediaContainerTools'
-require './ScreenMediators'
 require './Loggers'
 require './MediaInfo'
 
@@ -46,45 +45,10 @@ module Commands
 		end
 	end
 
-	class FireExternalExecutionCommand < SimpleCommand
-		#Exepect note.body = command
-		def execute(note)
-			facade = Facade.instance
-			facade.send_notification(Constants::Notifications::LOG_INFO, "Executing External Command #{note.body}")
-
-			#Skip these steps for now and directly execute the command
-			executorProxy = facade.retrieve_proxy(Constants::ProxyConstants::EXECUTOR_PROXY)
-
-			executorProxy.submitCommand(note.body)
-		end
-	end
-
-	class HandleExternalExecutionOutputCommand < SimpleCommand
-		def execute(note) #Expect note.body = [command, stdout]
-			facade = Facade.instance
-			io = note.body[1]
-
-			buffer = ""
-			fixedLength = 100
-
-			result = io.read(fixedLength, buffer)
-
-			while result != nil 
-				#print buffer
-				facade.send_notification(Constants::Notifications::UPDATE_SCREEN, [Constants::ScreenCommand::PRINT_AS_IS, note.body[0], buffer])
-				
-				result = io.read(fixedLength, buffer)
-			end
-
-			#Wait for process to die
-			Process.wait(io.pid)
-			facade.send_notification(Constants::Notifications::UPDATE_SCREEN, [Constants::ScreenCommand::KILL_SCREEN, note.body[0]])
-		end
-	end
-
 	class OutputCopyLeftNotice < SimpleCommand
 		def execute(note)
-			puts("\n\n#{Constants::CopyLeftConstants::COPYLEFT_NOTICE}\n\n")
+			puts("\n#{Constants::CopyLeftConstants::COPYLEFT_NOTICE}\n\n")
+			$stdout.flush
 		end
 	end
 
@@ -352,7 +316,8 @@ module Commands
 				facade.send_notification(Constants::Notifications::LOG_INFO, "Extracting Track (Audio) ##{audioTrack} for #{realFile}")
 				extractionCommand = MediaContainerTools::ContainerTools.generateExtractTrackCommand(mediaFile, audioTrack)
 
-				facade.send_notification(Constants::Notifications::EXECUTE_EXTERNAL_COMMAND, extractionCommand[0])
+				#facade.send_notification(Constants::Notifications::EXECUTE_EXTERNAL_COMMAND, extractionCommand[0])
+				system(extractionCommand[0])
 
 				previousFile = extractionCommand[1]
 
@@ -363,7 +328,7 @@ module Commands
 
 						tempFileProxy.addTemporaryFile(encodingJob, previousFile) # Add Flac file
 
-						facade.send_notification(Constants::Notifications::EXECUTE_EXTERNAL_COMMAND, postComm[0])
+						system(postComm[0])
 
 						previousFile = postComm[1]
 						tempFileProxy.addTemporaryFile(encodingJob, previousFile) # Add Wav File
@@ -373,14 +338,14 @@ module Commands
 						
 						tempFileProxy.addTemporaryFile(encodingJob, previousFile) # Add generic audio file
 						
-						facade.send_notification(Constants::Notifications::EXECUTE_EXTERNAL_COMMAND, postComm[0])
+						system(postComm[0])
 						
 						previousFile = postComm[1]
 						tempFileProxy.addTemporaryFile(encodingJob, previousFile) # Add Wav File
 						
 					when :ENCODE_AAC						
 						postComm = AudioEncoders::AacEncoder.generateEncodeWavToAacCommand(previousFile, encodingJob.hqAudio)
-						facade.send_notification(Constants::Notifications::EXECUTE_EXTERNAL_COMMAND, postComm[0])
+						system(postComm[0])
 
 						previousFile = postComm[1]
 					end
@@ -428,7 +393,7 @@ module Commands
 				facade.send_notification(Constants::Notifications::LOG_INFO, "Extracting Track (Subtitles) ##{subtitleTrack} for #{realFile}")
 				extractionCommand = MediaContainerTools::ContainerTools.generateExtractTrackCommand(mediaFile, subtitleTrack)
 
-				facade.send_notification(Constants::Notifications::EXECUTE_EXTERNAL_COMMAND, extractionCommand[0])
+				system(extractionCommand[0])
 
 				encodingJobProxy.addSubtitleTrackFile(encodingJob, extractionCommand[1])
 				tempFileProxy.addTemporaryFile(encodingJob, extractionCommand[1])
@@ -489,7 +454,7 @@ module Commands
 
 			command = command + " " + Constants::EncodingConstants::OUTPUT_ARG + " \"#{byteFile}\" \"#{avsFile}\""
 
-			facade.send_notification(Constants::Notifications::EXECUTE_EXTERNAL_COMMAND, command)
+			system(command)
 
 			#Add file to temporaryFile proxy only if noMux = false and noAudio = false
 			if !encodingJob.noMux && !encodingJob.noAudio then
@@ -526,7 +491,7 @@ module Commands
 				multiplexingCommands << MediaContainerTools::ContainerTools.generateMultiplexToMP4Command(audioFile, encodingJob.outputFile)
 
 				multiplexingCommands.each{|e|
-					facade.send_notification(Constants::Notifications::EXECUTE_EXTERNAL_COMMAND, e)
+					system(e)
 				}
 			end
 		end

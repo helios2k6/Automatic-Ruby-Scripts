@@ -16,15 +16,12 @@
 require 'rubygems'
 require 'PureMVC_Ruby'
 require './Constants'
-require './ScreenObjects'
 require './AudioEncoders'
 require './Commands'
-require './Executors'
 require './InputModule'
 require './Loggers'
 require './MediaObjects'
 require './MediaTaskObjects'
-require './ScreenMediators'
 
 def main
 	facade = Facade.instance
@@ -33,8 +30,6 @@ def main
 	facade.register_proxy(MediaTaskObjects::EncodingJobsProxy.new)
 	facade.register_proxy(Loggers::LoggerProxy.new)
 	facade.register_proxy(InputModule::ProgramArgsProxy.new(ARGV))
-	facade.register_proxy(Executors::ExecutorProxy.new)
-	facade.register_proxy(ScreenObjects::ScreenProxy.new)
 	facade.register_proxy(MediaObjects::MediaFileProxy.new)
 	facade.register_proxy(MediaTaskObjects::EncodedFileProxy.new)
 	facade.register_proxy(MediaTaskObjects::AvisynthFileProxy.new)
@@ -42,9 +37,6 @@ def main
 
 	#Initialize All Commands
 	facade.register_command(Constants::Notifications::PRINT_HELP, Commands::PrintHelpCommand)
-
-	facade.register_command(Constants::Notifications::EXECUTE_EXTERNAL_COMMAND, Commands::FireExternalExecutionCommand)
-	facade.register_command(Constants::Notifications::EXTERNAL_COMMAND_EXECUTED, Commands::HandleExternalExecutionOutputCommand)
 
 	facade.register_command(Constants::Notifications::EXIT_SUCCESS, Commands::ExitCommand)
 	facade.register_command(Constants::Notifications::EXIT_FAILURE, Commands::ExitCommand)
@@ -73,7 +65,6 @@ def main
 
 	#Initialize the Mediator
 	facade.register_mediator(Loggers::LoggerMediator.new)
-	facade.register_mediator(ScreenMediators::ScreenMediator.new)
 
 	#Show copyleft notification
 	facade.send_notification(Constants::Notifications::OUTPUT_COPYLEFT)
