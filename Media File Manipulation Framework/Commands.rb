@@ -100,7 +100,7 @@ module Commands
 			return false
 		end
 
-		def isValidQuality(quality)      
+		def isValidQuality(quality)
 			if quality == nil || Constants::ValidInputConstants::QUALITY_VECTOR.include?(quality) then
 				return true
 			end
@@ -122,9 +122,9 @@ module Commands
 	class RetrieveAllMediaFilesCommand < SimpleCommand
 		def execute(note)
 			facade = Facade.instance
-			mediaFileProxy = facade.retrieve_proxy(Constants::ProxyConstants::PROGRAM_ARGS_PROXY)
-			files = mediaFileProxy.programArgs.files
-			blacklist = mediaFileProxy.programArgs.blacklist
+			programArgsProxy = facade.retrieve_proxy(Constants::ProxyConstants::PROGRAM_ARGS_PROXY)
+			files = programArgsProxy.programArgs.files
+			blacklist = programArgsProxy.programArgs.blacklist
 
 			facade.send_notification(Constants::Notifications::LOG_INFO, "Gathering Media Files")
 
@@ -508,6 +508,5 @@ module Commands
 				File.delete("#{e}")
 			}
 		end
-
 	end
 end

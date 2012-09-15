@@ -51,10 +51,6 @@ module InputModule
 				end
 			end
 			
-			#Use a co-routine construct to get both results
-			#yield argCollector
-			#return invalidArgs
-			
 			return argCollector
 		end
 	end
