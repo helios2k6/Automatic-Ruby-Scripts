@@ -78,7 +78,6 @@ module Commands
 
 			#Wait for process to die
 			Process.wait(io.pid)
-
 			facade.send_notification(Constants::Notifications::UPDATE_SCREEN, [Constants::ScreenCommand::KILL_SCREEN, note.body[0]])
 		end
 	end
@@ -102,10 +101,8 @@ module Commands
 			
 			if  validateFiles &&  validateDevice && validateQuality then
 				facade.send_notification(Constants::Notifications::LOG_INFO, "Arguments Validated. Moving to Discovery State")
-				facade.send_notification(Constants::Notifications::RETRIEVE_MEDIA_FILES)
 			else
 				facade.send_notification(Constants::Notifications::LOG_ERROR, "Invalid Arguments Passed")
-				
 				facade.send_notification(Constants::Notifications::PRINT_HELP)
 				facade.send_notification(Constants::Notifications::EXIT_FAILURE)
 			end
@@ -148,7 +145,15 @@ module Commands
 			return false
 		end
 	end
-
+	
+	class LaunchEncodingCycleMacroCommand < MacroCommand
+		def initialize_macro_command()
+			add_sub_command(RetrieveAllMediaFilesCommand)
+			add_sub_command(GenerateEncodingJobsCommand)
+			add_sub_command(ExecuteAllEncodingJobsCommand)
+		end
+	end
+	
 	#Discovery state commands
 	class RetrieveAllMediaFilesCommand < SimpleCommand
 		def execute(note)
@@ -171,8 +176,6 @@ module Commands
 					processFile(e, blacklist)
 				}
 			end
-
-			facade.send_notification(Constants::Notifications::GENERATE_ENCODING_JOBS)
 		end
 
 		def processFile(file, blacklist)
@@ -242,9 +245,6 @@ module Commands
 					encodingJobsProxy.addEncodingJob(encodingJob)
 				}
 			}
-			
-			facade.send_notification(Constants::Notifications::EXECUTE_ALL_ENCODING_JOBS)
-
 		end
 
 		def generateDefaultOutputName(file, device)
@@ -258,8 +258,6 @@ module Commands
 		facade = Facade.instance
 		encodingJobProxy = facade.retrieve_proxy(Constants::ProxyConstants::ENCODING_JOBS_PROXY)
 		facade.send_notification(Constants::Notifications::LOG_INFO, "Executing All Encoding Jobs")
-
-		threads = []
 
 		encodingJobProxy.encodingJobs.each{|e|
 			if !e.noAudio then
@@ -278,11 +276,6 @@ module Commands
 			end
 			
 			facade.send_notification(Constants::Notifications::CLEANUP_FILES, e)
-		}
-
-		#Join on threads
-		threads.each{|t|
-			t.join
 		}
 		end
 	end

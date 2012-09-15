@@ -73,8 +73,6 @@ module Constants
 		EXTERNAL_COMMAND_EXECUTED = "EXTERNAL_COMMAND_EXECUTED" #Used to signal that a command has been executed
 		EXTERNAL_COMMAND_FINISHED_EXECUTING = "EXTERNAL_COMMAND_FINISHED_EXECUTING" #Used to signal that a command has finished executing
 
-		#Command Notifications
-
 		#Copyleft Command
 		OUTPUT_COPYLEFT = "OUTPUT_COPYLEFT"
 
@@ -89,6 +87,9 @@ module Constants
 		ENCODE_FAILURE = "ENCODE_FAILURE"
 		MULTIPLEXING_FAILURE = "MULTIPLEXING_FAILURE"
 
+		#Launch macro encoding cycle command
+		LAUNCH_ENCODING_CYCLE_MACRO_COMMAND = "LAUNCH_ENCODING_CYCLE_MACRO_COMMAND"
+		
 		#INPUT PARSING STATE COMMANDS
 		VALIDATE_PROGRAM_ARGS = "VALIDATE_PROGRAM_ARGS"
 
