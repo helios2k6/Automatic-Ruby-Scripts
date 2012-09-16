@@ -240,6 +240,7 @@ module Commands
 			end
 			
 			facade.send_notification(Constants::Notifications::CLEANUP_FILES, e)
+			facade.send_notification(Constants::Notifications::MOVE_FINISHED_FILE, e.outputFile)
 		}
 		end
 	end
@@ -507,6 +508,16 @@ module Commands
 				facade.send_notification(Constants::Notifications::LOG_INFO, "Deleting File #{e}")
 				File.delete("#{e}")
 			}
+		end
+	end
+	
+	class MoveFilesToFinishedFolderCommand < SimpleCommand
+		def execute(note)
+			if !Dir.exists?("Finished") then
+				Dir.mkdir("Finished")
+			end
+			
+			File.rename(note.body, "Finished#{File::PATH_SEPARATOR}#{note.body}")
 		end
 	end
 end
