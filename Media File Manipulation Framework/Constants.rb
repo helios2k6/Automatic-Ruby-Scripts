@@ -248,7 +248,7 @@ module Constants
 		
 		OPTIONAL_ENHANCEMENTS = "--non-deterministic"
 		
-		QUALITY_LOW = "--crf 24"
+		QUALITY_LOW = "--crf 24 --preset ultrafast"
 
 		QUALITY_MEDIUM = "--crf 22 --subme 8"
 

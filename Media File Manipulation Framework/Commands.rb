@@ -15,9 +15,10 @@
 require 'rubygems'
 require 'PureMVC_Ruby'
 require 'Thread'
-require './Constants'
+require 'fileutils'
 
 #All Modules should probably go here
+require './Constants'
 require './InputModule'
 require './MediaTaskObjects'
 require './AudioEncoders'
@@ -454,6 +455,7 @@ module Commands
 
 			command = command + " " + Constants::EncodingConstants::OUTPUT_ARG + " \"#{byteFile}\" \"#{avsFile}\""
 
+			facade.send_notification(Constants::Notifications::LOG_INFO, "Executing encoding command: #{command}")
 			system(command)
 
 			#Add file to temporaryFile proxy only if noMux = false and noAudio = false
@@ -514,10 +516,12 @@ module Commands
 	class MoveFilesToFinishedFolderCommand < SimpleCommand
 		def execute(note)
 			if !Dir.exists?("Finished") then
+			facade.send_notification(Constants::Notifications::LOG_INFO, "Creating Finished Directory")
 				Dir.mkdir("Finished")
 			end
 			
-			File.rename(note.body, "Finished#{File::PATH_SEPARATOR}#{note.body}")
+			facade.send_notification(Constants::Notifications::LOG_INFO, "Moving file #{note.body} to Finished directory")
+			FileUtils.mv(note.body, "Finished#{File::SEPARATOR}#{note.body}")
 		end
 	end
 end

@@ -62,6 +62,8 @@ def main
 	facade.register_command(Constants::Notifications::CLEANUP_FILES, Commands::CleanUpEncodingJobCommand)
 
 	facade.register_command(Constants::Notifications::OUTPUT_COPYLEFT, Commands::OutputCopyLeftNotice)
+	
+	facade.register_command(Constants::Notifications::MOVE_FINISHED_FILE, Commands::MoveFilesToFinishedFolderCommand)
 
 	#Initialize the Mediator
 	facade.register_mediator(Loggers::LoggerMediator.new)

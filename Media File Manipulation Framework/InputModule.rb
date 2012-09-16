@@ -81,6 +81,7 @@ module InputModule
 			@subtitleTrack = (subtitleTrackItem != nil && subtitleTrackItem[0]) || subtitleTrackItem
 			
 			qualityItem = argHash[Constants::InputConstants::QUALITY_ARG]
+			
 			@quality = (qualityItem != nil && qualityItem[0]) || Constants::ValidInputConstants::MEDIUM_QUALITY
 		end
 	end
