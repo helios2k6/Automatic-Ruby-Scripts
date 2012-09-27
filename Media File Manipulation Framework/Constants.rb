@@ -46,13 +46,11 @@ module Constants
 	end
 
 	class DeviceConstants
-		PS3_CONSTANT = "ps3"
-		IPHONE4_CONSTANT = "iphone4"
 		IPAD_3_CONSTANT = "ipad3"
 
-		DEVICE_VECTOR = [PS3_CONSTANT, IPHONE4_CONSTANT, IPAD_3_CONSTANT]
+		DEVICE_VECTOR = [IPAD_3_CONSTANT]
 		
-		DEFAULT_NAME_BY_DEVICE = {PS3_CONSTANT => "_PS3", IPHONE4_CONSTANT => "_iPhone4", IPAD_3_CONSTANT => "_iPad3"}
+		DEFAULT_NAME_BY_DEVICE = {IPAD_3_CONSTANT => "_iPad3"}
 	end
 
 	class Notifications
@@ -133,7 +131,7 @@ module Constants
 
 		#Special
 		DEVICE_ARG = "--device"
-		DEVICE_ARG_HELP_STRING =	"\t#{DEVICE_ARG} <string>\n\t\tSpecifies the device to encode for\n\t\tValid inputs: ps3, iphone4, ipad3\n\n"
+		DEVICE_ARG_HELP_STRING =	"\t#{DEVICE_ARG} <string>\n\t\tSpecifies the device to encode for\n\t\tValid inputs: ipad3\n\n"
 
 		QUALITY_ARG = "--quality"
 		QUALITY_ARG_HELP_STRING = "\t#{QUALITY_ARG} <string>\n\t\tSpecifies the quality level for the encode\n\t\tValid inputs: low, medium, high, extreme\n\n"
@@ -255,11 +253,7 @@ module Constants
 		QUALITY_HIGH = "--crf 20 --subme 9"
 
 		QUALITY_EXTREME = "--crf 18 --subme 10 --trellis 2"
-
-		PS3_COMPAT_ARGS = "--level 4.2 --profile high --aud --sar 1:1 --vbv-maxrate 31250 --vbv-bufsize 31250"
-		
-		IPHONE4_COMPAT_ARGS = "--level 3.1 --profile main --sar 1:1"
-		
+	
 		IPAD_3_COMPAT_ARGS = "--level 4.1 --profile high --aud --sar 1:1"
 		
 		OUTPUT_ARG = "--output"
@@ -275,9 +269,8 @@ module Constants
 			ValidInputConstants::EXTREME_QUALITY => QUALITY_EXTREME}
 		
 		DEVICE_COMPAT_HASH= {
-			DeviceConstants::PS3_CONSTANT => PS3_COMPAT_ARGS, 
-			DeviceConstants::IPHONE4_CONSTANT => IPHONE4_COMPAT_ARGS, 
-			DeviceConstants::IPAD_3_CONSTANT => IPAD_3_COMPAT_ARGS}
+			DeviceConstants::IPAD_3_CONSTANT => IPAD_3_COMPAT_ARGS
+		}
 	end
 
 	class AvisynthFilterConstants
