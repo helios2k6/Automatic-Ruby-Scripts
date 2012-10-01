@@ -20,52 +20,68 @@ require './Constants'
 require './MediaObjects'
 
 module MediaInfo
-  class MediaInfoTools
-    MEDIAINFO = "mediainfo.exe"
+	class MediaInfoTools
+		MEDIAINFO = "mediainfo.exe"
 
-    #XML Elements
-    TYPE_ELEMENT = "type"
-    FORMAT_ELEMENT = "Format"
-    ID_ELEMENT = "ID"
+		#XML Elements
+		TYPE_ELEMENT = "type"
+		FORMAT_ELEMENT = "Format"
+		ID_ELEMENT = "ID"
+		
+		WIDTH_ELEMENT = "Width"
+		HEIGHT_ELEMENT = "Height"
+		DAR_ELEMENT = "Display_aspect_ratio"
 
-    def self.isAMediaFile(file)
-      Constants::MediaContainers::EXTENSION_HASH.has_value?(File.extname(file))
-    end
+		def self.isAMediaFile(file)
+			Constants::MediaContainers::EXTENSION_HASH.has_value?(File.extname(file))
+		end
 
-    def self.processElement(element, tracks)
-      trackTypeS = element.attributes[TYPE_ELEMENT]
-      if Constants::TrackType::TRACK_TYPE_VECTOR.include?(trackTypeS) then
-        formatS = element.elements[FORMAT_ELEMENT].get_text.to_s
-        trackID = element.elements[ID_ELEMENT].get_text.to_s.to_i
+		def self.processElement(element, tracks)
+			trackTypeS = element.attributes[TYPE_ELEMENT]
+			
+			if Constants::TrackType::TRACK_TYPE_VECTOR.include?(trackTypeS) then
+				formatS = element.elements[FORMAT_ELEMENT].get_text.to_s
+				trackID = element.elements[ID_ELEMENT].get_text.to_s.to_i
+				
+				case trackTypeS
+				when Constants::TrackType::VIDEO #It's a video track
+					width = element.elements[WIDTH_ELEMENT].get_text.to_s.to_i
+					height = element.elements[HEIGHT_ELEMENT].get_text.to_s.to_i
+					dar = element.elements[DAR_ELEMENT].get_text.to_s
+				
+					videoTrack = MediaObjects::VideoTrack.new(trackID, formatS, width, height, dar)
+					tracks << videoTrack
+				when Constants::TrackType::AUDIO #It's an audio track
+					audioTrack =  MediaObjects::AudioTrack.new(trackID, formatS)
+					tracks << audioTrack
+				when Constants::TrackType::TEXT #It's a subtitle track
+					subtitleTrack =  MediaObjects::SubtitleTrack.new(trackID, formatS)
+					tracks << subtitleTrack
+				end
+			end
+		end
 
-        if Constants::TrackFormat::TRACK_FORMAT_VECTOR.include?(formatS) then
-          newTrack = MediaObjects::MediaTrack.new(trackID, trackTypeS, formatS)
-          tracks << newTrack
-        end
-      end
-    end
+		def self.getMediaInfo(file)
+			args = "--output=XML \"#{file}\""
 
-    def self.getMediaInfo(file)
-      args = "--output=XML \"#{file}\""
+			#Don't ask why we have to execute this command like this. It's the stupidest thing ever
+			xmlOutput = %x("#{MEDIAINFO}" #{args})
 
-      #Don't ask why we have to execute this command like this. It's the stupidest thing ever
-      xmlOutput = %x("#{MEDIAINFO}" #{args})
+			document = Document.new(xmlOutput)
+			rootInfo = document.elements["Mediainfo/File"]
 
-      document = Document.new(xmlOutput)
-      rootInfo = document.elements["Mediainfo/File"]
+			tracks = []
 
-      tracks = []
+			rootInfo.elements.each{|e| processElement(e, tracks)}
 
-      rootInfo.elements.each{|e| processElement(e, tracks)}
+			mediaType = rootInfo.elements["track[@type='#{Constants::TrackType::GENERAL}']/Format"].get_text.to_s
 
-      mediaType = rootInfo.elements["track[@type='#{Constants::TrackType::GENERAL}']/Format"].get_text.to_s
+			if Constants::MediaContainers::CONTAINER_VECTOR.include?(mediaType) then
+				mediaFile = MediaObjects::MediaFile.new(file, tracks, mediaType)
+				return mediaFile
+			end
 
-      if Constants::MediaContainers::CONTAINER_VECTOR.include?(mediaType) then
-        mediaFile = MediaObjects::MediaFile.new(file, tracks, mediaType)
-        return mediaFile
-      end
-
-      return nil
-    end
-  end
+			return nil
+		end
+	end
 end

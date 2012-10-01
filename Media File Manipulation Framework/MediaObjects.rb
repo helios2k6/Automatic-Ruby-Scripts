@@ -17,57 +17,89 @@ require 'PureMVC_Ruby'
 require './Constants'
 
 module MediaObjects
-  class MediaFileProxy < Proxy
-    attr_accessor :mediaFiles
+	class MediaFileProxy < Proxy
+		attr_accessor :mediaFiles
 
-    def initialize
-      super(Constants::ProxyConstants::MEDIA_FILE_PROXY)
-      @mediaFiles = Array.new
-    end
+		def initialize
+			super(Constants::ProxyConstants::MEDIA_FILE_PROXY)
+			@mediaFiles = Array.new
+		end
 
-    def addMediaFile(mediaFile)
-      if mediaFile.is_a? MediaFile then
-        @mediaFiles << mediaFile
-      end
-    end
-  end
+		def addMediaFile(mediaFile)
+				if mediaFile.is_a? MediaFile then
+				@mediaFiles << mediaFile
+				end
+			end
+		end
 
-  class MediaFile
-    attr_accessor :file, :tracks, :mediaContainerType
+	class MediaFile
+		attr_accessor :file, :tracks, :mediaContainerType
 
-    def initialize(file, tracks, mediaContainerType)
-      @file = file
-      @tracks = tracks
-      @mediaContainerType = mediaContainerType
-    end
+		def initialize(file, tracks, mediaContainerType)
+			@file = file
+			@tracks = tracks
+			@mediaContainerType = mediaContainerType
+		end
 
-    def numTracks
-      tracks.length
-    end
+		def numTracks
+			racks.length
+		end
 
-    def getTrack(trackID)
-      tracks.each{|e|
-        if e.trackID == trackID then
-          return e
-        end
-      }
+		def getTrack(trackID)
+			tracks.each{|e|
+				if e.trackID == trackID then
+					return e
+				end
+			}
+			return nil
+		end
+		
+		def getVideoTracks
+			response = Array.new
+			tracks.each{|e|
+				if e.trackType == Constants::TrackType::VIDEO then
+					response << e
+				end
+			}
+			return response
+		end
+		
+		def getBaseName
+			File.basename(file, File.extname(file))
+		end
+	end
 
-      return nil
-    end
+	class MediaTrack
+		attr_accessor :trackID, :trackType, :trackFormat
 
-    def getBaseName
-      File.basename(file, File.extname(file))
-    end
-  end
+		def initialize(trackID, trackType, trackFormat)
+			@trackID = trackID
+			@trackType = trackType
+			@trackFormat = trackFormat
+		end
+		
+	end
 
-  class MediaTrack
-    attr_accessor :trackID, :trackType, :trackFormat
-
-    def initialize(trackID, trackType, trackFormat)
-      @trackID = trackID
-      @trackType = trackType
-      @trackFormat = trackFormat
-    end
-  end
-
+	class VideoTrack < MediaTrack
+		attr_accessor :width, :height, :DAR
+		
+		def initialize(trackID, trackFormat, width, height, dar)
+			super(trackID, Constants::TrackType::VIDEO, trackFormat)
+			@width = width
+			@height = height
+			@DAR = dar
+		end
+	end
+	
+	class AudioTrack < MediaTrack
+		def initialize(trackID, trackFormat)
+			super(trackID, Constants::TrackType::AUDIO, trackFormat)
+		end
+	end
+	
+	class SubtitleTrack < MediaTrack
+		def initialize(trackID, trackFormat)
+			super(trackID,  Constants::TrackType::TEXT, trackFormat)
+		end
+	end
 end

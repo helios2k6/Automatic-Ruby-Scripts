@@ -133,6 +133,9 @@ module Constants
 		DEVICE_ARG = "--device"
 		DEVICE_ARG_HELP_STRING =	"\t#{DEVICE_ARG} <string>\n\t\tSpecifies the device to encode for\n\t\tValid inputs: ipad3\n\n"
 
+		ENSURE_16_9_ASPECT_RATIO = "--ensure-16-9"
+		ENSURE_16_9_ASPECT_RATIO_HELP_STRING = "\t#{ENSURE_16_9_ASPECT_RATIO} \n\t\tEnsures that videos are encoded at an aspect ratio of 16:9\n\n"
+		
 		QUALITY_ARG = "--quality"
 		QUALITY_ARG_HELP_STRING = "\t#{QUALITY_ARG} <string>\n\t\tSpecifies the quality level for the encode\n\t\tValid inputs: low, medium, high, extreme\n\n"
 
@@ -166,7 +169,7 @@ module Constants
 		VERY_HIGH_QUALITY_AUDIO_ARG = "--hq-audio"
 		VERY_HIGH_QUALITY_AUDIO_ARG_HELP_STRING = "\t#{VERY_HIGH_QUALITY_AUDIO_ARG}\n\t\tSet bitrate to 256k for all AAC encoded audio\n\n"
 		
-		PROG_ARG_VECTOR = [FILE_ARG, DEVICE_ARG, QUALITY_ARG, AVS_ADD_ARG, NO_MUX_ARG, HELP_ARG, FORCE_AUDIO_TRACK, FORCE_SUBTITLE_TRACK, BLACKLIST_ARG, POST_ENCODING_ARG, NO_SUBS_ARG, NO_AUDIO_ARG, VERY_HIGH_QUALITY_AUDIO_ARG]
+		PROG_ARG_VECTOR = [FILE_ARG, DEVICE_ARG, QUALITY_ARG, AVS_ADD_ARG, ENSURE_16_9_ASPECT_RATIO, NO_MUX_ARG, HELP_ARG, FORCE_AUDIO_TRACK, FORCE_SUBTITLE_TRACK, BLACKLIST_ARG, POST_ENCODING_ARG, NO_SUBS_ARG, NO_AUDIO_ARG, VERY_HIGH_QUALITY_AUDIO_ARG]
 
 		PROG_ARG_HELP_HASH = {
 			FILE_ARG => FILE_ARG_HELP_STRING,
@@ -174,6 +177,7 @@ module Constants
 			DEVICE_ARG => DEVICE_ARG_HELP_STRING,
 			QUALITY_ARG => QUALITY_ARG_HELP_STRING,
 			AVS_ADD_ARG => AVS_ADD_ARG_HELP_STRING,
+			ENSURE_16_9_ASPECT_RATIO => ENSURE_16_9_ASPECT_RATIO_HELP_STRING,
 			NO_MUX_ARG => NO_MUX_ARG_HELP_STRING,
 			NO_AUDIO_ARG => NO_AUDIO_ARG_HELP_STRING,
 			NO_SUBS_ARG => NO_SUBS_ARG_HELP_STRING,
@@ -281,5 +285,9 @@ module Constants
 		GRADFUN_2_DB = "gradfun2db"
 		LANCZOS_RESIZE = "lanczosResize"
 		SPLINE_64_RESIZE = "spline64Resize"
+	end
+	
+	class VideoInfoConstants
+		ASPECT_16_9 = "16:9"
 	end
 end

@@ -56,7 +56,7 @@ module InputModule
 	end
 
 	class ProgramArgs
-		attr_accessor :device, :files, :avsCommands, :noMultiplex, :audioTrack, :subtitleTrack, :blacklist, :quality, :postJobs, :noSubtitles, :noAudio, :hqAudio
+		attr_accessor :device, :files, :avsCommands, :noMultiplex, :audioTrack, :subtitleTrack, :blacklist, :quality, :postJobs, :noSubtitles, :noAudio, :hqAudio, :ensure169
 		def initialize(argVector)	
 			argHash = InputParser.processArgs(argVector)
 			
@@ -72,6 +72,7 @@ module InputModule
 			@noAudio = argHash[Constants::InputConstants::NO_AUDIO_ARG] != nil
 			@noSubtitles = argHash[Constants::InputConstants::NO_SUBS_ARG] != nil
 			@hqAudio = argHash[Constants::InputConstants::VERY_HIGH_QUALITY_AUDIO_ARG] != nil
+			@ensure169 = argHash[Constants::InputConstants::ENSURE_16_9_ASPECT_RATIO] != nil
 			
 			#Single item arguments
 			audioTrackItem = argHash[Constants::InputConstants::FORCE_AUDIO_TRACK] 

@@ -170,6 +170,7 @@ module Commands
 			quality = programArgsProxy.programArgs.quality
 			avsCommands = programArgsProxy.programArgs.avsCommands
 			postJobs = programArgsProxy.programArgs.postJobs
+			ensure169 = programArgsProxy.programArgs.ensure169
 			
 			noMux = programArgsProxy.programArgs.noMultiplex
 			noAudio = programArgsProxy.programArgs.noAudio
@@ -207,6 +208,8 @@ module Commands
 						encodingJob.subtitleTrack = subtitleTrackNumber.to_i
 					end
 
+					encodingJob.ensure169 = ensure169
+					
 					encodingJobsProxy.addEncodingJob(encodingJob)
 				}
 			}
@@ -403,12 +406,22 @@ module Commands
 	end
 
 	class GenerateAvisynthFileCommand < SimpleCommand
+		def calculateNewAspectMultipleFromN(oldWidth, n)
+			firstPass = oldWidth.to_f / n.to_f
+			secondPass = firstPass / 4.0
+			
+			roundedSecondPass = (secondPass + 0.4).round
+			
+			return (roundedSecondPass * 4).to_i
+		end
+	
 		def execute(note)
 			facade = Facade.instance
 			encodingJob = note.body
 			mediaFile = encodingJob.mediaFile
 			realFile = mediaFile.file
 			avsFile = encodingJob.avsFile
+			
 			tempFileProxy = facade.retrieve_proxy(Constants::ProxyConstants::TEMPORARY_FILES_PROXY)
 
 			outputFile = mediaFile.getBaseName + MediaTaskObjects::AVSFile::AVS_EXTENSION
@@ -421,6 +434,22 @@ module Commands
 			if subtitleTrack != nil then
 				avsFile.addPreFilter(Constants::AvisynthFilterConstants::TEXTSUB_FILTER + "(\"#{subtitleTrack}\")")
 				facade.send_notification(Constants::Notifications::LOG_INFO, "Adding Textsub Prefilter for #{subtitleTrack}")
+			end
+			
+			#Check to see if we need to ensure 16:9 aspect ratio
+			if encodingJob.ensure169 then
+				#Get first video track; that's the only one we care about
+				videoTrack = mediaFile.getVideoTracks[0]
+				
+				#Check DAR to make sure that the video supports 16:9 AR
+				if videoTrack.DAR == Constants::VideoInfoConstants::ASPECT_16_9 then
+					coeff = calculateNewAspectMultipleFromN(videoTrack.width, 16.0)
+					newWidth = coeff * 16
+					newHeight = coeff * 9
+					
+					avsFile.addPostFilter("#{Constants::AvisynthFilterConstants::LANCZOS_RESIZE}(#{newWidth}, #{newHeight})")
+					facade.send_notification(Constants::Notifications::LOG_INFO, "Ensuring 16:9 Aspect Ratio. Resizing from #{videoTrack.width} / #{videoTrack.height} to #{newWidth} / #{newHeight}")
+				end
 			end
 
 			avsFile.outputAvsFile(outputFile)
