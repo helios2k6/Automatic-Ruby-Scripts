@@ -45,8 +45,9 @@ module MediaInfo
 				
 				case trackTypeS
 				when Constants::TrackType::VIDEO #It's a video track
-					width = element.elements[WIDTH_ELEMENT].get_text.to_s.to_i
-					height = element.elements[HEIGHT_ELEMENT].get_text.to_s.to_i
+					width = element.elements[WIDTH_ELEMENT].get_text.to_s.split("pixels")[0].delete(" ").to_i
+					height = element.elements[HEIGHT_ELEMENT].get_text.to_s.split("pixels")[0].delete(" ").to_i
+					
 					dar = element.elements[DAR_ELEMENT].get_text.to_s
 				
 					videoTrack = MediaObjects::VideoTrack.new(trackID, formatS, width, height, dar)

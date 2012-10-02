@@ -407,6 +407,8 @@ module Commands
 
 	class GenerateAvisynthFileCommand < SimpleCommand
 		def calculateNewAspectMultipleFromN(oldWidth, n)
+			puts "DEBUG old #{oldWidth}"
+		
 			firstPass = oldWidth.to_f / n.to_f
 			secondPass = firstPass / 4.0
 			
@@ -443,6 +445,7 @@ module Commands
 				
 				#Check DAR to make sure that the video supports 16:9 AR
 				if videoTrack.DAR == Constants::VideoInfoConstants::ASPECT_16_9 then
+				
 					coeff = calculateNewAspectMultipleFromN(videoTrack.width, 16.0)
 					newWidth = coeff * 16
 					newHeight = coeff * 9
