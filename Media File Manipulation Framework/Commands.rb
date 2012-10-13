@@ -407,7 +407,6 @@ module Commands
 
 	class GenerateAvisynthFileCommand < SimpleCommand
 		def calculateNewAspectMultipleFromN(oldWidth, n)
-			puts "DEBUG old #{oldWidth}"
 		
 			firstPass = oldWidth.to_f / n.to_f
 			secondPass = firstPass / 4.0
