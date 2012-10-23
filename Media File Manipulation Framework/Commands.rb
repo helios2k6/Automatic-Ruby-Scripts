@@ -331,7 +331,8 @@ module Commands
 						postComm = AudioEncoders::FlacDecoder.generateDecodeFlacToWavCommand(previousFile)
 
 						tempFileProxy.addTemporaryFile(encodingJob, previousFile) # Add Flac file
-
+						
+						facade.send_notification(Constants::Notifications::LOG_INFO, "Decoding FLAC to WAV")
 						system(postComm[0])
 
 						previousFile = postComm[1]
@@ -342,13 +343,23 @@ module Commands
 						
 						tempFileProxy.addTemporaryFile(encodingJob, previousFile) # Add generic audio file
 						
+						facade.send_notification(Constants::Notifications::LOG_INFO, "Decoding Audio Track With FFMPEG")
 						system(postComm[0])
 						
 						previousFile = postComm[1]
 						tempFileProxy.addTemporaryFile(encodingJob, previousFile) # Add Wav File
 						
-					when :ENCODE_AAC						
-						postComm = AudioEncoders::AacEncoder.generateEncodeWavToAacCommand(previousFile, encodingJob.hqAudio)
+					when :ENCODE_AAC
+						#Check to see if the track we selected is actually 5.1; that way we can set the HQ audio flag
+						useHqAudio = mediaFile.getTrack(audioTrack).channels > 2 || encodingJob.hqAudio
+						
+						facade.send_notification(Constants::Notifications::LOG_INFO, "Encoding Audio File With AAC")
+						
+						if(useHqAudio)
+							facade.send_notification(Constants::Notifications::LOG_INFO, "Using HQ Audio")
+						end
+						
+						postComm = AudioEncoders::AacEncoder.generateEncodeWavToAacCommand(previousFile, useHqAudio)
 						system(postComm[0])
 
 						previousFile = postComm[1]

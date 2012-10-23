@@ -31,6 +31,8 @@ module MediaInfo
 		WIDTH_ELEMENT = "Width"
 		HEIGHT_ELEMENT = "Height"
 		DAR_ELEMENT = "Display_aspect_ratio"
+		
+		AUDIO_CHANNELS = "Channel_s_"
 
 		def self.isAMediaFile(file)
 			Constants::MediaContainers::EXTENSION_HASH.has_value?(File.extname(file))
@@ -53,7 +55,9 @@ module MediaInfo
 					videoTrack = MediaObjects::VideoTrack.new(trackID, formatS, width, height, dar)
 					tracks << videoTrack
 				when Constants::TrackType::AUDIO #It's an audio track
-					audioTrack =  MediaObjects::AudioTrack.new(trackID, formatS)
+					channels = element.elements[AUDIO_CHANNELS].get_text.to_s.split("channels")[0].delete(" ").to_i
+				
+					audioTrack =  MediaObjects::AudioTrack.new(channels, trackID, formatS)
 					tracks << audioTrack
 				when Constants::TrackType::TEXT #It's a subtitle track
 					subtitleTrack =  MediaObjects::SubtitleTrack.new(trackID, formatS)

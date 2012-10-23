@@ -64,6 +64,17 @@ module MediaObjects
 			return response
 		end
 		
+		def getAudioTracks
+			response = Array.new
+			tracks.each{|e|
+				if e.trackType == Constants::TrackType::AUDIO then
+					response << e
+				end
+			}
+			
+			return e;
+		end
+		
 		def getBaseName
 			File.basename(file, File.extname(file))
 		end
@@ -92,8 +103,11 @@ module MediaObjects
 	end
 	
 	class AudioTrack < MediaTrack
-		def initialize(trackID, trackFormat)
+		attr_accessor :channels
+		
+		def initialize(channels, trackID, trackFormat)
 			super(trackID, Constants::TrackType::AUDIO, trackFormat)
+			@channels = channels
 		end
 	end
 	
