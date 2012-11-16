@@ -399,6 +399,12 @@ module Commands
 					when Constants::TrackFormat::SSA, Constants::TrackFormat::UTF_EIGHT
 						facade.send_notification(Constants::Notifications::LOG_INFO, "Found #{e.trackFormat} Track for #{realFile}")
 						subtitleTrack = e.trackID
+						break
+
+					when Constants::TrackFormat::VOB_SUB #this is a weird format
+						facade.send_notification(Constants::Notifications::LOG_INFO, "Found #{e.trackFormat} Track for #{realFile}")
+						subtitleTrack = e.trackID
+						break
 					end
 				}
 			end
@@ -444,7 +450,12 @@ module Commands
 			subtitleTrack = encodingJobProxy.getSubtitleTrackFile(encodingJob)
 
 			if subtitleTrack != nil then
-				avsFile.addPreFilter(Constants::AvisynthFilterConstants::TEXTSUB_FILTER + "(\"#{subtitleTrack}\")")
+				if subtitleTrack.format == Constants::TrackFormat::VOB_SUB then
+					avsFile.addPreFilter(Constants::AvisynthFilterConstants::VOBSUB_FILTER + "(\"#{subtitleTrack}\")")
+				else
+					avsFile.addPreFilter(Constants::AvisynthFilterConstants::TEXTSUB_FILTER + "(\"#{subtitleTrack}\")")
+				end
+				
 				facade.send_notification(Constants::Notifications::LOG_INFO, "Adding Textsub Prefilter for #{subtitleTrack}")
 			end
 			

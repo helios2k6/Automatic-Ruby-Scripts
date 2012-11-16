@@ -217,6 +217,7 @@ module Constants
 
 		ASS = "ASS"
 		SSA = "SSA"
+		VOB_SUB = "VobSub"
 		UTF_EIGHT = "UTF-8"
 
 		TRACK_FORMAT_VECTOR = [AVC, VC_ONE, AAC, FLAC, AC3, VORBIS, ASS, UTF_EIGHT, WAV, MP3, DTS]
@@ -282,6 +283,7 @@ module Constants
 		DIRECTSHOW_SOURCE = "directShowSource"
 		FFVIDEO_SOURCE = "ffvideosource"
 		TEXTSUB_FILTER = "textsub"
+		VOBSUB_FILTER = "vobsub"
 		GRADFUN_2_DB = "gradfun2db"
 		LANCZOS_RESIZE = "lanczosResize"
 		SPLINE_64_RESIZE = "spline64Resize"
