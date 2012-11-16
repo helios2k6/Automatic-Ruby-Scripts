@@ -226,7 +226,20 @@ module Constants
 		VIDEO_FORMAT_VECTOR = [AVC, VC_ONE]
 		SUBTITLE_FORMAT_VECTOR = [ASS, SSA, UTF_EIGHT]
 
-		EXTENSION_HASH = {AVC => ".264", AAC => ".aac", FLAC => ".flac", AC3 => ".ac3", VORBIS => ".ogg", ASS => ".ass", SSA => ".ssa", UTF_EIGHT => ".srt", WAV => ".wav", MP3 => ".mp3", DTS => ".dts"}
+		EXTENSION_HASH = {
+			AVC => ".264",
+			AAC => ".aac",
+			FLAC => ".flac",
+			AC3 => ".ac3",
+			VORBIS => ".ogg",
+			ASS => ".ass",
+			SSA => ".ssa",
+			UTF_EIGHT => ".srt",
+			VOB_SUB => ".idx",
+			WAV => ".wav",
+			MP3 => ".mp3",
+			DTS => ".dts",
+		}
 	end
 
 	class MediaContainers

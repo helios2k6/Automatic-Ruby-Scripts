@@ -381,10 +381,11 @@ module Commands
 			realFile = mediaFile.file
 			encodingJobProxy = facade.retrieve_proxy(Constants::ProxyConstants::ENCODING_JOBS_PROXY)
 			tempFileProxy = facade.retrieve_proxy(Constants::ProxyConstants::TEMPORARY_FILES_PROXY)
-			subtitleTrack = encodingJob.subtitleTrack
+			subtitleTrackNumber = encodingJob.subtitleTrack
+			subtitleTrackObject = nil
 			facade.send_notification(Constants::Notifications::LOG_INFO, "Begin Extracting Subtitle Track for #{realFile}")
 			
-			if subtitleTrack == nil && mediaFile.mediaContainerType == Constants::MediaContainers::MKV then
+			if subtitleTrackNumber == nil && mediaFile.mediaContainerType == Constants::MediaContainers::MKV then
 				#See if the user wants to extract a particular track. If they do, then
 				#we don't have to cycle through the tracks
 
@@ -393,31 +394,50 @@ module Commands
 					case e.trackFormat
 					when Constants::TrackFormat::ASS
 						facade.send_notification(Constants::Notifications::LOG_INFO, "Found ASS Track for #{realFile}")
-						subtitleTrack = e.trackID
+						subtitleTrackNumber = e.trackID
+						subtitleTrackObject = e
 						break
 						
 					when Constants::TrackFormat::SSA, Constants::TrackFormat::UTF_EIGHT
 						facade.send_notification(Constants::Notifications::LOG_INFO, "Found #{e.trackFormat} Track for #{realFile}")
-						subtitleTrack = e.trackID
+						subtitleTrackNumber = e.trackID
+						subtitleTrackObject = e
 						break
 
 					when Constants::TrackFormat::VOB_SUB #this is a weird format
 						facade.send_notification(Constants::Notifications::LOG_INFO, "Found #{e.trackFormat} Track for #{realFile}")
-						subtitleTrack = e.trackID
+						subtitleTrackNumber = e.trackID
+						subtitleTrackObject = e
 						break
 					end
 				}
 			end
 
-			if subtitleTrack != nil then
+			if subtitleTrackNumber != nil then
 				#Check to see if the subtitle track actually was found
-				facade.send_notification(Constants::Notifications::LOG_INFO, "Extracting Track (Subtitles) ##{subtitleTrack} for #{realFile}")
-				extractionCommand = MediaContainerTools::ContainerTools.generateExtractTrackCommand(mediaFile, subtitleTrack)
+				facade.send_notification(Constants::Notifications::LOG_INFO, "Extracting Track (Subtitles) ##{subtitleTrackNumber} for #{realFile}")
+				extractionCommand = MediaContainerTools::ContainerTools.generateExtractTrackCommand(mediaFile, subtitleTrackNumber)
 
 				system(extractionCommand[0])
 
-				encodingJobProxy.addSubtitleTrackFile(encodingJob, extractionCommand[1])
-				tempFileProxy.addTemporaryFile(encodingJob, extractionCommand[1])
+				#OK, so VOB_SUB is a weird fucking format. Basically, when you tell mkvextract.exe to extract the VOB_SUB track, you tell it to extract the
+				#*.idx file instead of teh *.sub file. When you do, mkvextract will extract both files. Now, here's the thing, you don't pass the 
+				#*.idx file to avisynth filter. You pass the *.sub file to the avisynth filter, so you have to save the *.sub file in the EncodingJobProxy. 
+				#It's very weird and special cased for VOB_SUB
+				if subtitleTrackObject.trackFormat == Constants::TrackFormat::VOB_SUB then
+					#Add the *.idx file
+					tempFileProxy.addTemporaryFile(encodingJob, extractionCommand[1])
+					
+					#Formulate the *.sub file
+					subFile = File.basename(extractionCommand[1], Constants::TrackFormat::EXTENSION_HASH[Constants::TrackFormat::VOB_SUB]) + ".sub"
+					
+					facade.send_notification(Constants::Notifications::LOG_INFO, "Special casing for VOB_SUB. Adding #{subFile} to encoding job proxy and temp file proxy")
+					encodingJobProxy.addSubtitleTrackFile(encodingJob, subFile)
+					tempFileProxy.addTemporaryFile(encodingJob, subFile)
+				else
+					encodingJobProxy.addSubtitleTrackFile(encodingJob, extractionCommand[1])
+					tempFileProxy.addTemporaryFile(encodingJob, extractionCommand[1])
+				end
 			end
 		end
 	end
@@ -447,16 +467,17 @@ module Commands
 			
 			#Get subtitle track
 			encodingJobProxy = facade.retrieve_proxy(Constants::ProxyConstants::ENCODING_JOBS_PROXY)
-			subtitleTrack = encodingJobProxy.getSubtitleTrackFile(encodingJob)
+			subtitleTrackFile = encodingJobProxy.getSubtitleTrackFile(encodingJob)
 
-			if subtitleTrack != nil then
-				if subtitleTrack.format == Constants::TrackFormat::VOB_SUB then
-					avsFile.addPreFilter(Constants::AvisynthFilterConstants::VOBSUB_FILTER + "(\"#{subtitleTrack}\")")
+			if subtitleTrackFile != nil then
+				extension = File.extname(subtitleTrackFile)
+				if extension == ".sub" then
+					avsFile.addPreFilter(Constants::AvisynthFilterConstants::VOBSUB_FILTER + "(\"#{subtitleTrackFile}\")")
 				else
-					avsFile.addPreFilter(Constants::AvisynthFilterConstants::TEXTSUB_FILTER + "(\"#{subtitleTrack}\")")
+					avsFile.addPreFilter(Constants::AvisynthFilterConstants::TEXTSUB_FILTER + "(\"#{subtitleTrackFile}\")")
 				end
 				
-				facade.send_notification(Constants::Notifications::LOG_INFO, "Adding Textsub Prefilter for #{subtitleTrack}")
+				facade.send_notification(Constants::Notifications::LOG_INFO, "Adding Textsub Prefilter for #{subtitleTrackFile}")
 			end
 			
 			#Check to see if we need to ensure 16:9 aspect ratio
