@@ -382,7 +382,6 @@ module Commands
 			encodingJobProxy = facade.retrieve_proxy(Constants::ProxyConstants::ENCODING_JOBS_PROXY)
 			tempFileProxy = facade.retrieve_proxy(Constants::ProxyConstants::TEMPORARY_FILES_PROXY)
 			subtitleTrackNumber = encodingJob.subtitleTrack
-			subtitleTrackObject = nil
 			facade.send_notification(Constants::Notifications::LOG_INFO, "Begin Extracting Subtitle Track for #{realFile}")
 			
 			if subtitleTrackNumber == nil && mediaFile.mediaContainerType == Constants::MediaContainers::MKV then
@@ -395,19 +394,16 @@ module Commands
 					when Constants::TrackFormat::ASS
 						facade.send_notification(Constants::Notifications::LOG_INFO, "Found ASS Track for #{realFile}")
 						subtitleTrackNumber = e.trackID
-						subtitleTrackObject = e
 						break
 						
 					when Constants::TrackFormat::SSA, Constants::TrackFormat::UTF_EIGHT
 						facade.send_notification(Constants::Notifications::LOG_INFO, "Found #{e.trackFormat} Track for #{realFile}")
 						subtitleTrackNumber = e.trackID
-						subtitleTrackObject = e
 						break
 
 					when Constants::TrackFormat::VOB_SUB #this is a weird format
 						facade.send_notification(Constants::Notifications::LOG_INFO, "Found #{e.trackFormat} Track for #{realFile}")
 						subtitleTrackNumber = e.trackID
-						subtitleTrackObject = e
 						break
 					end
 				}
@@ -417,7 +413,7 @@ module Commands
 				#Check to see if the subtitle track actually was found
 				facade.send_notification(Constants::Notifications::LOG_INFO, "Extracting Track (Subtitles) ##{subtitleTrackNumber} for #{realFile}")
 				extractionCommand = MediaContainerTools::ContainerTools.generateExtractTrackCommand(mediaFile, subtitleTrackNumber)
-
+				subtitleTrackObject = mediaFile.getTrack(subtitleTrackNumber)
 				system(extractionCommand[0])
 
 				#OK, so VOB_SUB is a weird fucking format. Basically, when you tell mkvextract.exe to extract the VOB_SUB track, you tell it to extract the
