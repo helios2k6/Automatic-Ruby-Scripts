@@ -103,11 +103,12 @@ module MediaObjects
 	end
 	
 	class AudioTrack < MediaTrack
-		attr_accessor :channels
+		attr_accessor :channels, :language
 		
-		def initialize(channels, trackID, trackFormat)
+		def initialize(channels, trackID, trackFormat, language=nil)
 			super(trackID, Constants::TrackType::AUDIO, trackFormat)
 			@channels = channels
+			@language = language
 		end
 	end
 	
