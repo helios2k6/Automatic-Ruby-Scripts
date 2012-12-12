@@ -33,7 +33,7 @@ module MediaInfo
 		DAR_ELEMENT = "Display_aspect_ratio"
 		
 		AUDIO_CHANNELS = "Channel_s_"
-		AUDIO_LANGUAGE = "Langauge"
+		AUDIO_LANGUAGE = "Language"
 
 		def self.isAMediaFile(file)
 			Constants::MediaContainers::EXTENSION_HASH.has_value?(File.extname(file))
