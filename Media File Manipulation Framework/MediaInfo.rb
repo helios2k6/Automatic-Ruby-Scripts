@@ -33,7 +33,7 @@ module MediaInfo
 		DAR_ELEMENT = "Display_aspect_ratio"
 		
 		AUDIO_CHANNELS = "Channel_s_"
-		AUDIO_LANGUAGE = "Langauge_String"
+		AUDIO_LANGUAGE = "Langauge"
 
 		def self.isAMediaFile(file)
 			Constants::MediaContainers::EXTENSION_HASH.has_value?(File.extname(file))
@@ -62,8 +62,8 @@ module MediaInfo
 					langaugeElement = element.elements[AUDIO_LANGUAGE]
 					language = nil
 					
-					if languageElement != nil then
-						language = languageElement.get_text.to_s
+					if langaugeElement != nil then
+						language = langaugeElement.get_text.to_s
 					end
 					
 					audioTrack =  MediaObjects::AudioTrack.new(channels, trackID, formatS, language)

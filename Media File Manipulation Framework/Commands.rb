@@ -267,7 +267,66 @@ module Commands
 
 			return postCommand
 		end
-
+		
+		
+		#Order by: Japanese > nil > Everything else
+		#Then order by track type: FLAC > WAV > AAC > Everything else
+		def chooseBestAudioTrack(audioTracks, language = nil)
+			if audioTracks == nil || audioTracks.empty? then
+				return nil
+			end
+			chosenTracks = []
+			
+			if language != nil then
+				#Cycle through tracks and just pick out the ones that have a nil language or japanese language
+				audioTracks.each{|t|
+					if t.language == nil || t.language.casecmp(language) == 0 then
+						chosenTracks << t
+					end
+				}
+				chosenTracks.sort!{|a, b|
+					if a.language == nil then
+						if b.language == nil then
+							0 #both are nil, equal
+						else
+							1 #"b" has the language we want, but "a" doesn't, therefore "a" goes to the back of the line
+						end
+					else
+						if b.language == nil then
+							-1 #"a" has the language we want, but "b" doesn't
+						else
+							0 #"a" and "b" have the language we want; equal
+						end
+					end
+				}
+			else
+				chosenTracks = Array.new(audioTracks)
+			end
+			
+			if chosenTracks.empty? then
+				return nil
+			end
+			
+			#Cycle through and choose the best track format
+			chosenTrack = nil
+			chosenTracks.each{|e|
+				case e.trackFormat
+					when Constants::TrackFormat::FLAC #Prefer FLAC
+						chosenTrack = e
+						break
+					when Constants::TrackFormat::WAV #Then prefer WAV
+						chosenTrack = e
+						break
+					when Constants::TrackFormat::AAC #Then prefer AAC
+						chosenTrack = e
+						break
+					else
+						chosenTrack = e
+				end
+			}
+			return chosenTrack
+		end
+		
 		def execute(note)
 			facade = Facade.instance
 			encodingJob = note.body
@@ -278,6 +337,7 @@ module Commands
 			audioTrack = encodingJob.audioTrack
 			postCommands = []
 			facade.send_notification(Constants::Notifications::LOG_INFO, "Begin Extracting Audio Track for #{realFile}")
+			programArgsProxy = facade.retrieve_proxy(Constants::ProxyConstants::PROGRAM_ARGS_PROXY)
 			
 			if audioTrack != nil then
 				#First see if there's a particular audio track the user wants us to extract
@@ -286,32 +346,24 @@ module Commands
 				#Otherwise, cycle through tracks to see if any of them are audio tracks
 				case mediaFile.mediaContainerType
 				when Constants::MediaContainers::MKV, Constants::MediaContainers::MP4
-					mediaFile.tracks.each{|e|
-						if e.trackType == Constants::TrackType::AUDIO then
-							case e.trackFormat
-								when Constants::TrackFormat::FLAC
-									facade.send_notification(Constants::Notifications::LOG_INFO, "Found FLAC Audio for #{realFile}")
-									audioTrack = e.trackID
-									postCommands = getPostJobsForAudioTrack(e)
-									break
-								
-								when Constants::TrackFormat::WAV
-									facade.send_notification(Constants::Notifications::LOG_INFO, "Found WAV Audio for #{realFile}")
-									audioTrack = e.trackID
-									postCommands = getPostJobsForAudioTrack(e)
-									break
-									
-								when Constants::TrackFormat::AAC
-									facade.send_notification(Constants::Notifications::LOG_INFO, "Found AAC Audio for #{realFile}")
-									audioTrack = e.trackID
-									break
-								else
-									facade.send_notification(Constants::Notifications::LOG_INFO, "Found #{e.trackFormat} Audio for #{realFile}")
-									audioTrack = e.trackID
-									postCommands = getPostJobsForAudioTrack(e)
-							end
-						end
-					}
+					audioTracks = mediaFile.getAudioTracks()
+					
+					chosenAudioTrack = nil
+					if programArgsProxy.programArgs.ensureJap then
+						facade.send_notification(Constants::Notifications::LOG_INFO, "Attempting to use Japanese track")
+						chosenAudioTrack = chooseBestAudioTrack(audioTracks, "Japanese")
+					else
+						chosenAudioTrack = chooseBestAudioTrack(audioTrack)
+					end
+					
+					if chosenAudioTrack != nil && chosenAudioTrack.language != nil then
+						facade.send_notification(Constants::Notifications::LOG_INFO, "Found #{chosenAudioTrack.trackFormat} Audio for #{realFile} with #{chosenAudioTrack.language}")
+					else
+						facade.send_notification(Constants::Notifications::LOG_INFO, "Found #{chosenAudioTrack.trackFormat} Audio for #{realFile}")
+					end
+					
+					audioTrack = chosenAudioTrack.trackID
+					postCommand = getPostJobsForAudioTrack(chosenAudioTrack)
 				end
 			end
 			

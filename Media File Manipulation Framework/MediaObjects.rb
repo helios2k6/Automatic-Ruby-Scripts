@@ -72,7 +72,7 @@ module MediaObjects
 				end
 			}
 			
-			return e;
+			return response;
 		end
 		
 		def getBaseName

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Mediainfo version="0.7.60">
+<File>
+<track type="General">
+<Unique_ID>207791328644847687380370500566714463234 (0x9C532779CA2498959E0E2E61A2E8B402)</Unique_ID>
+<Complete_name>Kannazuki no Miko (1).mkv</Complete_name>
+<Format>Matroska</Format>
+<Format_version>Version 1</Format_version>
+<File_size>349 MiB</File_size>
+<Duration>24mn 11s</Duration>
+<Overall_bit_rate_mode>Variable</Overall_bit_rate_mode>
+<Overall_bit_rate>2 019 Kbps</Overall_bit_rate>
+<Encoded_date>UTC 2006-12-21 15:08:26</Encoded_date>
+<Writing_application>mkvmerge v1.6.0 (&apos;Ist das so&apos;) built on Oct 14 2005 15:22:41</Writing_application>
+<Writing_library>libebml v0.7.5 + libmatroska v0.7.7</Writing_library>
+<Attachment>Yes / Yes</Attachment>
+</track>
+
+<track type="Video">
+<ID>1</ID>
+<Format>AVC</Format>
+<Format_Info>Advanced Video Codec</Format_Info>
+<Format_profile>High@L5.1</Format_profile>
+<Format_settings__CABAC>Yes</Format_settings__CABAC>
+<Format_settings__ReFrames>11 frames</Format_settings__ReFrames>
+<Codec_ID>V_MPEG4/ISO/AVC</Codec_ID>
+<Duration>24mn 10s</Duration>
+<Bit_rate>1 771 Kbps</Bit_rate>
+<Width>704 pixels</Width>
+<Height>480 pixels</Height>
+<Display_aspect_ratio>16:9</Display_aspect_ratio>
+<Original_display_aspect_ratio>3:2</Original_display_aspect_ratio>
+<Frame_rate_mode>Constant</Frame_rate_mode>
+<Frame_rate>23.976 fps</Frame_rate>
+<Standard>NTSC</Standard>
+<Color_space>YUV</Color_space>
+<Chroma_subsampling>4:2:0</Chroma_subsampling>
+<Bit_depth>8 bits</Bit_depth>
+<Scan_type>Progressive</Scan_type>
+<Bits__Pixel_Frame_>0.219</Bits__Pixel_Frame_>
+<Stream_size>295 MiB (85%)</Stream_size>
+<Title>Kannazuki no Miko 01: The Land of Eternity</Title>
+<Writing_library>x264 core 54 svn-598M</Writing_library>
+<Encoding_settings>cabac=1 / ref=8 / deblock=1:0:0 / analyse=0x3:0x133 / me=umh / subme=7 / brdo=1 / mixed_ref=1 / me_range=24 / chroma_me=1 / trellis=2 / 8x8dct=1 / cqm=0 / deadzone=21,11 / chroma_qp_offset=0 / slices=2 / nr=0 / decimate=1 / mbaff=0 / bframes=3 / b_pyramid=1 / b_adapt=1 / b_bias=0 / direct=1 / wpredb=1 / bime=1 / keyint=250 / keyint_min=25 / scenecut=40 / rc=2pass / bitrate=1771 / ratetol=1.0 / rceq=&apos;blurCplx^(1-qComp)&apos; / qcomp=0.60 / qpmin=10 / qpmax=51 / qpstep=4 / cplxblur=20.0 / qblur=0.5 / ip_ratio=1.40 / pb_ratio=1.30 / aq=1:1.0:15.0</Encoding_settings>
+<Default>Yes</Default>
+<Forced>No</Forced>
+</track>
+
+<track type="Audio" streamid="1">
+<ID>2</ID>
+<Format>Vorbis</Format>
+<Format_settings__Floor>1</Format_settings__Floor>
+<Codec_ID>A_VORBIS</Codec_ID>
+<Duration>24mn 11s</Duration>
+<Bit_rate_mode>Variable</Bit_rate_mode>
+<Bit_rate>160 Kbps</Bit_rate>
+<Channel_s_>2 channels</Channel_s_>
+<Sampling_rate>48.0 KHz</Sampling_rate>
+<Compression_mode>Lossy</Compression_mode>
+<Stream_size>27.7 MiB (8%)</Stream_size>
+<Title>2.0 Vorbis</Title>
+<Writing_library>aoTuV Beta 4.51 (UTC 2005-11-17)</Writing_library>
+<Language>Japanese</Language>
+<Default>Yes</Default>
+<Forced>No</Forced>
+</track>
+
+<track type="Audio" streamid="2">
+<ID>3</ID>
+<Format>Vorbis</Format>
+<Format_settings__Floor>1</Format_settings__Floor>
+<Codec_ID>A_VORBIS</Codec_ID>
+<Duration>24mn 11s</Duration>
+<Bit_rate_mode>Variable</Bit_rate_mode>
+<Bit_rate>112 Kbps</Bit_rate>
+<Channel_s_>2 channels</Channel_s_>
+<Sampling_rate>48.0 KHz</Sampling_rate>
+<Compression_mode>Lossy</Compression_mode>
+<Delay_relative_to_video>3ms</Delay_relative_to_video>
+<Stream_size>19.4 MiB (6%)</Stream_size>
+<Title>2.0 Vorbis</Title>
+<Writing_library>aoTuV Beta 4.51 (UTC 2005-11-17)</Writing_library>
+<Language>English</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+
+<track type="Text" streamid="1">
+<ID>4</ID>
+<Format>ASS</Format>
+<Codec_ID>S_TEXT/ASS</Codec_ID>
+<Codec_ID_Info>Advanced Sub Station Alpha</Codec_ID_Info>
+<Compression_mode>Lossless</Compression_mode>
+<Title>ASS</Title>
+<Language>English</Language>
+<Default>Yes</Default>
+<Forced>No</Forced>
+</track>
+
+<track type="Text" streamid="2">
+<ID>5</ID>
+<Format>UTF-8</Format>
+<Codec_ID>S_TEXT/UTF8</Codec_ID>
+<Codec_ID_Info>UTF-8 Plain Text</Codec_ID_Info>
+<Title>SRT</Title>
+<Language>English</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+
+<track type="Menu">
+<_00_00_00000>en:Prologue</_00_00_00000>
+<_00_01_59100>en:Kannazuki no Miko 01: The Land of Eternity</_00_01_59100>
+<_00_22_10000>en:Ending</_00_22_10000>
+<_00_23_40100>en:Preview</_00_23_40100>
+</track>
+
+</File>
+</Mediainfo>
+
