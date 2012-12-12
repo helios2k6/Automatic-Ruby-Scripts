@@ -363,7 +363,7 @@ module Commands
 					end
 					
 					audioTrack = chosenAudioTrack.trackID
-					postCommand = getPostJobsForAudioTrack(chosenAudioTrack)
+					postCommands = getPostJobsForAudioTrack(chosenAudioTrack)
 				end
 			end
 			
