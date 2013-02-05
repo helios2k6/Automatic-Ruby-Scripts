@@ -268,76 +268,18 @@ module Commands
 			return postCommand
 		end
 		
-		
-		#Order by: Japanese > nil > Everything else
-		#Then order by track type: FLAC > WAV > AAC > Everything else
-		def chooseBestAudioTrack(audioTracks, language = nil)
-			if audioTracks == nil || audioTracks.empty? then
-				return nil
-			end
-			chosenTracks = []
-			
-			if language != nil then
-				#Cycle through tracks and just pick out the ones that have a nil language or japanese language
-				audioTracks.each{|t|
-					if t.language == nil || t.language.casecmp(language) == 0 then
-						chosenTracks << t
-					end
-				}
-				chosenTracks.sort!{|a, b|
-					if a.language == nil then
-						if b.language == nil then
-							0 #both are nil, equal
-						else
-							1 #"b" has the language we want, but "a" doesn't, therefore "a" goes to the back of the line
-						end
-					else
-						if b.language == nil then
-							-1 #"a" has the language we want, but "b" doesn't
-						else
-							0 #"a" and "b" have the language we want; equal
-						end
-					end
-				}
-			else
-				chosenTracks = Array.new(audioTracks)
-			end
-			
-			if chosenTracks.empty? then
-				return nil
-			end
-			
-			#Cycle through and choose the best track format
-			chosenTrack = nil
-			chosenTracks.each{|e|
-				case e.trackFormat
-					when Constants::TrackFormat::FLAC #Prefer FLAC
-						chosenTrack = e
-						break
-					when Constants::TrackFormat::WAV #Then prefer WAV
-						chosenTrack = e
-						break
-					when Constants::TrackFormat::AAC #Then prefer AAC
-						chosenTrack = e
-						break
-					else
-						chosenTrack = e
-				end
-			}
-			return chosenTrack
-		end
-		
-		def execute(note)
+		def extractAudioTrackAndEncode(encodingJob)
 			facade = Facade.instance
-			encodingJob = note.body
 			mediaFile = encodingJob.mediaFile
 			realFile = mediaFile.file
 			encodingJobProxy = facade.retrieve_proxy(Constants::ProxyConstants::ENCODING_JOBS_PROXY)
 			tempFileProxy = facade.retrieve_proxy(Constants::ProxyConstants::TEMPORARY_FILES_PROXY)
 			audioTrack = encodingJob.audioTrack
-			postCommands = []
-			facade.send_notification(Constants::Notifications::LOG_INFO, "Begin Extracting Audio Track for #{realFile}")
 			programArgsProxy = facade.retrieve_proxy(Constants::ProxyConstants::PROGRAM_ARGS_PROXY)
+			mediaFile = encodingJob.mediaFile
+			postCommands = []
+			
+			facade.send_notification(Constants::Notifications::LOG_INFO, "Begin Extracting Audio Track for #{realFile}")
 			
 			if audioTrack != nil then
 				#First see if there's a particular audio track the user wants us to extract
@@ -353,7 +295,7 @@ module Commands
 						facade.send_notification(Constants::Notifications::LOG_INFO, "Attempting to use Japanese track")
 						chosenAudioTrack = chooseBestAudioTrack(audioTracks, "Japanese")
 					else
-						chosenAudioTrack = chooseBestAudioTrack(audioTrack)
+						chosenAudioTrack = chooseBestAudioTrack(audioTracks)
 					end
 					
 					if chosenAudioTrack != nil && chosenAudioTrack.language != nil then
@@ -421,6 +363,123 @@ module Commands
 				#Assign the AAC file to the EncodingJobProxy
 				encodingJobProxy.addAudioTrackFile(encodingJob, previousFile)
 				tempFileProxy.addTemporaryFile(encodingJob, previousFile) #Add AAC file to temp file proxy
+			end
+		end
+		
+		def generateAudioAVSScript(mediaFileName, trackID, outputFile)
+			scriptText = "x = \"#{mediaFileName}\"\nffindex(x)\naudiodub(ffvideosource(x), ffaudiosource(x, track=#{trackID - 1}))"
+			
+			avsFile = File.open(outputFile, 'w')
+			
+			avsFile.puts(scriptText)
+			
+			avsFile.close
+		end
+		
+		def encodeMediaAudioDirectly(encodingJob)
+			facade = Facade.instance
+			audioTrack = encodingJob.audioTrack
+			mediaFile = encodingJob.mediaFile
+			realFile = mediaFile.file
+			encodingJobProxy = facade.retrieve_proxy(Constants::ProxyConstants::ENCODING_JOBS_PROXY)
+			programArgsProxy = facade.retrieve_proxy(Constants::ProxyConstants::PROGRAM_ARGS_PROXY)
+			tempFileProxy = facade.retrieve_proxy(Constants::ProxyConstants::TEMPORARY_FILES_PROXY)
+			facade.send_notification(Constants::Notifications::LOG_INFO, "Begin Encoding Audio Directly from #{realFile}")
+			
+			audioTracks = mediaFile.getAudioTracks()
+			
+			chosenAudioTrack = nil
+			if programArgsProxy.programArgs.ensureJap then
+				facade.send_notification(Constants::Notifications::LOG_INFO, "Attempting to use Japanese track")
+				chosenAudioTrack = chooseBestAudioTrack(audioTracks, "Japanese")
+			else
+				chosenAudioTrack = chooseBestAudioTrack(audioTracks)
+			end
+			
+			#Generate avs script
+			tempOutputAVS = "temp_audio_#{realFile}.avs"
+			generateAudioAVSScript(realFile, chosenAudioTrack.trackID, tempOutputAVS)
+			
+			#Execute the AVS2Pipe
+			useHqAudio = chosenAudioTrack.channels > 2 || encodingJob.hqAudio
+			outputAudioFile = File.basename(realFile, File.extname(realFile)) << Constants::TrackFormat::EXTENSION_HASH[Constants::TrackFormat::AAC]
+			bitrate = useHqAudio ? 256000: 96000
+			command = "avs2pipe_vs.exe audio \"#{tempOutputAVS}\" | #{Constants::AudioExecutables::NERO_AAC} -if - -of \"#{outputAudioFile}\""
+			
+			system(command)
+			
+			encodingJobProxy.addAudioTrackFile(encodingJob, outputAudioFile)
+			tempFileProxy.addTemporaryFile(encodingJob, outputAudioFile) 
+			tempFileProxy.addTemporaryFile(encodingJob, tempOutputAVS) 
+		end
+			
+		#Order by: Japanese > nil > Everything else
+		#Then order by track type: FLAC > WAV > AAC > Everything else
+		def chooseBestAudioTrack(audioTracks, language = nil)
+			if audioTracks == nil || audioTracks.empty? then
+				return nil
+			end
+			chosenTracks = []
+			
+			if language != nil then
+				#Cycle through tracks and just pick out the ones that have a nil language or japanese language
+				audioTracks.each{|t|
+					if t.language == nil || t.language.casecmp(language) == 0 then
+						chosenTracks << t
+					end
+				}
+				
+				chosenTracks.sort!{|a, b|
+					if a.language == nil then
+						if b.language == nil then
+							0 #both are nil, equal
+						else
+							1 #"b" has the language we want, but "a" doesn't, therefore "a" goes to the back of the line
+						end
+					else
+						if b.language == nil then
+							-1 #"a" has the language we want, but "b" doesn't
+						else
+							0 #"a" and "b" have the language we want; equal
+						end
+					end
+				}
+			else
+				chosenTracks = Array.new(audioTracks)
+			end
+			
+			if chosenTracks.empty? then
+				return nil
+			end
+			
+			#Cycle through and choose the best track format
+			chosenTrack = nil
+			chosenTracks.each{|e|
+				case e.trackFormat
+					when Constants::TrackFormat::FLAC #Prefer FLAC
+						chosenTrack = e
+						break
+					when Constants::TrackFormat::WAV #Then prefer WAV
+						chosenTrack = e
+						break
+					when Constants::TrackFormat::AAC #Then prefer AAC
+						chosenTrack = e
+						break
+					else
+						chosenTrack = e
+				end
+			}
+			return chosenTrack
+		end
+		
+		def execute(note)
+			facade = Facade.instance
+			programArgsProxy = facade.retrieve_proxy(Constants::ProxyConstants::PROGRAM_ARGS_PROXY)
+			
+			if programArgsProxy.programArgs.encodeAudioDirectly then
+				encodeMediaAudioDirectly(note.body)
+			else
+				extractAudioTrackAndEncode(note.body)
 			end
 		end
 	end
