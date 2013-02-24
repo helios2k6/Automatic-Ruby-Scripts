@@ -404,10 +404,10 @@ module Commands
 			useHqAudio = chosenAudioTrack.channels > 2 || encodingJob.hqAudio
 			outputAudioFile = File.basename(realFile, File.extname(realFile)) << Constants::TrackFormat::EXTENSION_HASH[Constants::TrackFormat::AAC]
 			bitrate = useHqAudio ? 256000: 96000
-			command = "avs2pipe_vs.exe audio \"#{tempOutputAVS}\" | #{Constants::AudioExecutables::NERO_AAC} -if - -of \"#{outputAudioFile}\""
+			command = "avs2pipe_vs.exe audio \"#{tempOutputAVS}\" | #{Constants::AudioExecutables::NERO_AAC} -br #{bitrate} -if - -of \"#{outputAudioFile}\""
 			
 			system(command)
-			
+			cd 
 			encodingJobProxy.addAudioTrackFile(encodingJob, outputAudioFile)
 			tempFileProxy.addTemporaryFile(encodingJob, outputAudioFile) 
 			tempFileProxy.addTemporaryFile(encodingJob, tempOutputAVS) 
