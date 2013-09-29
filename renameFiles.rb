@@ -3,9 +3,9 @@ def checkFile(file)
 	return file != "." && file != ".." && (ext.casecmp(".png") == 0 || ext.casecmp(".jpg") == 0 || ext.casecmp(".jpeg") == 0 || ext.casecmp(".gif") == 0)
 end
 
-def processFolder(rootNameString, files)
+def processFolder(rootNameString, files, startIndex=1)
 	tempFiles = []
-	i = 1
+	i = startIndex
 	files.each{|f|
 		ext = File.extname(f)
 		if checkFile(f) then
@@ -19,7 +19,7 @@ def processFolder(rootNameString, files)
 		end
 	}
 	
-	i = 1
+	i = startIndex
 	tempFiles.each{|f|
 		ext = File.extname(f)
 		if checkFile(f) then
@@ -33,7 +33,13 @@ def processFolder(rootNameString, files)
 end
 
 def main
-	processFolder(ARGV[0], Dir.new("."))
+	rootNameString = ARGV[0]
+	startIndex = 0
+	if ARGV.length >= 2 then
+		startIndex = ARGV[1].to_i
+	end
+	
+	processFolder(ARGV[0], Dir.new("."), startIndex)
 end
 
 main
