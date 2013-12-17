@@ -171,6 +171,7 @@ module Commands
 			avsCommands = programArgsProxy.programArgs.avsCommands
 			postJobs = programArgsProxy.programArgs.postJobs
 			ensure169 = programArgsProxy.programArgs.ensure169
+			ensure720p = programArgsProxy.programArgs.ensure720p
 			
 			noMux = programArgsProxy.programArgs.noMultiplex
 			noAudio = programArgsProxy.programArgs.noAudio
@@ -209,6 +210,7 @@ module Commands
 					end
 
 					encodingJob.ensure169 = ensure169
+					encodingJob.ensure720p = ensure720p
 					
 					encodingJobsProxy.addEncodingJob(encodingJob)
 				}
@@ -550,14 +552,87 @@ module Commands
 	end
 
 	class GenerateAvisynthFileCommand < SimpleCommand
-		def calculateNewAspectMultipleFromN(oldWidth, n)
+		class Resolution
+			attr_accessor :width, :height
+			
+			def initialize(width, height)
+				@width = width
+				@height = height
+			end
+		end
 		
-			firstPass = oldWidth.to_f / n.to_f
-			secondPass = firstPass / 4.0
+		class ResolutionResolver
+			attr_accessor :ensure_720p, :ensure_16_9, :resolution
 			
-			roundedSecondPass = (secondPass + 0.4).round
+			def initialize(ensure_720p, ensure_16_9, resolution)
+				@ensure_720p = ensure_720p
+				@ensure_16_9 = ensure_16_9
+				@resolution = resolution
+			end
 			
-			return (roundedSecondPass * 4).to_i
+			def self.gcd(a, b)
+				if !(a.is_a? Integer) || !(b.is_a? Integer) then
+					raise "Invalid input. GCD can only work on Integers"
+				end
+				
+				if a == b then
+					return a
+				end
+				
+				larger = a
+				smaller = b
+				
+				if a < b then
+					larger = b
+					smaller = a
+				end
+				
+				quotient = larger / smaller
+				remainder = larger % smaller
+				
+				if remainder == 0 then
+					return smaller
+				end
+				
+				if remainder == 1 then
+					return 1
+				end
+				
+				return gcd(smaller, remainder)
+			end
+			
+			def self.enforce169(oldResolution)
+				aspectCoefficient = gcd(oldResolution.width, oldResolution.height)
+				return Resolution.new(aspectCoefficient * 16, aspectCoefficient * 9)
+			end
+			
+			def self.enforce720p(oldResolution)
+				if oldResolution.height <= 720 then
+					return oldResolution
+				end
+			
+				aspectCoefficient = gcd(oldResolution.width, oldResolution.height)
+				widthCoPrime = oldResolution.width / aspectCoefficient
+				heightCoPrime = oldResolution.height / aspectCoefficient
+				
+				closestCoefficient = 720 / heightCoPrime
+				
+				return Resolution.new(closestCoefficient * widthCoPrime, closestCoefficient * heightCoPrime)
+			end
+			
+			def getFinalResolution
+				resolvedResolution = @resolution
+				
+				if @ensure_16_9 then
+					resolvedResolution = ResolutionResolver::enforce169(resolvedResolution)
+				end
+				
+				if @ensure_720p then
+					resolvedResolution = ResolutionResolver::enforce720p(resolvedResolution)
+				end
+				
+				return resolvedResolution
+			end
 		end
 	
 		def execute(note)
@@ -587,23 +662,17 @@ module Commands
 				facade.send_notification(Constants::Notifications::LOG_INFO, "Adding Textsub Prefilter for #{subtitleTrackFile}")
 			end
 			
-			#Check to see if we need to ensure 16:9 aspect ratio
-			if encodingJob.ensure169 then
-				#Get first video track; that's the only one we care about
-				videoTrack = mediaFile.getVideoTracks[0]
-				
-				#Check DAR to make sure that the video supports 16:9 AR
-				if videoTrack.DAR == Constants::VideoInfoConstants::ASPECT_16_9 then
-				
-					coeff = calculateNewAspectMultipleFromN(videoTrack.width, 16.0)
-					newWidth = coeff * 16
-					newHeight = coeff * 9
-					
-					avsFile.addPostFilter("#{Constants::AvisynthFilterConstants::LANCZOS_RESIZE}(#{newWidth}, #{newHeight})")
-					facade.send_notification(Constants::Notifications::LOG_INFO, "Ensuring 16:9 Aspect Ratio. Resizing from #{videoTrack.width} / #{videoTrack.height} to #{newWidth} / #{newHeight}")
-				end
+			videoTrack = mediaFile.getVideoTracks[0]
+			originalResolution = Resolution.new(videoTrack.width, videoTrack.height)
+			resolutionResolver = ResolutionResolver.new(encodingJob.ensure720p, encodingJob.ensure169, originalResolution)
+			
+			resolvedResolution = resolutionResolver.getFinalResolution()
+			
+			if resolvedResolution.width != originalResolution.width || resolvedResolution.height != originalResolution.height
+				avsFile.addPostFilter("#{Constants::AvisynthFilterConstants::LANCZOS_RESIZE}(#{resolvedResolution.width}, #{resolvedResolution.height})")
+				facade.send_notification(Constants::Notifications::LOG_INFO, "Resizing video to ensure 16:9 and/or ensure 720p. Resizing from #{videoTrack.width} / #{videoTrack.height} to #{resolvedResolution.width} / #{resolvedResolution.height}")
 			end
-
+			
 			avsFile.outputAvsFile(outputFile)
 			facade.send_notification(Constants::Notifications::LOG_INFO, "Output Avisynth File for #{realFile}")
 			facade.retrieve_proxy(Constants::ProxyConstants::AVISYNTH_FILE_PROXY).addAvisynthFile(encodingJob, outputFile)

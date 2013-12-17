@@ -136,6 +136,9 @@ module Constants
 		ENSURE_16_9_ASPECT_RATIO = "--ensure-16-9"
 		ENSURE_16_9_ASPECT_RATIO_HELP_STRING = "\t#{ENSURE_16_9_ASPECT_RATIO} \n\t\tEnsures that videos are encoded at an aspect ratio of 16:9\n\n"
 		
+		ENSURE_720_P = "--ensure-720p"
+		ENSURE_720_P_HELP_STRING = "\t#{ENSURE_720_P} \n\t\tEnsures that videos are encoded at 720p or less\n\n"
+		
 		ENSURE_JAPANESE = "--ensure-japanese"
 		ENSURE_JAPANESE_HELP_STRING = "\t#{ENSURE_JAPANESE} \n\t\tEnsures that the audio track is Japanesen\n\n"
 		
@@ -181,6 +184,7 @@ module Constants
 			DEVICE_ARG, QUALITY_ARG,
 			AVS_ADD_ARG,
 			ENSURE_16_9_ASPECT_RATIO,
+			ENSURE_720_P,
 			ENSURE_JAPANESE,
 			NO_MUX_ARG,
 			HELP_ARG,
@@ -201,6 +205,7 @@ module Constants
 			QUALITY_ARG => QUALITY_ARG_HELP_STRING,
 			AVS_ADD_ARG => AVS_ADD_ARG_HELP_STRING,
 			ENSURE_16_9_ASPECT_RATIO => ENSURE_16_9_ASPECT_RATIO_HELP_STRING,
+			ENSURE_720_P => ENSURE_720_P_HELP_STRING,
 			ENSURE_JAPANESE => ENSURE_JAPANESE_HELP_STRING,
 			NO_MUX_ARG => NO_MUX_ARG_HELP_STRING,
 			NO_AUDIO_ARG => NO_AUDIO_ARG_HELP_STRING,

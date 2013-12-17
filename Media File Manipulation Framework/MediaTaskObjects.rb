@@ -104,9 +104,9 @@ module MediaTaskObjects
   end
 
   class EncodingJob
-    attr_accessor :mediaFile, :avsFile, :outputFile, :noMux, :noAudio, :noSubtitles, :encodingOptions, :audioTrack, :subtitleTrack, :postEncodingJobs, :tempFiles, :hqAudio, :ensure169
+    attr_accessor :mediaFile, :avsFile, :outputFile, :noMux, :noAudio, :noSubtitles, :encodingOptions, :audioTrack, :subtitleTrack, :postEncodingJobs, :tempFiles, :hqAudio, :ensure169, :ensure720p
 
-    def initialize(mediaFile, avsFile, outputFile, noMux, noAudio, noSubtitles, encodingOptions, postEncodingJobs=[], hqAudio=false, ensure169=false)
+    def initialize(mediaFile, avsFile, outputFile, noMux, noAudio, noSubtitles, encodingOptions, postEncodingJobs=[], hqAudio=false, ensure169=false, ensure720p=false)
       @mediaFile = mediaFile
       @avsFile = avsFile
       @outputFile = outputFile
@@ -118,6 +118,7 @@ module MediaTaskObjects
       @tempFiles = []
 	  @hqAudio = hqAudio
 	  @ensure169 = ensure169
+	  @ensure720p = ensure720p
     end
 
     def getEncodingOptionsAsString
