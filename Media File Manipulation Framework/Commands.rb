@@ -611,9 +611,19 @@ module Commands
 				return gcd(smaller, remainder)
 			end
 			
+			def self.calculate169AspectMultiplier(oldResolution, aspectCoefficient)
+				widthCoefficient = oldResolution.width / (aspectCoefficient * 16)
+				heightCoefficient = oldResolution.height / (aspectCoefficient * 9)
+				
+				widthCoefficient > heightCoefficient ? widthCoefficient : heightCoefficient
+			end
+			
 			def self.enforce169(oldResolution)
 				aspectCoefficient = gcd(oldResolution.width, oldResolution.height)
-				return Resolution.new(aspectCoefficient * 16, aspectCoefficient * 9)
+				
+				aspectMultiplier = calculate169AspectMultiplier(oldResolution, aspectCoefficient)
+				
+				return Resolution.new(aspectCoefficient * 16 * aspectMultiplier, aspectCoefficient * 9 * aspectMultiplier)
 			end
 			
 			def self.enforce720p(oldResolution)
