@@ -13,7 +13,7 @@
 #You should have received a copy of the GNU General Public License
 #along with Auto Device Encoder.  If not, see <http://www.gnu.org/licenses/>.
 require 'rubygems'
-require 'PureMVC_Ruby'
+require 'puremvc-ruby'
 require 'Thread'
 require 'fileutils'
 
@@ -296,18 +296,28 @@ module Commands
 					if programArgsProxy.programArgs.ensureJap then
 						facade.send_notification(Constants::Notifications::LOG_INFO, "Attempting to use Japanese track")
 						chosenAudioTrack = chooseBestAudioTrack(audioTracks, "Japanese")
+						
+						if chosenAudioTrack == nil then
+							facade.send_notification(Constants::Notifications::LOG_INFO, "Did not find suitable Japanese audio track. Defaulting to first available audio track.")
+							chosenAudioTrack = chooseBestAudioTrack(audioTracks)
+						end
+						
 					else
 						chosenAudioTrack = chooseBestAudioTrack(audioTracks)
 					end
 					
-					if chosenAudioTrack != nil && chosenAudioTrack.language != nil then
-						facade.send_notification(Constants::Notifications::LOG_INFO, "Found #{chosenAudioTrack.trackFormat} Audio for #{realFile} with #{chosenAudioTrack.language}")
+					if chosenAudioTrack != nil then
+						if chosenAudioTrack.language != nil then
+							facade.send_notification(Constants::Notifications::LOG_INFO, "Found #{chosenAudioTrack.trackFormat} Audio for #{realFile} with #{chosenAudioTrack.language}")
+						else
+							facade.send_notification(Constants::Notifications::LOG_INFO, "Found #{chosenAudioTrack.trackFormat} Audio for #{realFile}")
+						end
+						
+						audioTrack = chosenAudioTrack.trackID
+						postCommands = getPostJobsForAudioTrack(chosenAudioTrack)
 					else
-						facade.send_notification(Constants::Notifications::LOG_INFO, "Found #{chosenAudioTrack.trackFormat} Audio for #{realFile}")
+						facade.send_notification(Constants::Notifications::LOG_INFO, "Did not find suitable. Defaulting to first available audio track.")
 					end
-					
-					audioTrack = chosenAudioTrack.trackID
-					postCommands = getPostJobsForAudioTrack(chosenAudioTrack)
 				end
 			end
 			
