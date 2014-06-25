@@ -379,7 +379,7 @@ module Commands
 		end
 		
 		def generateAudioAVSScript(mediaFileName, trackID, outputFile)
-			scriptText = "x = \"#{mediaFileName}\"\nffindex(x)\naudiodub(ffvideosource(x), ffaudiosource(x, track=#{trackID - 1}))"
+			scriptText = "x = \"#{mediaFileName}\"\nffindex(x)\naudiodub(ffvideosource(x), ffaudiosource(x, track=#{trackID}))"
 			
 			avsFile = File.open(outputFile, 'w')
 			
@@ -418,8 +418,7 @@ module Commands
 			bitrate = useHqAudio ? 256000: 96000
 			command = "avs2pipe_vs.exe audio \"#{tempOutputAVS}\" | #{Constants::AudioExecutables::NERO_AAC} -br #{bitrate} -if - -of \"#{outputAudioFile}\""
 			
-			system(command)
-			cd 
+			system(command) 
 			encodingJobProxy.addAudioTrackFile(encodingJob, outputAudioFile)
 			tempFileProxy.addTemporaryFile(encodingJob, outputAudioFile) 
 			tempFileProxy.addTemporaryFile(encodingJob, tempOutputAVS) 
