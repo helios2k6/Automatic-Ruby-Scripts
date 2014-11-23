@@ -14,7 +14,7 @@
 #along with Auto Device Encoder.  If not, see <http://www.gnu.org/licenses/>.
 
 require 'rubygems'
-require 'PureMVC_Ruby'
+require 'puremvc-ruby'
 require './Constants'
 require './AudioEncoders'
 require './Commands'

@@ -15,7 +15,7 @@
 require 'rubygems'
 require './Constants'
 require './MediaObjects'
-require 'PureMVC_Ruby'
+require 'puremvc-ruby'
 
 module MediaTaskObjects
   attr_accessor :encodingJobs
@@ -143,8 +143,8 @@ module MediaTaskObjects
 
     def initialize(mediaSource, filters)
       @mediaSource = mediaSource
-      @filters = filters
-      @preFilters = [] #These filters are meant to be executed before any user-defined filters
+      @filters = Array.new(filters)
+      @preFilters = Array.new() #These filters are meant to be executed before any user-defined filters
     end
 
     def addPreFilter(filter)
