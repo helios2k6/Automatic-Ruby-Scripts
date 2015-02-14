@@ -23,7 +23,7 @@ def processFolder(rootNameString, files, startIndex=1)
 	tempFiles.each{|f|
 		ext = File.extname(f)
 		if checkFile(f) then
-			ext = File.extname(f)
+			ext = File.extname(f).downcase
 			newName = "#{rootNameString} (#{i})#{ext}"
 			File.rename(f, newName)
 			puts("Rename #{f} to #{newName}")
