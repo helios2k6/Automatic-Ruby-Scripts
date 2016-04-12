@@ -138,7 +138,7 @@ module MediaTaskObjects
   class AVSFile
     attr_accessor :mediaSource, :preFilters, :filters
 
-    STANDARD_AVS_SCRIPT = "ffindex(x)\ny=directshowsource(x)\nffvideosource(x, fpsnum=24000, fpsden=1001)\ngradfun2db()\n"
+    STANDARD_AVS_SCRIPT = "ffindex(x)\ny=directshowsource(x)\nffvideosource(x, fpsnum=24000, fpsden=1001)\n"
     AVS_EXTENSION = ".avs"
 
     def initialize(mediaSource, filters)
