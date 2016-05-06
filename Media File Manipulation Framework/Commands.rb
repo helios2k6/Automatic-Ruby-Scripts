@@ -539,7 +539,7 @@ module Commands
 				system(extractionCommand[0])
 
 				#OK, so VOB_SUB is a weird fucking format. Basically, when you tell mkvextract.exe to extract the VOB_SUB track, you tell it to extract the
-				#*.idx file instead of teh *.sub file. When you do, mkvextract will extract both files. Now, here's the thing, you don't pass the 
+				#*.idx file instead of the *.sub file. When you do, mkvextract will extract both files. Now, here's the thing, you don't pass the 
 				#*.idx file to avisynth filter. You pass the *.sub file to the avisynth filter, so you have to save the *.sub file in the EncodingJobProxy. 
 				#It's very weird and special cased for VOB_SUB
 				if subtitleTrackObject.trackFormat == Constants::TrackFormat::VOB_SUB then
