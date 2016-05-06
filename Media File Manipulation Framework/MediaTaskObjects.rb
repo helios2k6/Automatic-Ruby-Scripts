@@ -12,10 +12,9 @@
 #
 #You should have received a copy of the GNU General Public License
 #along with Auto Device Encoder.  If not, see <http://www.gnu.org/licenses/>.
-require 'rubygems'
+require 'puremvc-ruby'
 require './Constants'
 require './MediaObjects'
-require 'puremvc-ruby'
 
 module MediaTaskObjects
   attr_accessor :encodingJobs
