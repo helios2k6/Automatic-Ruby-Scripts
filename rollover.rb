@@ -1,4 +1,5 @@
 require 'time'
+require 'ostruct'
 
 def tryParseTime(timeString)
   begin
@@ -18,9 +19,9 @@ def getTimesForProject(projectName)
     
     maybeParsedTime = tryParseTime(controlVariable)
     if maybeParsedTime != nil then
-      timeStruct = Hash.new
-      timeStruct["project"] = projectName
-      timeStruct["time"] = maybeParsedTime
+      timeStruct = OpenStruct.new
+      timeStruct.project = projectName
+      timeStruct.time = maybeParsedTime
       projectTimes << timeStruct
     else
       puts "Invalid time format input. Try again. Type \"END\" if you want to break out of this loop"
@@ -31,20 +32,21 @@ end
 
 def calculateProjectTimes(allProjects)
   # get all values
-  allProjectTimes = allProjects.values
+  allProjectTimes = allProjects.values.flatten(1)
+  puts allProjectTimes
 
   # sort array by project and time, with I/O being the only project that can break a tie
   sortedProjectTimes = allProjectTimes.sort { |a, b|
-    if ((a["time"]) - (b["time"])) == 0 then
-      if a["project"].casecmp "I/O" == 0 then
+    if ((a.time) - (b.time)) == 0 then
+      if a.project.casecmp "I/O" == 0 then
         return 1
-      elsif b["project"].casecmp "I/O" == 0 then
+      elsif b.project.casecmp "I/O" == 0 then
         return -1
       else
         return 0
       end
     else
-      return a["time"] <=> b["time"]
+      return a.time <=> b.time
     end
   }
   puts sortedProjectTimes
@@ -53,14 +55,14 @@ def calculateProjectTimes(allProjects)
   previousProject = nil
   sortedProjectTimes.each { |currentProject|
     # first, add the key to the has if it doesn't exist
-    if projectTimeTrackers.has_key?(currentProject["project"]) == false then
-      projectTimeTrackers[currentProject["project"]] = 0
+    if projectTimeTrackers.has_key?(currentProject.project) == false then
+      projectTimeTrackers[currentProject.project] = 0
     end
     
     # second, take the previous project and calculate the duration
     if previousProject != nil then
-      timeDiff = currentProject["time"] - previousProject["time"]
-      projectTimeTrackers[currentProject["project"]] = projectTimeTrackers[currentProject["project"]] + timeDiff
+      timeDiff = currentProject.time - previousProject.time
+      projectTimeTrackers[currentProject.project] = projectTimeTrackers[currentProject.project] + timeDiff
     end
     
     # now, if this is the IO project, set the ioProjectTimeHolder variable to the PREVIOUS project
@@ -68,8 +70,8 @@ def calculateProjectTimes(allProjects)
       ioProjectTimeHolder = previousProject
     #if this is NOT the I/O project, but the ioProjectTimeHolder variable was set, then calculate the time for that project
     elsif ioProjectTimeHolder != nil then
-      timeDiff = currentProject["time"] - previousProject["time"]
-      projectTimeTrackers[ioProjectTimeHolder["project"]] = projectTimeTrackers[ioProjectTimeHolder["project"]] + timeDiff
+      timeDiff = currentProject.time - previousProject.time
+      projectTimeTrackers[ioProjectTimeHolder.project] = projectTimeTrackers[ioProjectTimeHolder.project] + timeDiff
     end
     
     previousProject = currentProject
