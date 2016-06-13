@@ -377,7 +377,8 @@ module Commands
 		end
 		
 		def generateAudioAVSScript(mediaFileName, trackID, outputFile)
-			scriptText = "x = \"#{mediaFileName}\"\nffindex(x)\naudiodub(ffvideosource(x), ffaudiosource(x, track=#{trackID}))"
+			# In the AVS Script, we have to subtract the trackID by 1 because it uses a 0-based index, while everyone else uses a 1-based index. Fuck this stupid shit
+			scriptText = "x = \"#{mediaFileName}\"\nffindex(x)\naudiodub(ffvideosource(x), ffaudiosource(x, track=#{trackID - 1}))"
 			
 			avsFile = File.open(outputFile, 'w')
 			
@@ -408,7 +409,7 @@ module Commands
 			
 			#Generate avs script
 			tempOutputAVS = "temp_audio_#{realFile}.avs"
-			generateAudioAVSScript(realFile, chosenAudioTrack.trackID, tempOutputAVS)
+			generateAudioAVSScript(realFile, chosenAudioTrack.trackID, tempOutputAVS) 
 			
 			#Execute the AVS2Pipe
 			useHqAudio = chosenAudioTrack.channels > 2 || encodingJob.hqAudio
