@@ -87,6 +87,11 @@ def main
   loop {
     puts "Enter next project or \"END\" if you want to exit the loop"
     projectName = gets.chomp
+    
+    if tryParseTime(projectName) != nil then
+      puts "You mistyped the project name as a time. Please enter a proper name"
+      next
+    end
 
     break if projectName.casecmp("END") == 0
 
