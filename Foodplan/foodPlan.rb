@@ -76,29 +76,74 @@ def setMatrixElement(matrix, x, y, z, value)
     matrix[x][y][z] = value
 end
 
+def getMatrixElement(matrix, x, y, z)
+    if matrix[x] == nil || matrix[x][y] == nil || matrix[x][y][z] == nil then
+        return 0
+    end
+
+    return matrix[x][y][z]
+end
+
 def max(a, b)
     return a > b ? a : b
 end
 
 def determineFoodPlanUsingUnboundedKnapsack(protein_limit, carbs_limit, fat_limit, food_array)
     # All solution matrices use the multidimensional matrix index of M[protein][carbs][fat]
-    memoList = []
+    smaller_solution_list = []
+    intermediate_solution_list = []
+    memo_list = []
+    keep_matrix = []
 
     for protein in 0..protein_limit
         for carbs in 0..carbs_limit
             for fat in 0..fat_limit
+                loop_current_tuple = Tuple.new(protein, carbs, fat)
                 # Cycle through all items in food food array
-                best_tuple = Tuple.new(0, 0, 0)
                 for food_index in 0..food_array.length
                     current_food = food_array[food_index]
+                    current_food_tuple = Tuple.new(current_food.protein, current_food.carbs, current_food.fat)
 
-                    if protein >= current_food.protein && carbs >= current_food.carbs && fat >= current_food.fat then
-                        max_protein = max(memoList[protein - current_food.protein][carbs - current_food.carbs][fat - current_food.fat] + )
+                    if loop_current_tuple >= current_food_tuple then
+                        memo_target = loop_current_tuple - current_food_tuple
+                        setMatrixElement(smaller_solution_list, current_food_tuple.protein, current_food_tuple.carbs, current_food_tuple.fat, getMatrixElement(memo_list, memo_target.protein, memo_target.carbs, memo_target.fat))
+                    else
+                        setMatrixElement(smaller_solution_list, current_food_tuple.protein, current_food_tuple.carbs, current_food_tuple.fat, Tuple.new(0, 0, 0))
                     end
                 end
+
+                # Apply the intermediate solutions
+                for food_index in 0..food_array.length
+                    current_food = food_array[food_index]
+                    current_food_tuple = Tuple.new(current_food.protein, current_food.carbs, current_food.fat)
+
+                    if loop_current_tuple >= current_food_tuple then
+                        setMatrixElement(intermediate_solution_list, current_food_tuple.protein, current_food_tuple.carbs, current_food_tuple.fat, getMatrixElement(smaller_solution_list, current_food_tuple.protein, current_food_tuple.carbs, current_food_tuple.fat) + current_food_tuple)
+                    else
+                        setMatrixElement(intermediate_solution_list, current_food_tuple.protein, current_food_tuple.carbs, current_food_tuple.fat, Tuple.new(0, 0, 0))
+                    end
+                end
+
+                file_index_of_max_value = Tuple.new(0, 0, 0)
+                setMatrixElement(memo_list, protein, carbs, fat, getMatrixElement(intermediate_solution_list, 0, 0, 0))
+
+                # Find keep matrix
+                for food_index in 0..food_array.length
+                    current_food = food_array[food_index]
+                    current_food_tuple = Tuple.new(current_food.protein, current_food.carbs, current_food.fat)
+
+                    if getMatrixElement(intermediate_solution_list, current_food.protein, current_food.carbs, current_food.fat) > getMatrixElement(memo_list, protein, carbs, fat) then
+                        setMatrixElement(memo_list, protein, carbs, fat, getMatrixElement(intermediate_solution_list, current_food.protein, current_food.carbs, current_food.fat))
+                        file_index_of_max_value = current_food_tuple
+                    end
+                end
+
+                setMatrixElement(keep_matrix, file_index_of_max_value.first, file_index_of_max_value.second, file_index_of_max_value.third, true);
             end
         end
     end
+
+    return keep_matrix
 end
 
 def distance(x1, x2, y1, y2, z1, z2)
