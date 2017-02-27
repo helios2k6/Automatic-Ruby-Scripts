@@ -1,0 +1,18 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Local File",
+      "type": "Ruby",
+      "request": "launch",
+      "cwd": "${workspaceRoot}",
+      "program": "${workspaceRoot}/foodPlan.rb",
+      "args": [
+        "foods.json",
+        "3",
+        "2",
+        "1"
+      ]
+    }
+  ]
+}
