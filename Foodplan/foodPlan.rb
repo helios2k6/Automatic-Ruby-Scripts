@@ -11,143 +11,70 @@ class Food
     end
 end
 
-class Tuple
-    attr_accessor :first, :second, :third
-
-    def initialize(first, second, third)
-        @first = first
-        @second = second
-        @third = third
-    end
-
-    def < rhs
-        return @first < rhs.first &&
-            @second < rhs.second &&
-            @third < rhs.third
-    end
-
-    def > rhs
-        return @first > rhs.first &&
-            @second > rhs.second &&
-            @third > rhs.third
-    end
-
-    def <= rhs
-        return @first <= rhs.first &&
-            @second <= rhs.second &&
-            @third <= rhs.third
-    end
-    
-    def >= rhs
-        return @first >= rhs.first &&
-            @second >= rhs.second &&
-            @third >= rhs.third
-    end
-
-    def + rhs
-        return Tuple.new(@first + rhs.first, @second + rhs.second, @third + rhs.third)
-    end
-
-    def - rhs
-        return Tuple.new(@first - rhs.first, @second - rhs.second, @third - rhs.second)
-    end
-end
-
 def decodeFoodFile(file)
     json_file = JSON.parse(IO.read(file))
     json_foods_array = json_file["foods"]
     food_array = []
     json_foods_array.each {|element|
-        food_array << Food.new(element["name"], Integer(element["protein"]), Integer(element["carbs"]), Integer(element["fat"]))
+        food_count = Integer(element["count"]) - 1
+        for count in 0..food_count do
+            food_array << Food.new(element["name"], Integer(element["protein"]), Integer(element["carbs"]), Integer(element["fat"]))
+        end
     }
     
     return food_array
 end
 
-def setMatrixElement(matrix, x, y, z, value)
-    if matrix[x] == nil then
-        matrix[x] = []
-    end
-
-    if matrix[x][y] == nil then
-        matrix[x][y] = []
-    end
-
-    matrix[x][y][z] = value
-end
-
-def getMatrixElement(matrix, x, y, z)
-    if matrix[x] == nil || matrix[x][y] == nil || matrix[x][y][z] == nil then
-        return 0
-    end
-
-    return matrix[x][y][z]
-end
-
-def max(a, b)
-    return a > b ? a : b
-end
-
-def determineFoodPlanUsingUnboundedKnapsack(protein_limit, carbs_limit, fat_limit, food_array)
-    # All solution matrices use the multidimensional matrix index of M[protein][carbs][fat]
-    smaller_solution_list = []
-    intermediate_solution_list = []
-    memo_list = []
-    keep_matrix = []
-
-    for protein in 0..protein_limit
-        for carbs in 0..carbs_limit
-            for fat in 0..fat_limit
-                loop_current_tuple = Tuple.new(protein, carbs, fat)
-                # Cycle through all items in food food array
-                for food_index in 0..food_array.length
-                    current_food = food_array[food_index]
-                    current_food_tuple = Tuple.new(current_food.protein, current_food.carbs, current_food.fat)
-
-                    if loop_current_tuple >= current_food_tuple then
-                        memo_target = loop_current_tuple - current_food_tuple
-                        setMatrixElement(smaller_solution_list, current_food_tuple.protein, current_food_tuple.carbs, current_food_tuple.fat, getMatrixElement(memo_list, memo_target.protein, memo_target.carbs, memo_target.fat))
-                    else
-                        setMatrixElement(smaller_solution_list, current_food_tuple.protein, current_food_tuple.carbs, current_food_tuple.fat, Tuple.new(0, 0, 0))
-                    end
-                end
-
-                # Apply the intermediate solutions
-                for food_index in 0..food_array.length
-                    current_food = food_array[food_index]
-                    current_food_tuple = Tuple.new(current_food.protein, current_food.carbs, current_food.fat)
-
-                    if loop_current_tuple >= current_food_tuple then
-                        setMatrixElement(intermediate_solution_list, current_food_tuple.protein, current_food_tuple.carbs, current_food_tuple.fat, getMatrixElement(smaller_solution_list, current_food_tuple.protein, current_food_tuple.carbs, current_food_tuple.fat) + current_food_tuple)
-                    else
-                        setMatrixElement(intermediate_solution_list, current_food_tuple.protein, current_food_tuple.carbs, current_food_tuple.fat, Tuple.new(0, 0, 0))
-                    end
-                end
-
-                file_index_of_max_value = Tuple.new(0, 0, 0)
-                setMatrixElement(memo_list, protein, carbs, fat, getMatrixElement(intermediate_solution_list, 0, 0, 0))
-
-                # Find keep matrix
-                for food_index in 0..food_array.length
-                    current_food = food_array[food_index]
-                    current_food_tuple = Tuple.new(current_food.protein, current_food.carbs, current_food.fat)
-
-                    if getMatrixElement(intermediate_solution_list, current_food.protein, current_food.carbs, current_food.fat) > getMatrixElement(memo_list, protein, carbs, fat) then
-                        setMatrixElement(memo_list, protein, carbs, fat, getMatrixElement(intermediate_solution_list, current_food.protein, current_food.carbs, current_food.fat))
-                        file_index_of_max_value = current_food_tuple
-                    end
-                end
-
-                setMatrixElement(keep_matrix, file_index_of_max_value.first, file_index_of_max_value.second, file_index_of_max_value.third, true);
-            end
-        end
-    end
-
-    return keep_matrix
-end
-
 def distance(x1, x2, y1, y2, z1, z2)
     return Math.sqrt((x1-x2)**2 + (y1-y2)**2 + (z1-z2)**2)
+end
+
+def foodDistance(a, b)
+    return Math.sqrt(
+        (a.protein - b.protein)**2 + (a.carbs - b.carbs)**2 + (a.fat - b.fat)**2
+    )
+end
+
+def determineFoodPlanUsingGreedy(protein_limit, carbs_limit, fat_limit, food_array)
+    current_protein_allowance = protein_limit
+    current_carb_allowance = carbs_limit
+    current_fat_allowance = fat_limit
+
+    bag_of_food = []
+
+    # Sort food by largest amount
+    sorted_food_array = food_array.sort {|x, y|
+        food_distance = foodDistance(x, y)
+        # invert since we want decending
+        if food_distance < 0 then
+            1
+        elsif food_distance > 0 then
+            -1
+        else
+            0
+        end
+    }
+
+    food_array_index = 0
+    while (current_protein_allowance > 0 || current_carb_allowance > 0 || current_fat_allowance > 0) && food_array_index < sorted_food_array.length do
+        current_food = sorted_food_array[food_array_index]
+
+        prospective_protein_allowance = current_protein_allowance - current_food.protein
+        prospective_carb_allowance = current_carb_allowance - current_food.carbs
+        prospective_fat_allowance = current_fat_allowance - current_food.fat
+
+        if prospective_protein_allowance >= 0 && prospective_carb_allowance >= 0 && prospective_fat_allowance >= 0 then
+            current_protein_allowance = prospective_protein_allowance
+            current_carb_allowance = prospective_carb_allowance
+            current_fat_allowance = prospective_fat_allowance
+
+            bag_of_food << current_food
+        end
+
+        food_array_index += 1
+    end
+
+    return bag_of_food
 end
 
 def determineFoodPlanUsingPowerSet(protein_limit, carbs_limit, fat_limit, food_array)
@@ -193,14 +120,39 @@ def determineFoodPlanUsingPowerSet(protein_limit, carbs_limit, fat_limit, food_a
     return current_best_subset
 end
 
-def main
-    food_array = decodeFoodFile(ARGV[0])
-    puts "Calculating food plan using Powerset method"
-    best_food_plan = determineFoodPlanUsingPowerSet(Integer(ARGV[1]), Integer(ARGV[2]), Integer(ARGV[3]), food_array)
+def summarizeFoodArray(food_array)
     puts "=======Food Plan======="
-    best_food_plan.each {|food|
-        puts "Food #{food.name} |> Protein: #{food.protein} + Carbs #{food.carbs} + Fat #{food.fat}"
+    current_protein_level = 0
+    current_carbs_level = 0
+    current_fat_level = 0
+
+    sorted_array = food_array.sort {|a, b|
+        a.name <=> b.name 
     }
+
+    sorted_array.each {|food|
+        puts "#{food.name} |> Protein: #{food.protein} + Carbs #{food.carbs} + Fat #{food.fat}"
+        current_protein_level += food.protein
+        current_carbs_level += food.carbs
+        current_fat_level += food.fat
+    }
+
+    puts "==Total=="
+    puts "Total Protein: #{current_protein_level}"
+    puts "Total Carbs: #{current_carbs_level}"
+    puts "Total Fat: #{current_fat_level}"
+end
+
+def main
+    if ARGV.length == 4 then
+        food_array = decodeFoodFile(ARGV[0])
+        puts "Calculating food plan using Greedy method"
+        best_food_plan = determineFoodPlanUsingGreedy(Integer(ARGV[1]), Integer(ARGV[2]), Integer(ARGV[3]), food_array)
+        summarizeFoodArray(best_food_plan)
+    else
+        puts "Food Plan v0.1"
+        puts "Usage: ruby <this script> <food json file> <protein limit> <carbs limit> <fat limit>"
+    end
 end
 
 main
