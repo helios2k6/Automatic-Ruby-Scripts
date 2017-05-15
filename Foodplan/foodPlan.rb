@@ -86,7 +86,7 @@ def determineFoodPlanUsingPowerSet(protein_limit, carbs_limit, fat_limit, food_a
     current_best_fat_level = 0
     current_best_distance = distance(current_best_protein_level, protein_limit, current_best_carbs_level, carbs_limit, current_best_fat_level, fat_limit)
     
-    for i in 0..max_subsets
+    for i in 0.upto(max_subsets) do
         current_subset = []
         for j in 0..food_array.length
             mask = i & (1 << j)
