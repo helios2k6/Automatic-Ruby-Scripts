@@ -8,7 +8,7 @@ $GLOBAL_SHOULD_EXIT_AFTER_CURRENT_BACKUP = false
 def printHelp
   puts "Interruptable Backup v1.0"
   puts "Continuously backs up a root folder until SIGINT (Ctrl+C) is sent to it"
-  puts "Usage: ruby <this script> <absolute path to hb backup directory> <absolute path to top level directory to backup> <save file>"
+  puts "Usage: ruby <this script> <absolute path to hb backup directory> <absolute path to top level directory to backup> <save file> <boolean: should use dry-run>"
 end
 
 def saveBackedUpFolders(hashOfSavedFiles, saveFile)
@@ -32,11 +32,17 @@ def loadSavedFolders(saveFile)
   fileHash
 end
 
-def backupSubFolder(pathToHbBackupFolder, pathToFolderToBackup)
+def backupSubFolder(pathToHbBackupFolder, pathToFolderToBackup, dryRun = false)
   command = "#{HB_BINARY} #{BACKUP_OPTION} #{pathToHbBackupFolder} \"#{pathToFolderToBackup}\""
-  puts "Executing command: #{command}"
-  sleep(5)
-  #system(command)
+
+  if !dryRun then
+    puts "Executing command: #{command}"
+    system(command)
+  else
+    # Add delay to simulate backup
+    puts "(DRY RUN) Executing command: #{command}"
+    sleep(2)
+  end
 end
 
 def getAllSubFolders(pathToRootDirectory, savedFolders)
@@ -52,11 +58,11 @@ def getAllSubFolders(pathToRootDirectory, savedFolders)
   allSubFolders
 end
 
-def backupRootFolder(pathToHbDirectory, pathToRootDirectory, pathToSaveFile)
+def backupRootFolder(pathToHbDirectory, pathToRootDirectory, pathToSaveFile, dryRun = false)
   savedFilesHash =  loadSavedFolders(pathToSaveFile)
   getAllSubFolders(pathToRootDirectory, savedFilesHash).each{ |folder|
     if !$GLOBAL_SHOULD_EXIT_AFTER_CURRENT_BACKUP then
-      backupSubFolder(pathToHbDirectory, folder)
+      backupSubFolder(pathToHbDirectory, folder, dryRun)
       savedFilesHash[folder] = folder
     end
   }
@@ -86,8 +92,13 @@ def main
   pathToHbDirectory = ARGV[0]
   pathToRootDirectory = ARGV[1]
   pathToSaveFile = ARGV[2]
+  dryRun = false
 
-  savedFilesHash = backupRootFolder(pathToHbDirectory, pathToRootDirectory, pathToSaveFile)
+  if ARGV.size > 3 then
+    dryRun = dryRun = ARGV[3].downcase == "true"
+  end
+
+  savedFilesHash = backupRootFolder(pathToHbDirectory, pathToRootDirectory, pathToSaveFile, dryRun)
   saveBackedUpFolders(savedFilesHash, pathToSaveFile)
 end
 
