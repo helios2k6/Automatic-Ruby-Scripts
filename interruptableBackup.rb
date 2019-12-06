@@ -77,7 +77,7 @@ def main
   end
 
   # Be careful with this signal handler--we need to signal that we should exit this process
-  # once we finish 
+  # once we finish.
   Signal.trap("INT") {
     $GLOBAL_INTERRUPT_COUNT = $GLOBAL_INTERRUPT_COUNT + 1
     if $GLOBAL_INTERRUPT_COUNT > 1 then

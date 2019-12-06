@@ -1,5 +1,4 @@
 require 'socket'
-#LARGEST_DATA = 4096
 LARGEST_DATA = 25600
 LARGEST_RAND = 2**64 - 1
 

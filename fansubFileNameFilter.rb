@@ -1,4 +1,3 @@
-
 GarbageCharacterVector = ["_"]
 
 VideoQualityVector = ["480", "720", "1080"]
