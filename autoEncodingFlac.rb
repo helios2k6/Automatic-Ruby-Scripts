@@ -1,7 +1,6 @@
 FLAC_BASE_COMMAND = "flac"
 FLAC_ARGS = " -d "
 FLAC_EXTENSION = ".flac"
-
 WAV_EXTENSION = ".wav"
 
 NERO_AAC_BASE_COMMAND = "neroAacEnc"
