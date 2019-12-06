@@ -8,7 +8,7 @@ BracketRegularExpression = /\[\w*\]/
 ParenthesisRegularExpression = /\(\w*\)/
 
 def allPossibleQualityTags()
-	
+	return []
 end
 
 def searchNthSubgroupBracketSubgroup(fileName, groupNumber = 0)

@@ -2,7 +2,6 @@ FFMPEG_BASE_COMMAND = "ffmpeg"
 FFMPEG_INPUT_ARG = "-i"
 FFMPEG_FPS_ARG = "-vf fps=1/40"
 FFMPEG_OUTPUT_ARG_SUFFIX = "out_%02d.jpg"
-
 MKV_EXTENSION = ".mkv";
 
 def getPictures(file)
